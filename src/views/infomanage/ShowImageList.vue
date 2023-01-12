@@ -7,8 +7,7 @@
           highlight-current :current-node-key="1" @node-click="rowClick" class="permission-tree" />
       </el-aside>
       <!-- //右边的盒子 -->
-      <el-main width="78%" style="padding:0" class="right-box">
-        <!-- 操作部分 -->
+      <el-main width="78%" style="padding:0" class="right-box">        <!-- 操作部分 -->
         <div style="width:100%;">
           <el-button type="primary" class="filter-item" style="margin: 10px;" @click.prevent="addChildNode"
             v-hasPermi="['system:node:add']">
@@ -27,7 +26,7 @@
             <div class="wrapper">
               <div class="imgBox">
                 <el-image :src="getImageUrlByUrl(item.lessPictureUrl)"
-                  :preview-src-list="imageSrcList.map(item => getImageUrlByUrl(item.pictureUrl))" :initial-index="index"
+                  :preview-src-list="imageSrcList.map(item => getImageUrlByUrl(item.pictureUrl))" ref="previewImg" :initial-index="index"
                   style="min-width: 168px;height:168px;text-align: center;line-height: 168px;font-size: 40px;"
                   fit="fill" lazy>
                   <template #placeholder>
@@ -41,8 +40,14 @@
                 </el-image>
               </div>
             </div>
-            <el-button icon="Delete" size="large" circle type="danger" @click="deleteImage(index)"
+            <el-button class="delete_button" icon="Delete" size="large" circle type="danger" @click="deleteImage(index)"
               v-hasPermi="['system:image:remove']"></el-button>
+            <!--<el-button type="primary" @click="showImg">查看原图</el-button>
+            <el-image-viewer
+              v-if="showImageViewer"
+              @close="close"
+              :url-list="imageSrcList.map(item => getImageUrlByUrl(item.pictureUrl))"
+            />-->
           </el-card>
         </div>
       </el-main>
@@ -187,6 +192,29 @@ async function uploadImageSuccess() {
 function uploadImageError() {
   $modal.msgError('添加图片失败');
 }
+
+//查看大图
+/*
+const previewImg = ref(null);
+const viewBigPicture = () =>{
+  console.log(previewImg.value);
+  previewImg.value.clickHandler()
+}*/
+
+const previewImg = ref(null);
+const viewBigPicture = () =>{
+  previewImg.value.clickHandler();
+}
+
+const showImageViewer = ref(false);
+const url = ref([]);
+const showImg= () => { //预览大图
+  showImageViewer.value = true
+}
+const close = () => { //必须要这个事件 不然点击右上角关闭按钮没有反应
+  showImageViewer.value = false
+}
+
 
 // 对话框
 const dialogFormVisible = ref(false);

@@ -46,7 +46,10 @@
                             v-hasPermi="['system:logininfor:add']">新增</el-button>
                     </el-col>
                     <el-col :span="1.5">
-                        <el-button type="danger" plain icon="Delete" size="small" :disabled="multiple"
+                        <!--<el-button type="danger" plain icon="Delete" size="small" :disabled="multiple"
+                            @click="handleDelete" v-hasPermi="['system:logininfor:remove']">删除</el-button>
+                        -->
+                        <el-button type="danger" plain icon="Delete" size="small"
                             @click="handleDelete" v-hasPermi="['system:logininfor:remove']">删除</el-button>
                     </el-col>
                     <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
@@ -246,8 +249,10 @@ function createData() {
 function uploadFileSuccess() {
     $modal.msgSuccess('上传成功');
     dialogFormVisible.value = false;
+    const curNode = tree.value.getCurrentNode();
     upload.value.clearFiles();
     getList();
+    rowClick(curNode);
 }
 
 /*
@@ -314,13 +319,17 @@ function handleAdd() {
 }
 // 删除文件
 function handleDelete() {
-    $modal.confirm('是否删除文件?').then(() => {
-        delFile(ids.value).then(res => {
-            getList();
-        }).catch(err => {
-            $modal.msgError('删除失败');
+    if(ids.length == 0){
+        $modal.msg("您没有选择文件！")
+    }else{
+        $modal.confirm('是否删除文件?').then(() => {
+            delFile(ids.value).then(res => {
+                getList();
+            }).catch(err => {
+                $modal.msgError('删除失败');
+            });
         });
-    });
+    }
 }
 
 // 请求文件列表
@@ -346,13 +355,17 @@ function getList() {
 
 // 选择文件项
 function handleSelectionChange(selection) {
+    /*
     if (selection.length !== 1) {
         multiple.value = true;
     } else {
         multiple.value = false;
     }
+    */
+   ids.value = [];
+   console.log(selection,'ppp');
     selection.forEach(item => {
-        ids.value.push(item.treeId);
+        ids.value.push(item.fileId);
     });
 }
 

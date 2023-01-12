@@ -36,7 +36,7 @@
       -->
         <el-carousel :interval="4000" :autoplay="false" type="card" trigger="click" height="200px">
           <el-carousel-item v-for="(src, index) in imageSrcList" :key="index">
-            <el-image :src="getImageUrlByUrl(src.lessPictureUrl)" fit="contain" @click.passive="clickImage(index)">
+            <el-image :src="getImageUrlByUrl(src.lessPictureUrl)" :preview-src-list = "[getImageUrlByUrl(src.lessPictureUrl)]" fit="contain" @click.passive="clickImage(index)">
               <template #placeholder>
                 <div class="image-slot">Loading<span class="dot">...</span></div>
               </template>
@@ -57,7 +57,7 @@
             <el-button disabled>
               待检图片
             </el-button>
-            <el-image :src="getImageUrlByUrl(curImageSrc.pictureUrl)" class="check_btn">
+            <el-image :src="getImageUrlByUrl(curImageSrc.lessPictureUrl)" :preview-src-list="[getImageUrlByUrl(curImageSrc.pictureUrl)]" class="check_btn">
               <template #error>
                 <div class="image_div">
                 </div>
@@ -74,7 +74,7 @@
             <el-button @click="checkGrow">
               苗盘生长点检测
             </el-button>
-            <el-image class="check_btn" :src="getImageUrlByUrl(curGrowthDetected)">
+            <el-image class="check_btn" :src="getImageUrlByUrl(curGrowthDetected)" :preview-src-list="[getImageUrlByUrl(curGrowthDetectedPre)]">
               <template #error>
                 <div class="image_div">
                 </div>
@@ -90,7 +90,7 @@
             <el-button @click="checkHoles">
               苗盘穴孔检测
             </el-button>
-            <el-image :src="getImageUrlByUrl(curPlugDetected)" class="check_btn" lazy>
+            <el-image :src="getImageUrlByUrl(curPlugDetected)" :preview-src-list="[getImageUrlByUrl(curPlugDetectedPre)]"  class="check_btn" lazy>
               <template #error>
                 <div class="image_div">
                 </div>
@@ -105,7 +105,7 @@
             <el-button @click="checkGreen">
               苗盘超绿检测
             </el-button>
-            <el-image class="check_btn" :src="getImageUrlByUrl(curGreenDetected)">
+            <el-image class="check_btn" :src="getImageUrlByUrl(curGreenDetected)" :preview-src-list="[getImageUrlByUrl(curGreenDetectedPre)]">
               <template #error>
                 <div class="image_div">
                 </div>
@@ -142,9 +142,12 @@ const imageSrcList = ref(['https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3
 const totalPage = ref(null); // 图片总页数
 
 const curImageSrc = ref(imageSrcList.value[0]); // 正在看的图片对象
-const curGrowthDetected = ref('');  // 生长点检测图片
-const curPlugDetected = ref('');  //苗盘穴孔检测图片
-const curGreenDetected = ref(''); // 苗盘超绿检测图片
+const curGrowthDetected = ref('');  // 生长点检测略缩图片
+const curGrowthDetectedPre = ref('');  // 生长点检测图片
+const curPlugDetected = ref('');  //苗盘穴孔检测略缩图片
+const curPlugDetectedPre = ref('');  //苗盘穴孔检测图片
+const curGreenDetected = ref(''); // 苗盘超绿检测略缩图片
+const curGreenDetectedPre = ref(''); // 苗盘超绿检测图片
 
 function clickImage(index) {
   curImageSrc.value = imageSrcList.value[index];
@@ -232,11 +235,9 @@ function checkGrow() {
 
 function checkGrow() {
   growLoading.value = true;
- 
       getCheckedGrowthImgByImg(curImageSrc.value.pictureId).then(res => {
-        console.log(curImageSrc.value.pictureUrl);
-        console.log(res);
-        curGrowthDetected.value = res.data;
+        curGrowthDetected.value = res.lessPicture;
+        curGrowthDetectedPre.value = res.pictureDeal;
         growLoading.value = false;
       }, err => {
         growLoading.value = false;
@@ -248,8 +249,9 @@ function checkGrow() {
 function checkHoles() {
   holeLoading.value = true;
   getCheckedHoleImgByImg(curImageSrc.value.pictureUrl).then(res => {
-    curPlugDetected.value = res.msg;
-    console.log(res.msg);
+    curPlugDetected.value = res.lessPicture;
+    curPlugDetectedPre.value = res.pictureDeal;
+    console.log(res,'111');
     holeLoading.value = false;
   }, err => {
     holeLoading.value = false;
@@ -259,7 +261,8 @@ function checkHoles() {
 function checkGreen() {
   greenLoding.value = true;
   getCheckedGreenImgByImg(curImageSrc.value.pictureUrl).then(res => {
-    curGreenDetected.value = res.msg;
+    curGreenDetected.value = res.lessPicture;
+    curGreenDetectedPre.value = res.pictureDeal;
     greenLoding.value = false;
   }, err => {
     greenLoding.value = false;
@@ -300,6 +303,9 @@ async function rowClick(nodeObj) {
   imageSrcList.value = imageList.value;
   if(imageList.value.length>1){
     showImg()
+  }
+  if(imageList.value.length == 0){
+    $modal.msg('此节点无图片！');
   }
   currentPage.value = 1;
   //totalPage.value = Math.ceil(imageList.value.length / 5);

@@ -59,7 +59,8 @@
             <el-button disabled>
               待检图片
             </el-button>
-            <el-image :src="getImageUrlByUrl(curImageSrc.pictureUrl)" class="check_btn">
+            <el-image :src="getImageUrlByUrl(curImageSrc.lessPictureUrl)" :preview-src-list="[getImageUrlByUrl(curImageSrc.pictureUrl)]
+            " class="check_btn">
               <template #placeholder>
                 <div class="image-slot">Loading<span class="dot">...</span></div>
               </template>
@@ -72,7 +73,7 @@
               <el-button @click="checkBlade" v-hasPermi="['system:blade:check']">
                 叶片检测
               </el-button>
-              <el-image class="check_btn" :src="getImageUrlByUrl(bladeSrc)">
+              <el-image class="check_btn" :src="getImageUrlByUrl(bladeSrc)" :preview-src-list="[getImageUrlByUrl(bladeSrc)]">
                 <template #placeholder>
                   <div class="image-slot">Loading<span class="dot">...</span></div>
                 </template>
@@ -105,6 +106,8 @@ import { getImageUrlByUrl } from '@/utils/tree';
 
 // vue实例
 const { proxy: { $modal } } = getCurrentInstance();
+
+
 
 // 加载
 const loading = ref(false);
@@ -174,7 +177,7 @@ async function nextPage() {
 */
 
 const bladeLoading = ref(false);
-const bladeSrc = ref(''); // 叶片检测后图片链接
+const bladeSrc = ref(''); // 叶片检测后略缩图片链接
 // 检测方法
 function checkBlade() {
   bladeLoading.value = true;
@@ -224,6 +227,9 @@ async function rowClick(nodeObj) {
   imageSrcList.value = imageList.value;
   if (imageList.value.length > 1) {
     showImg()
+  }
+  if (imageList.value.length == 0) {
+    $modal.msg('此节点无图片！');
   }
   currentPage.value = 1;
   totalPage.value = Math.ceil(imageList.value.length / 5);
