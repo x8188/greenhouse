@@ -70,7 +70,8 @@
               </template>
             </el-image>
             <div v-loading="bladeLoading">
-              <el-button @click="checkBlade" v-hasPermi="['system:blade:check']">
+              <!--<el-button @click="checkBlade" v-hasPermi="['system:blade:check']">-->
+              <el-button @click="checkBlade">
                 叶片检测
               </el-button>
               <el-image class="check_btn" :src="getImageUrlByUrl(bladeSrc)" :preview-src-list="[getImageUrlByUrl(bladeSrc)]">

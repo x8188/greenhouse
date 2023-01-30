@@ -19,13 +19,13 @@ export function getImageUrlByUrl(url) {
 // 将根据url获取的数据转换为json
 export async function getJsonByCSV(url) {
   const data = await getFileContent(url);
-  console.log(data,'9090')
+  //console.log(data,'9090')
   let utf8decoder = new TextDecoder('gbk');
   let binary = utf8decoder.decode(data);
   const ctx = xlsx.read(binary, { type: 'binary', codepage: 936 });
   const result = xlsx.utils.sheet_to_json(ctx.Sheets[ctx.SheetNames[0]], { header: 1 });
-  console.log(url,'6667');
-  console.log(result,'7776');
+  //console.log(url,'6667');
+  //console.log(result,'7776');    
   return result
 }
 

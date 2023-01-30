@@ -108,10 +108,10 @@ function getList() {
       ...item,
       fileStatus: item.fileStatus === 1
     }));
-    console.log(fileList, '666');
+    //console.log(fileList, '666');
     total.value = res.total;
   }).catch(err => {
-    console.log(fileList, '888');
+    //console.log(fileList, '888');
   });
 }
 
@@ -233,6 +233,7 @@ getTreeList();
 
 function rowClick(nodeObj) {
   loading.value = true;
+  console.log(nodeObj.object,"sss");
   console.log(nodeObj.treeId, '777');
   checkAll.value = false;
   predictedUrl = '';
