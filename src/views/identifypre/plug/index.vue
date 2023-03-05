@@ -36,7 +36,7 @@
       -->
         <el-carousel :interval="4000" :autoplay="false" type="card" trigger="click" height="200px">
           <el-carousel-item v-for="(src, index) in imageSrcList" :key="index">
-            <el-image :src="getImageUrlByUrl(src.lessPictureUrl)" :preview-src-list = "[getImageUrlByUrl(src.lessPictureUrl)]" fit="contain" @click.passive="clickImage(index)">
+            <el-image :src="getImageUrlByUrl(src.lessPictureUrl)"  fit="contain" @click.passive="clickImage(index)">
               <template #placeholder>
                 <div class="image-slot">Loading<span class="dot">...</span></div>
               </template>
@@ -238,6 +238,7 @@ function checkGrow() {
       getCheckedGrowthImgByImg(curImageSrc.value.pictureId).then(res => {
         curGrowthDetected.value = res.lessPicture;
         curGrowthDetectedPre.value = res.pictureDeal;
+        $modal.msg('正在检测中')
         growLoading.value = false;
       }, err => {
         growLoading.value = false;

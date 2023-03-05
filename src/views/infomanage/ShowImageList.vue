@@ -22,11 +22,11 @@
         <!-- 内容部分 -->
         <div v-if="imageSrcList.length === 0" style="height:500px;">无图片或未选择节点</div>
         <div class="image_box img-list" v-else>
-          <el-card class="image_item item" v-for="(item, index) in imageSrcList" :key="item.pictureId">
-            <div class="wrapper">
+          <el-card class="image_item item" v-for="(item, index) in imageSrcList.slice((currentpageNum-1)*pageSize,currentpageNum * pageSize)" :key="item.pictureId">
+            <div class="wrapper" >
               <div class="imgBox">
                 <el-image :src="getImageUrlByUrl(item.lessPictureUrl)"
-                  :preview-src-list="imageSrcList.map(item => getImageUrlByUrl(item.pictureUrl))" ref="previewImg" :initial-index="index"
+                  :preview-src-list="imageSrcList.slice((currentpageNum-1)*pageSize,currentpageNum * pageSize).map(item => getImageUrlByUrl(item.pictureUrl))" ref="previewImg" :initial-index="index"
                   style="min-width: 168px;height:168px;text-align: center;line-height: 168px;font-size: 40px;"
                   fit="fill" lazy>
                   <template #placeholder>
@@ -38,9 +38,12 @@
                     </el-icon>
                   </template>
                 </el-image>
+                    
               </div>
+              
             </div>
-            <el-button class="delete_button" icon="Delete" size="large" circle type="danger" @click="deleteImage(index)"
+           
+            <el-button class="delete_button" icon="Delete" size="large" circle type="danger" @click="deleteImage(item.pictureId,item.pictureUrl)"
               v-hasPermi="['system:image:remove']"></el-button>
             <!--<el-button type="primary" @click="showImg">查看原图</el-button>
             <el-image-viewer
@@ -49,13 +52,27 @@
               :url-list="imageSrcList.map(item => getImageUrlByUrl(item.pictureUrl))"
             />-->
           </el-card>
+          <!--分页组件-->
+          
+        </div>
+        <!--分页组件-->
+        <div class="demo-pagination-block">
+          <el-pagination
+              background
+              :current-page="currrentpageNum"
+              :page-size="pageSize"
+              layout="prev, pager, next, jumper"
+              :total="totalPage"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+          />
         </div>
       </el-main>
     </el-container>
     <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible" center draggable width="50%">
-      <el-form ref="dataForm" :model="form" :rules="rules" label-position="left" label-width="100px">
-        <el-form-item label="节点名称：" prop="treeName">
-          <el-input v-model="form.treeName" placeholder="输入节点名称" />
+      <el-form ref="dataForm" :model="form" :rules="rules" label-position="left" label-width="110px">
+        <el-form-item label="节点新名称：" prop="treeName">
+          <el-input v-model="form.treeName" placeholder="输入节点新名称" />
         </el-form-item>
         <el-form-item label="是否公开：" prop="isShow">
           <el-switch v-model="form.isShow" />
@@ -72,35 +89,38 @@
     </el-dialog>
     <!-- 添加图片对话框 -->
     <el-dialog title="添加图片" v-model="imageDialog" center draggable width="50%">
-      <el-upload v-model:file-list="fileList" class="upload-demo" ref="upload" accept=".jpeg,.jpg,.png,.gif,.bmp,.webp"
+      <el-upload v-model:file-list="fileList" class="upload-demo" ref="upload" accept=".jpeg,.jpg,.png,.gif,.bmp,.webp,.zip,.rar"
         list-type="picture-card" :action="uploadUrl" :auto-upload="false"
-        :headers="{ 'Authorization': 'Bearer ' + getToken() }" :on-error="uploadImageError"
-        :on-success="uploadImageSuccess" :multiple="true">
+        :headers="{ 'Authorization': 'Bearer ' + getToken() }" :on-preview="handlePictureCardPreview" :on-error="uploadImageError"
+        :on-success="uploadImageSuccess" :before-upload="handleBeforeUpload" :on-change="handleUploadFile" :multiple="true">
         <el-button type="primary">Click to upload</el-button>
-        <!--
+        
         <template #tip>
           <div class="el-upload__tip">
-            jpg/png files with a size less than 500kb
+            <!-- jpg/png files with a size less than 500kb -->
+            png files with a size less than  50
           </div>
         </template>
-      -->
+      
       </el-upload>
-      <div slot="footer" class="dialog-footer">
+      <div class="dialog-footer">
         <el-button type="primary" @click="submitImage">
           添加
         </el-button>
-        <el-button @click="imageDialog = false">取消</el-button>
+        <!-- <el-button @click="imageDialog = false">取消</el-button> -->
+        <el-button @click="suspendSubmitImage">取消</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script setup name="showImageList">
-import { ref, getCurrentInstance, nextTick } from 'vue';
+import { ref,reactive,toRefs,getCurrentInstance, nextTick } from 'vue';
 import { getTreeNodeIdsByNode, getImageUrlByUrl } from '@/utils/tree';
 import { getTree, addNode, updateNode, deleteNodes } from '@/api/tree.js';
 import { getToken } from '@/utils/auth';
 import { getImagesBynodeId, deleteImageByIdAndUrl } from '@/api/infomanage/types';
+import zipLogo from '@/assets/zip/zip.webp'
 
 const props = defineProps({
   treeType: {
@@ -108,6 +128,7 @@ const props = defineProps({
     default: 1
   }
 });
+
 
 // vue实例
 const { proxy: { $modal } } = getCurrentInstance();
@@ -119,6 +140,33 @@ const loadingText = ref('加载中...');
 // 图片
 const imageSrcList = ref([]);
 
+//分页
+const currentPage1 = ref(5)
+const totalPage = ref(0);
+const currentpageNum = ref(1);//当前页数
+const pageSize = ref(12);
+
+const handleSizeChange = (val) => {
+  console.log(`${val} items per page`)
+  pageSize = val;
+}
+
+const handleCurrentChange = (val) => {
+  console.log(`current page: ${val}`)
+  currentpageNum.value = val; 
+}
+
+const dialogImageUrl = ref('');
+const dialogVisible = ref(false);
+
+const handlePictureCardPreview = (uploadFile) => {
+
+  console.log(uploadFile.url,'9999');
+
+  dialogImageUrl.value = uploadFile.url
+  dialogVisible.value = true
+
+}
 
 const imageList = [
   {
@@ -146,12 +194,34 @@ const imageList = [
     pictureUrl: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
   }];
 
-function deleteImage(index) {
+/* function deleteImage(index) {
+  //v-for="(item, index) in imageSrcList.slice((currentpageNum-1)*pageSize,currentpageNum * pageSize)" :key="item.pictureId"
   $modal.confirm('是否删除该图片?').then(() => {
+    
     const image = imageSrcList.value[index];
     imageSrcList.value.splice(index, 1);
     deleteImageByIdAndUrl(image.pictureId, image.pictureUrl).then(() => {
       $modal.msgSuccess('删除图片成功');
+      rowClick(curNode);
+    }, () => {
+      $modal.msgError('删除图片失败');
+
+    });
+  });
+} */
+
+function deleteImage(pictureId,pictureUrl) {
+  //v-for="(item, index) in imageSrcList.slice((currentpageNum-1)*pageSize,currentpageNum * pageSize)" :key="item.pictureId"
+  $modal.confirm('是否删除该图片?').then(() => {
+    
+   /*  const image = imageSrcList.value[index];
+    imageSrcList.value.splice(index, 1); */
+    const curNode = tree.value.getCurrentNode();
+    console.log(pictureId,pictureUrl,'0000');
+    const pictureIds = pictureId;
+    deleteImageByIdAndUrl(pictureId,pictureUrl).then(() => {
+      $modal.msgSuccess('删除图片成功');
+      rowClick(curNode);
     }, () => {
       $modal.msgError('删除图片失败');
     });
@@ -175,19 +245,76 @@ const uploadUrl = ref('');
 const submitImage = () => {
   imageDialog.value = false;
   uploadUrl.value = `${import.meta.env.VITE_APP_UPLOAD_URL}/system/picture/upload?isShow=1&treeId=${tree.value.getCurrentNode().treeId}`;
+  console.log(uploadUrl,'999');
   nextTick(async () => {
-    await upload.value.submit();
+    await upload.value.submit()
   });
   addImage();
 };
 
+const suspendSubmitImage = (file) =>{
+  nextTick(async () => {
+    await upload.value.abort()
+    handleRemove(file)
+    console.log(file);
+    $modal.msg('已取消图片提交！')
+  });
+  
+  imageDialog.value = false;
+}
+
+//try
+const handleUploadFile = (file) =>{
+  const fileType = file.name.substring(file.name.lastIndexOf('.') + 1)
+  
+  console.log('图片上传类型3', fileType)
+  if(fileType === 'zip')
+  {
+    var ImgOne = document.getElementsByClassName('el-upload-list__item-thumbnail')
+    setTimeout(() => {
+      for(let i = 0;i<ImgOne.length;i++)
+      {
+       const fileType2 = fileList.value[i].name.substring(fileList.value[i].name.lastIndexOf('.') + 1) 
+        console.log(fileList.value[0].name,333);
+        if(fileType2 === 'zip'){
+          ImgOne[i].src =  zipLogo
+        } 
+      }
+    },500)
+    
+  }
+
+}
+/* 
+//图片上传前触发
+const handleBeforeUpload = (file) => {
+    // 拿到文件后缀名
+    const fileType = file.name.substring(file.name.lastIndexOf('.') + 1)
+    console.log('图片上传类型', fileType)
+    // 当然拉我的需求是只需要图片和pdf，大家有需要可以在此处扩展
+    const isImage = fileType === 'png'
+    // const isLt1M = file.size / 1024 / 1024 < 1;
+    // 根据后缀名判断文件类型
+    if (!isImage) {
+        $modal.msgError('只能上传图片或压缩包格式的文件！', 'error', 'vab-hey-message-error')
+        return false
+    }
+    // 可以限制图片的大小
+    // if (!isLt1M) {
+    //     this.$message.error('上传图片大小不能超过 1MB!');
+    // }
+    return isImage
+}
+ */
 async function uploadImageSuccess() {
   $modal.msgSuccess('添加图片成功');
   fileList.value = [];
   const curNode = tree.value.getCurrentNode();
   imageSrcList.value = await getImagesBynodeId(curNode.treeId);
+  imageDialog.value = false;
   rowClick(curNode);
 }
+
 
 function uploadImageError() {
   $modal.msgError('添加图片失败');
@@ -339,6 +466,8 @@ function deleteNode() {
 async function rowClick(nodeObj) {
   loading.value = true;
   imageSrcList.value = await getImagesBynodeId(nodeObj.treeId);
+  totalPage.value = imageSrcList.value.length;
+  pageSize.value = 12;
   if(imageSrcList.length === 0){
     $modal.msgWarning('此节点无图片');
   }
@@ -350,9 +479,13 @@ async function rowClick(nodeObj) {
 
 <style scoped>
 :deep(.el-tree-node__label) {
-    font-size: 16px;
-    
+    font-size: 16px; 
 }
+
+:deep(.el-form-item__label) {
+    width: 110px;
+}
+
 
 :deep(.el-tree) {
     background-color: rgb(218,227,241);
@@ -561,3 +694,6 @@ async function rowClick(nodeObj) {
          0 1px 8px 0 rgba(0, 0, 0, 0.2); */
 }
 </style>
+
+
+

@@ -12,7 +12,11 @@
         <ShowCSVTable :url="curFileUrl" max-custom-h="200px" @getDates="getDates" />
 
         <div v-show="fileList.length">
-          <el-button class="btn tag_btn">时间选择</el-button>
+          <div class="time_title_container">
+            <div class="time_title">
+              时间选择
+            </div>            
+          </div>
           <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all
           </el-checkbox>
           <el-checkbox-group v-model="declaredDates" @change="handleCheckedDatesChange">
@@ -328,5 +332,21 @@ function getDates(dateArr) {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
   /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
          0 1px 8px 0 rgba(0, 0, 0, 0.2); */
+}
+
+.time_title_container{
+  margin:15px auto;
+  background-color: rgb(218,227,241);
+  height: 40px;
+  width: 200px;
+  border-radius: 50px;
+  letter-spacing: 2px;
+}
+
+.time_title{
+  margin: auto;
+  line-height: 40px;
+  text-align: center;
+  word-spacing: 20px;
 }
 </style>

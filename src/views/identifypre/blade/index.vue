@@ -87,7 +87,11 @@
             </div>
           </el-col>
           <el-col :span="12" style="padding-left:10px">
-            <el-button :disabled="false">叶片检测结果</el-button>
+            <div class="bladeContainer">
+              <div class="bladeTitle">
+                叶片检测结果
+              </div>
+            </div>
             <el-table :data="tableData" stripe style="width: 100%">
               <el-table-column prop="variety" label="类别" />
               <el-table-column prop="data" label="值" />
@@ -322,5 +326,22 @@ async function rowClick(nodeObj) {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
   /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
          0 1px 8px 0 rgba(0, 0, 0, 0.2); */
+}
+
+.bladeContainer{
+  height: 40px;
+  margin: auto;
+  margin-bottom: 10px;
+  width: 120px;
+  background-color: rgb(218,227,241);
+  border-radius: 40px;
+  text-align: center;
+}
+
+.bladeTitle{
+  font-size: 14px;
+  line-height: 40px;
+  color: grey;
+  letter-spacing: 2px;
 }
 </style>

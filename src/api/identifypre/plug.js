@@ -41,7 +41,8 @@ export function getCheckedGrowthImgByImg(treeId) {
     method:'get',
     params:{
       treeId
-    }
+    },
+    timeout: 1000*60
   })
 }
 

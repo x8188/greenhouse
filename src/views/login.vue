@@ -58,7 +58,9 @@
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
         </div>
       </el-form-item>
+      <!--
       <el-form-item style="width:100%;">
+       
         <el-button
           size="large"
           type="primary"
@@ -67,10 +69,12 @@
         >
           <span>用 户 登 入</span>
         </el-button>
+      
         <div style="float: right;" v-if="register">
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
         </div>
       </el-form-item>
+    -->
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
