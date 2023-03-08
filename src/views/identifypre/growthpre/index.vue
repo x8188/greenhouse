@@ -39,7 +39,7 @@
             <Download style="width: 1.5em; height: 1.5em; margin: auto;" />
           </el-button>
         </div>
-        <Histogram3D v-if="!histogramLoading && fileList.length" :xData="xData" :yData="yData" :tableData="tableData"
+        <Histogram3D v-if="!histogramLoading && fileList.length && histogrM3DShow" :xData="xData" :yData="yData" :tableData="tableData"
           class="histogram" />
         <div v-else class="histogram" v-loading="histogramLoading"></div>
       </el-main>
@@ -66,6 +66,7 @@ const loading = ref(false);
 const histogramLoading = ref(false);
 const trueResult = ref(true)
 const loadingText = ref('加载中...');
+const histogrM3DShow = ref(false)
 
 // 表格数据
 
@@ -163,11 +164,11 @@ async function startPre() {
     $modal.msgWarning('不能少于七个文件')
     histogramLoading.value = false;
   } else {
+    histogrM3DShow.value = true
     getPredictGrow({
       "ids": `${declaredDates.value[0].fileId},${declaredDates.value[1].fileId},${declaredDates.value[2].fileId},${declaredDates.value[3].fileId},${declaredDates.value[4].fileId},${declaredDates.value[5].fileId},${declaredDates.value[6].fileId}`
     }).then(res => {
       predictedUrl = res.msg;
-      console.log(res.msg);
     }).catch(err => {
       $modal.msgError('无法预测');
     });
@@ -188,7 +189,6 @@ async function startPre() {
         
         return obj
       })
-      predictedUrl = '';
       trueResult.value = true;
       histogramLoading.value = false;
     }
@@ -220,7 +220,6 @@ const tree = ref(null); // 树的dom实例
 const getTreeList = () => {
   //调用getTree接口
   getTree(treeType, 0, 1).then(res => {
-    console.log(res);
     routesData.value = res.data.children;
     nextTick(() => {
       //getCurrentNode	返回当前被选中节点的数据 (如果没有则返回 null)
@@ -236,14 +235,17 @@ getTreeList();
 
 
 function rowClick(nodeObj) {
+  histogrM3DShow.value = false
   loading.value = true;
-  console.log(nodeObj.object,"sss");
-  console.log(nodeObj.treeId, '777');
+ /*  tableData.value = [];
+  xData.value = [];
+  yData.value = []; */
+  histogramLoading.value = false;
   checkAll.value = false;
+  declaredDates.value = [];
   predictedUrl = '';
   //获取表格数据
   getTableData(nodeObj.treeId).then(res => {
-    console.log(res, '123');
     curFileUrl.value = res.msg;
     loading.value = false;
   }, err => {
@@ -257,7 +259,6 @@ function rowClick(nodeObj) {
 
 function getDates(dateArr) {
   dates.value = dateArr;
-  console.log('111', dates.value[0]);
 }
 
 

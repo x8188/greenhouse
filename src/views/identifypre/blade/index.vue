@@ -74,7 +74,7 @@
               <el-button @click="checkBlade">
                 叶片检测
               </el-button>
-              <el-image class="check_btn" :src="getImageUrlByUrl(bladeSrc)" :preview-src-list="[getImageUrlByUrl(bladeSrc)]">
+              <el-image class="check_btn" :src="getImageUrlByUrl(lessBladeSrc)" :preview-src-list="[getImageUrlByUrl(bladeSrc)]">
                 <template #placeholder>
                   <div class="image-slot">Loading<span class="dot">...</span></div>
                 </template>
@@ -183,13 +183,15 @@ async function nextPage() {
 
 const bladeLoading = ref(false);
 const bladeSrc = ref(''); // 叶片检测后略缩图片链接
+const lessBladeSrc = ref('')
 // 检测方法
 function checkBlade() {
   bladeLoading.value = true;
   imageLoading.value = true;
   getCheckedLeafImgByImg(curImageSrc.value.pictureUrl).then(res => {
     bladeSrc.value = res.picture;
-    delete res.picture;
+    lessBladeSrc.value = res.lesspicture;
+    delete res.lesspicture;
     tableData.value.map(item => {
       item.data = res[item.variety];
       return item;

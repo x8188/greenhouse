@@ -6,7 +6,8 @@ export function getImagesBynodeId(treeId) {
     method: 'get',
     params: {
       treeId
-    }
+    },
+    timeout: 1000*600
   });
 }
 
@@ -18,7 +19,7 @@ export function getCheckedGreenImgByImg(pictureUrl) {
     params: {
       fileUrl: pictureUrl
     },
-    timeout: 1000*60
+    timeout: 1000*600
   })
 }
 
@@ -30,7 +31,7 @@ export function getCheckedHoleImgByImg(pictureUrl) {
     params: {
       fileUrl: pictureUrl
     },
-    timeout: 1000*60
+    timeout: 1000*600
   })
 }
 
@@ -42,7 +43,7 @@ export function getCheckedGrowthImgByImg(treeId) {
     params:{
       treeId
     },
-    timeout: 1000*60
+    timeout: 1000*600
   })
 }
 

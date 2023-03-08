@@ -6,7 +6,8 @@ export function getImagesBynodeId(treeId) {
     method: 'get',
     params: {
       treeId
-    }
+    },
+    timeout: 1000*600
   });
 }
 

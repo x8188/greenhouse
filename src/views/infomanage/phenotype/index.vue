@@ -90,13 +90,13 @@
               @keyup.enter="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="日期" prop="dateTime">
+          <!-- <el-form-item label="日期" prop="dateTime">
             <el-date-picker
               v-model="queryParams.dateTime"
               type="datetime"
               placeholder="选择一个日期"
             />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             <el-button
               type="primary"
@@ -258,6 +258,8 @@
     <el-dialog
       :title="textMap[dialogStatus]"
       v-model="dialogFormVisible"
+      :close-on-click-modal = false
+      @close="dialogClosed"
       center
       draggable
       width="50%"
@@ -281,7 +283,7 @@
             type="datetime"
             placeholder="选择一个日期"
           />
-        </el-form-item>
+        </el-form-item> 
         <el-form-item label="是否公开" prop="fileStatus">
           <el-switch v-model="dataForm.fileStatus" />
         </el-form-item>
@@ -395,6 +397,11 @@ function resetForm() {
   dataForm.description = "";
   dataForm.fileStatus = true;
   dataForm.dateTime = null;
+}
+
+const dialogClosed = () =>{
+  getList();
+  console.log("我被调用了");
 }
 
 // 开启文件详情窗口
@@ -751,7 +758,7 @@ function updateChildNode() {
     $modal.msgWarning("请选择所要修改节点的父节点");
     return;
   }
-  resetTreeForm();
+  //resetTreeForm();
   dialogTreeStatus.value = "updateNode";
   dialogTreeFormVisible.value = true;
 }
@@ -819,6 +826,13 @@ function deleteNode() {
 }
 
 function rowClick(nodeObj) {
+  treeForm.treeName = nodeObj.treeName;
+  if(nodeObj.isShow == 1){
+    treeForm.isShow == true
+  }else{
+    treeForm.isShow == false
+  }
+
   queryParams.treeId = nodeObj.treeId;
   getList();
 }

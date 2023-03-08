@@ -7,7 +7,8 @@ export function getTableData(treeId) {
     method: 'get',
     params: {
       treeId
-    }
+    },
+    timeout: 1000*600000
   })
 }
 
