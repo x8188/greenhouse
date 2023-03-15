@@ -297,6 +297,14 @@ getTreeList();
 
 // 点击树节点回调
 async function rowClick(nodeObj) {
+  //再不能测试的情况下的新增
+  curGrowthDetected.value = "";
+  curGrowthDetected.value = "";  // 生长点检测略缩图片
+  curGrowthDetectedPre.value = "";  // 生长点检测图片
+  curPlugDetected.value = "";  //苗盘穴孔检测略缩图片
+  curPlugDetectedPre.value = "";  //苗盘穴孔检测图片
+  curGreenDetected.value = ""; // 苗盘超绿检测略缩图片
+  curGreenDetectedPre.value = ""; // 苗盘超绿检测图片
   loading.value = true;
   imageList.value = await getImagesBynodeId(nodeObj.treeId);
   //

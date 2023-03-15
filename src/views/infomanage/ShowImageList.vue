@@ -67,7 +67,11 @@
             >添加图片</el-button
           >
           当前节点是否公开：
-          <el-switch disabled v-model="nodeIsShow" />
+          <el-switch
+            v-hasPermi="['system:node:update']"
+            v-model="nodeIsShow"
+            @change="switchChange()"
+          />
         </div>
         <!-- 内容部分 -->
         <div v-if="imageSrcList.length === 0" style="height: 500px">
@@ -209,9 +213,7 @@
         <el-button type="primary">Click to upload</el-button>
 
         <template #tip>
-          <div class="el-upload__tip">
-            请上传图片或压缩包
-          </div>
+          <div class="el-upload__tip">请上传图片或压缩包</div>
         </template>
       </el-upload>
       <div class="dialog-footer">
@@ -242,7 +244,6 @@ const props = defineProps({
   },
 });
 
-const nodeIsShow = ref(true);
 
 // vue实例
 const {
@@ -314,7 +315,6 @@ const imageList = [
   },
 ];
 
-
 function deleteImage(pictureId, pictureUrl) {
   $modal.confirm("是否删除该图片?").then(() => {
     const curNode = tree.value.getCurrentNode();
@@ -345,7 +345,6 @@ const fileList = ref([]);
 // 提交添加图片
 const upload = ref(null);
 const uploadUrl = ref("");
-
 
 const submitImage = () => {
   imageDialog.value = false;
@@ -387,12 +386,12 @@ const handleUploadFile = (file) => {
         console.log(fileList.value[0].name, 333);
         if (fileType2 === "zip") {
           ImgOne[i].src = zipLogo;
-        }else if(fileType2 === "rar"){
+        } else if (fileType2 === "rar") {
           ImgOne[i].src = zipLogo;
         }
       }
     }, 500);
-  }else if(fileType === "rar"){
+  } else if (fileType === "rar") {
     var ImgOne = document.getElementsByClassName(
       "el-upload-list__item-thumbnail"
     );
@@ -404,7 +403,7 @@ const handleUploadFile = (file) => {
         console.log(fileList.value[0].name, 333);
         if (fileType2 === "zip") {
           ImgOne[i].src = zipLogo;
-        }else if(fileType2 === "rar"){
+        } else if (fileType2 === "rar") {
           ImgOne[i].src = zipLogo;
         }
       }
@@ -416,7 +415,7 @@ const handleUploadFile = (file) => {
 const handleBeforeUpload = (file) => {
   // 拿到文件后缀名
   const fileType = file.name.substring(file.name.lastIndexOf(".") + 1);
-  const whiteList = ["png", "jpg", "jpeg", "bmp","webp","zip", "rar"];
+  const whiteList = ["png", "jpg", "jpeg", "bmp", "webp", "zip", "rar"];
   console.log("图片上传类型", fileType);
 
   if (whiteList.indexOf(fileType) === -1) {
@@ -430,10 +429,9 @@ const handleBeforeUpload = (file) => {
 };
 
 async function uploadImageSuccess(res) {
-  console.log(res.msg,'lll');
+  console.log(res.msg, "lll");
   $modal.msgSuccess(res.msg);
-  
-  
+
   fileList.value = [];
   const curNode = tree.value.getCurrentNode();
   imageSrcList.value = await getImagesBynodeId(curNode.treeId);
@@ -444,8 +442,6 @@ async function uploadImageSuccess(res) {
 function uploadImageError() {
   $modal.msgError("添加图片失败");
 }
-
-
 
 const previewImg = ref(null);
 const viewBigPicture = () => {
@@ -503,7 +499,7 @@ function createData() {
         treeType: props.treeType,
       }).then(
         (res) => {
-          console.log(res,'0000');
+          console.log(res, "0000");
           $modal.msgSuccess("添加节点成功");
           getTreeList();
         },
@@ -526,18 +522,43 @@ function updateData() {
       }).then(
         () => {
           $modal.msgSuccess("修改成功");
-          async()=>{
+          async () => {
             await getTreeList();
-          }
+          };
         },
         () => {
           $modal.msgError("修改失败");
         }
       );
       dialogFormVisible.value = false;
+      rowClick(tree.value.getCurrentNode());
     }
   });
 }
+
+
+const nodeIsShow = ref(true);
+const switchChange = () => {
+  console.log(nodeIsShow.value,'opop');
+  updateNode({
+    //尝试改改
+    isShow: nodeIsShow ? 1 : 0,
+    treeName: form.treeName,
+    treeId: tree.value.getCurrentNode().treeId,
+  }).then(
+    () => {
+      $modal.msgSuccess("修改成功");
+      async () => {
+        await getTreeList();
+      };
+    },
+    () => {
+      $modal.msgError("修改失败");
+    }
+  );
+  rowClick(tree.value.getCurrentNode());
+};
+
 
 // 树控件
 const routesData = ref([]);
@@ -607,20 +628,19 @@ function deleteNode() {
 }
 // 点击树节点时的回调
 async function rowClick(nodeObj) {
-
   currentpageNum.value = 1;
 
-  console.log(currentpageNum.value,'0000'); 
 
   form.treeName = nodeObj.treeName;
-  if(nodeObj.isShow == 1){
+  if (nodeObj.isShow == 1) {
     form.isShow = true;
     nodeIsShow.value = true;
-  }else{
+  } else {
     form.isShow = false;
     nodeIsShow.value = false;
   }
-  
+
+  console.log(nodeObj.isShow,'oooo');
 
   loading.value = true;
   imageSrcList.value = await getImagesBynodeId(nodeObj.treeId);

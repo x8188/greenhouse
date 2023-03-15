@@ -228,6 +228,15 @@ const getTreeList = () => {
 getTreeList();
 
 async function rowClick(nodeObj) {
+  //再不能检测情况下的更改
+  console.log(tableData.value[0].data,'ppp');
+  tableData.value[0].data = "";
+  tableData.value[1].data = "";
+  tableData.value[2].data = "";
+  tableData.value[3].data = "";
+  tableData.value[4].data = "";
+  bladeSrc.value = "";
+  lessBladeSrc.value = "";
   loading.value = true;
   imageList.value = await getImagesBynodeId(nodeObj.treeId);
   //imageSrcList.value = imageList.value.slice(0, imageList.value.length > 5 ? 5 : imageList.value.length);

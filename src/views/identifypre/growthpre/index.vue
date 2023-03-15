@@ -17,10 +17,10 @@
               时间选择
             </div>            
           </div>
-          <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all
+          <el-checkbox :disabled="histogramLoading === true " v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">Check all
           </el-checkbox>
-          <el-checkbox-group v-model="declaredDates" @change="handleCheckedDatesChange">
-            <el-checkbox v-for="date in fileList" :key="date" :label="date">{{
+          <el-checkbox-group :disabled="histogramLoading === true " v-model="declaredDates" @change="handleCheckedDatesChange">
+            <el-checkbox :disabled="histogramLoading === true " v-for="date in fileList" :key="date" :label="date">{{
                 date.dateTime
             }}</el-checkbox>
           </el-checkbox-group>
@@ -198,7 +198,7 @@ async function startPre() {
 
 // 下载预测结果
 function downloadPreResult() {
-  if (predictedUrl === '') {
+  if (predictedUrl === '' || histogramLoading.value === true) {
     $modal.msgWarning('未预测结果，请先预测')
     return
   }
