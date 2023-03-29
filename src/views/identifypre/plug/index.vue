@@ -8,32 +8,6 @@
       </el-aside>
       <!-- //右边的盒子 -->
       <el-main width="78%" style="padding:0" class="right-box">
-        <!-- 图片部分 
-        <div v-if="imageSrcList.length === 0">无图片</div>
-        <el-row v-else v-loading="imageLoading" justify="start" align="middle">
-          <el-col :span="2" class="info_btn">
-            <el-button plain @click.passive="prevPage" circle icon="ArrowLeftBold" :disabled="currentPage === 1">
-            </el-button>
-          </el-col>
-          <el-col v-for="(src, index) in imageSrcList" :key="src.pictureId" :span="4">
-            <el-image :src="getImageUrlByUrl(src.pictureUrl)" fit="contain" @click.passive="clickImage(index)">
-              <template #error>
-                <div>
-                  <el-icon>
-                    <Picture />
-                  </el-icon>
-                </div>
-              </template>
-            </el-image>
-          </el-col>
-          
-          <el-col :span="2" class="info_btn">
-            <el-button plain @click.passive="nextPage" circle icon="ArrowRightBold"
-              :disabled="currentPage === totalPage">
-            </el-button>
-          </el-col>
-        </el-row>
-      -->
         <el-carousel :interval="4000" :autoplay="false" type="card" trigger="click" height="200px">
           <el-carousel-item v-for="(src, index) in imageSrcList" :key="index">
             <el-image :src="getImageUrlByUrl(src.lessPictureUrl)"  fit="contain" @click.passive="clickImage(index)">
@@ -157,82 +131,13 @@ function showImg(){
   $modal.msg('等待图片加载');
 }
 
-
-
-/*
-// 上一页图片
-async function prevPage() {
-  currentPage.value--;
-  imageLoading.value = true;
-  let start = (currentPage.value - 1) * 5;
-  imageSrcList.value = imageList.value.slice(start, start + 5);
-  curImageSrc.value = imageSrcList.value[0];
-  imageLoading.value = false;
-}
-
-// 下一页图片
-async function nextPage() {
-  currentPage.value++;
-  imageLoading.value = true;
-  let start = (currentPage.value - 1) * 5;
-  imageSrcList.value = imageList.value.slice(start, currentPage.value === totalPage.value ? start + (imageList.value.length - start) % 5 : start + 5);
-  curImageSrc.value = imageSrcList.value[0];
-  imageLoading.value = false;
-}
-*/
-
 const growLoading = ref(false);
 const greenLoding = ref(false);
 const holeLoading = ref(false);
 
 // 检测方法
-/*
-function checkGrow() {
-  growLoading.value = true;
-  getCheckedGrowthImgByImg(curImageSrc.value.pictureUrl).then(res => {
-    curGrowthDetected.value = res.msg;
-    growLoading.value = false;
-  }, err => {
-    growLoading.value = false;
-  });
-}
-*/
 
-/*
-//苗盘生长检测
-function checkGrow() {
-  growLoading.value = true;
-  console.log(tree.value.getCurrentNode());
-  const nodeObj = rowClick(tree.value.getCurrentNode());
-  getCheckedGrowthImgByImg(nodeObj.treeId).then(res => {
-    curGrowthDetected.value = res.data;
-    growLoading.value = false;
-  }, err => {
-    growLoading.value = false;
-  })
-}
-*/
-
-/*
-function checkGrow() {
-  growLoading.value = true;
-  getTree(treeType, 0, 1).then(res => {
-    routesData.value = res.data.children;
-    nextTick(() => {
-      const nodeObj = tree.value.getCurrentNode();
-      console.log(nodeObj.treeId);
-      getCheckedGrowthImgByImg(nodeObj.treeId).then(res => {
-        console.log(res);
-        curGrowthDetected.value = res.data;
-        growLoading.value = false;
-      }, err => {
-        growLoading.value = false;
-      })
-    });
-  });
-}
-*/
-
+//苗盘生长点检测
 function checkGrow() {
   growLoading.value = true;
       getCheckedGrowthImgByImg(curImageSrc.value.pictureId).then(res => {
@@ -243,22 +148,19 @@ function checkGrow() {
       }, err => {
         growLoading.value = false;
       })
-   
-
 }
-
+//苗盘穴孔检测
 function checkHoles() {
   holeLoading.value = true;
   getCheckedHoleImgByImg(curImageSrc.value.pictureUrl).then(res => {
     curPlugDetected.value = res.lessPicture;
     curPlugDetectedPre.value = res.pictureDeal;
-    console.log(res,'111');
     holeLoading.value = false;
   }, err => {
     holeLoading.value = false;
   });
 }
-
+//苗盘超绿检测
 function checkGreen() {
   greenLoding.value = true;
   getCheckedGreenImgByImg(curImageSrc.value.pictureUrl).then(res => {
@@ -280,10 +182,9 @@ const defaultProps = ref({
 const treeType = 2;  // 树的种类
 const tree = ref(null); // 树的dom实例
 
-
+//获得树列表
 const getTreeList = () => {
   getTree(treeType, 0, 1).then(res => {
-    console.log(res);
     routesData.value = res.data.children;
     nextTick(() => {
       if (!tree.value.getCurrentNode())
@@ -297,8 +198,6 @@ getTreeList();
 
 // 点击树节点回调
 async function rowClick(nodeObj) {
-  //再不能测试的情况下的新增
-  curGrowthDetected.value = "";
   curGrowthDetected.value = "";  // 生长点检测略缩图片
   curGrowthDetectedPre.value = "";  // 生长点检测图片
   curPlugDetected.value = "";  //苗盘穴孔检测略缩图片
@@ -307,8 +206,6 @@ async function rowClick(nodeObj) {
   curGreenDetectedPre.value = ""; // 苗盘超绿检测图片
   loading.value = true;
   imageList.value = await getImagesBynodeId(nodeObj.treeId);
-  //
-  //curGreenDetected.value =await getCheckedGrowthImgByImg(nodeObj.treeId);
   imageSrcList.value = imageList.value;
   if(imageList.value.length>1){
     showImg()
@@ -317,7 +214,6 @@ async function rowClick(nodeObj) {
     $modal.msg('此节点无图片！');
   }
   currentPage.value = 1;
-  //totalPage.value = Math.ceil(imageList.value.length / 5);
   curImageSrc.value = imageSrcList.value[0];
   loading.value = false;
 }
@@ -338,9 +234,6 @@ async function rowClick(nodeObj) {
 }
 
 .right-box {
-  // background-color: #fff;
-  // border:1px solid #ccc;
-  // margin-bottom: 50px;
   margin-left: 20px;
 }
 
@@ -373,15 +266,9 @@ async function rowClick(nodeObj) {
 .mokuai {
   margin-bottom: 0;
   background-color: rgb(218,227,241);
-  // box-shadow:2px 2px 5px #000;
-  // border:1px solid #ccc;
-  // margin-bottom: 50px;
 }
 
 .right-box {
-  // background-color: #fff;
-  // border:1px solid #ccc;
-  // margin-bottom: 50px;
   margin-left: 20px;
 }
 
@@ -400,8 +287,6 @@ async function rowClick(nodeObj) {
 
 .shadow {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
-  /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
-         0 1px 8px 0 rgba(0, 0, 0, 0.2); */
 }
 
 .el-image img {

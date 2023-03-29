@@ -8,7 +8,6 @@
 import { ref,watchEffect } from 'vue';
 import { getJsonByCSV,jsonToTable } from '@/utils/tree';
 
-// const url = 'src/assets/2022-5-5-16.00.csv';
 const props = defineProps({
   url: {
     type: String,
@@ -27,7 +26,6 @@ const tableData = ref([]);
 watchEffect(() => {
   if (props.url) {
     getJsonByCSV(props.url).then(result => {
-      console.log(result,'kkk');
       tableProps.value = result[0]
       tableData.value = jsonToTable(result)
       emits('getDates', result[0].slice(1))

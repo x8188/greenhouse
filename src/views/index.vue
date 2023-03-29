@@ -4,10 +4,9 @@
       <el-col :sm="24" :lg="24">
         <blockquote  style="font-size: 24px">
           <img src="@/assets/logo/logo.png" style="width:50px;height:50px" alt="">
-          <div>欢迎来到种苗管理系统！</div>
+          <div>欢迎来到表型管理系统！</div>
           <br />
         </blockquote>
-
         <hr />
       </el-col>
     </el-row>
@@ -89,7 +88,6 @@
 <script setup name="Index">
 import useUserStore from '@/store/modules/user';
 const user = useUserStore()
-console.log(user.roles)
 const version = ref('3.8.2')
 
 function goTarget(url) {
@@ -98,6 +96,12 @@ function goTarget(url) {
 </script>
 
 <style scoped lang="scss">
+
+
+.app-container{
+  background: linear-gradient(90.21deg, #eeeeee -5.91%, #c5ebc0 111.58%);
+  opacity: 1;
+}
 
 .projectcard_bigContainer{
   display: flex;
@@ -109,8 +113,8 @@ function goTarget(url) {
 }
 
 .project_imgbox {
-  width:25vw;
-  height: 20vw;
+  width:380px;
+  height: 300px;
     position: relative;
     border-radius: 20px;
     overflow: hidden;

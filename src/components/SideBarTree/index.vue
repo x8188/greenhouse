@@ -85,13 +85,13 @@ function addChildNode() {
 }
 
 function deleteNode() {
-  console.log('delete', tree.value.getCurrentNode());
+  //console.log('delete', tree.value.getCurrentNode());
 }
 
 async function rowClick(nodeObj, node, event) {
-  console.log('nodeObj', nodeObj);
+  /* console.log('nodeObj', nodeObj);
   console.log('node', node);
-  console.log('event', event);
+  console.log('event', event); */
   loading.value = true;
   imageSrcList.value = await getImageList();
   loading.value = false;

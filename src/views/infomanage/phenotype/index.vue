@@ -125,8 +125,8 @@
           </el-col>
           <el-col :span="1.5">
             <!--<el-button type="danger" plain icon="Delete" size="small" :disabled="multiple"
-                            @click="handleDelete" v-hasPermi="['system:logininfor:remove']">删除</el-button>
-                        -->
+              @click="handleDelete" v-hasPermi="['system:logininfor:remove']">删除</el-button>
+          -->
             <el-button
               type="danger"
               plain
@@ -138,7 +138,6 @@
               >删除</el-button
             >
           </el-col>
-          <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
         </el-row>
         <!-- 表格部分 -->
         <el-table
@@ -258,7 +257,7 @@
     <el-dialog
       :title="textMap[dialogStatus]"
       v-model="dialogFormVisible"
-      :close-on-click-modal = false
+      :close-on-click-modal="false"
       @close="dialogClosed"
       center
       draggable
@@ -283,7 +282,7 @@
             type="datetime"
             placeholder="选择一个日期"
           />
-        </el-form-item> 
+        </el-form-item>
         <el-form-item label="是否公开" prop="fileStatus">
           <el-switch v-model="dataForm.fileStatus" />
         </el-form-item>
@@ -389,19 +388,15 @@ const rules = reactive({
 
 const drawer = ref(false); // 文件详情窗口开启状态
 const fileName = ref(""); // 选中文件名
-const curFileUrl = ref("");
+const curFileUrl = ref("");//文件路径
 
+//表单重置
 function resetForm() {
   dataForm.fileId = null;
   dataForm.fileName = "";
   dataForm.description = "";
   dataForm.fileStatus = true;
   dataForm.dateTime = null;
-}
-
-const dialogClosed = () =>{
-  getList();
-  console.log("我被调用了");
 }
 
 // 开启文件详情窗口
@@ -417,12 +412,11 @@ const upload = ref(null);
 const uploadUrl = ref("");
 
 //文件上传前触发
+//文件格式验证
 const handleBeforeUpload = (file) => {
   // 拿到文件后缀名
   const fileType = file.name.substring(file.name.lastIndexOf(".") + 1);
-  console.log("文件上传类型", fileType);
   const isCsv = fileType === "csv";
-  // const isLt1M = file.size / 1024 / 1024 < 1;
   if (!isCsv) {
     $modal.msgError(
       "只能上传csv格式的文件！",
@@ -453,13 +447,11 @@ function createData() {
       });
     }
   });
-  console.log("文件上传");
   dialogFormVisible.value = false;
-  //rowClick(curNode);
   getList();
   setTimeout(() => {
-      getList();
- },1000)
+    getList();
+  }, 1000);
 }
 
 //取消文件对话框
@@ -469,46 +461,29 @@ function deleteUploadData() {
   getList();
 }
 
+//关闭添加文件窗口
+const dialogClosed = () => {
+  getList();
+};
+
 // 文件上传成功回调
 async function uploadFileSuccess() {
-  console.log('为甚');
-  console.log("上传成功");
   $modal.msgSuccess("上传成功");
 
   isDisabled.value = false;
   const curNode = tree.value.getCurrentNode();
   //upload.value.clearFiles();
 
-    console.log("我想刷新");
-    getList();
-    rowClick(curNode);
-    dialogFormVisible.value = false;
+  getList();
+  rowClick(curNode);
+  dialogFormVisible.value = false;
 }
-
-/*
-function beforeAvatarUpload(rawFile) {
-    console.log(rawFile);
-    console.log(rawFile.type);
-    let fileArr = file.name.split('.')
-    let suffix = fileArr[fileArr.length - 1]
-    if (!/(csv)/i.test(suffix)) {
-        ElMessage.error('请输入正确格式文件!')
-        return false
-      }
-    
-    if (rawFile.type !== 'text/csv') {
-        ElMessage.error('请输入正确格式文件!')
-        return false
-    }
-    
-    return true
-}
-*/
 
 // 文件上传失败回调
 function uploadFileError() {
   $modal.msgError("上传失败");
 }
+
 // 文件替换
 function handleExceed(files) {
   upload.value?.clearFiles();
@@ -549,6 +524,7 @@ function handleAdd() {
   dialogFormVisible.value = true;
   isDisabled.value = false;
 }
+
 // 删除文件
 function handleDelete() {
   if (ids.value.length == 0) {
@@ -580,9 +556,7 @@ function getList() {
         ...item,
         fileStatus: item.fileStatus === 1,
       }));
-      console.log(fileList, "666");
       total.value = res.total;
-      //isDisabled.value = false;
     })
     .catch((err) => {
       tableLoading.value = false;
@@ -592,15 +566,7 @@ function getList() {
 
 // 选择文件项
 function handleSelectionChange(selection) {
-  /*
-    if (selection.length !== 1) {
-        multiple.value = true;
-    } else {
-        multiple.value = false;
-    }
-    */
   ids.value = [];
-  console.log(selection, "ppp");
   selection.forEach((item) => {
     ids.value.push(item.fileId);
   });
@@ -684,7 +650,7 @@ const resetQuery = () => {
 
 // 树控件
 const routesData = ref([
-  {
+ /*  {
     treeName: "Level one 1",
     treeId: "1",
     children: [
@@ -699,12 +665,14 @@ const routesData = ref([
         ],
       },
     ],
-  },
+  }, */
 ]);
+
+// 树表单
 const treeForm = reactive({
   treeName: "",
   isShow: true,
-}); // 树表单
+}); 
 
 const dialogTreeFormVisible = ref(false); // 树表单可见
 const dataTreeForm = ref(null); // 树表单dom实例
@@ -730,6 +698,7 @@ const tree = ref(null); // 数的dom实例
 const getTreeList = () => {
   getTree(treeType.value, 0, 1).then((res) => {
     routesData.value = res.data.children;
+    console.log(routesData.value,'9090');
     nextTick(() => {
       if (!tree.value.getCurrentNode())
         tree.value.setCurrentNode(routesData.value[0]);
@@ -737,11 +706,13 @@ const getTreeList = () => {
     });
   });
 };
+
 // 重置树表单
 function resetTreeForm() {
   treeForm.treeName = "";
   treeForm.isShow = true;
 }
+
 // 添加节点
 function addChildNode() {
   if (!tree.value.getCurrentNode() && routesData.value.length !== 0) {
@@ -752,16 +723,17 @@ function addChildNode() {
   dialogTreeStatus.value = "createNode";
   dialogTreeFormVisible.value = true;
 }
+
 // 修改节点
 function updateChildNode() {
   if (!tree.value.getCurrentNode()) {
     $modal.msgWarning("请选择所要修改节点的父节点");
     return;
   }
-  //resetTreeForm();
   dialogTreeStatus.value = "updateNode";
   dialogTreeFormVisible.value = true;
 }
+
 // 创建树节点
 function createTreeData() {
   dataTreeForm.value.validate((valid) => {
@@ -787,6 +759,7 @@ function createTreeData() {
     }
   });
 }
+
 // 更新树节点
 function updateTreeData() {
   dataTreeForm.value.validate((valid) => {
@@ -825,12 +798,13 @@ function deleteNode() {
   });
 }
 
+//树控件点击回调
 function rowClick(nodeObj) {
   treeForm.treeName = nodeObj.treeName;
-  if(nodeObj.isShow == 1){
-    treeForm.isShow == true
-  }else{
-    treeForm.isShow == false
+  if (nodeObj.isShow == 1) {
+    treeForm.isShow == true;
+  } else {
+    treeForm.isShow == false;
   }
 
   queryParams.treeId = nodeObj.treeId;

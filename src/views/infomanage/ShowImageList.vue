@@ -66,12 +66,13 @@
             v-hasPermi="['system:image:add']"
             >添加图片</el-button
           >
-          当前节点是否公开：
-          <el-switch
+          
+          当前节点状态：
+           <el-switch
             v-hasPermi="['system:node:update']"
             v-model="nodeIsShow"
             @change="switchChange()"
-          />
+          /> 
         </div>
         <!-- 内容部分 -->
         <div v-if="imageSrcList.length === 0" style="height: 500px">
@@ -123,7 +124,7 @@
                 </el-image>
               </div>
             </div>
-
+ 
             <el-button
               class="delete_button"
               icon="Delete"
@@ -132,9 +133,8 @@
               type="danger"
               @click="deleteImage(item.pictureId, item.pictureUrl)"
               v-hasPermi="['system:image:remove']"
-            ></el-button>
+            ></el-button> 
           </el-card>
-          <!--分页组件-->
         </div>
         <!--分页组件-->
         <div class="demo-pagination-block">
@@ -218,7 +218,6 @@
       </el-upload>
       <div class="dialog-footer">
         <el-button type="primary" @click="submitImage"> 添加 </el-button>
-        <!-- <el-button @click="imageDialog = false">取消</el-button> -->
         <el-button @click="suspendSubmitImage">取消</el-button>
       </div>
     </el-dialog>
@@ -244,7 +243,6 @@ const props = defineProps({
   },
 });
 
-
 // vue实例
 const {
   proxy: { $modal },
@@ -263,12 +261,10 @@ const currentpageNum = ref(1); //当前页数
 const pageSize = ref(12);
 
 const handleSizeChange = (val) => {
-  console.log(`${val} items per page`);
-  pageSize = val;
+  pageSize.value = val;
 };
 
 const handleCurrentChange = (val) => {
-  console.log(`current page: ${val}`);
   currentpageNum.value = val;
 };
 
@@ -276,8 +272,6 @@ const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 
 const handlePictureCardPreview = (uploadFile) => {
-  console.log(uploadFile.url, "9999");
-
   dialogImageUrl.value = uploadFile.url;
   dialogVisible.value = true;
 };
@@ -318,7 +312,6 @@ const imageList = [
 function deleteImage(pictureId, pictureUrl) {
   $modal.confirm("是否删除该图片?").then(() => {
     const curNode = tree.value.getCurrentNode();
-    console.log(pictureId, pictureUrl, "0000");
     const pictureIds = pictureId;
     deleteImageByIdAndUrl(pictureId, pictureUrl).then(
       () => {
@@ -363,14 +356,13 @@ const suspendSubmitImage = (file) => {
   nextTick(async () => {
     await upload.value.abort();
     handleRemove(file);
-    console.log(file);
     $modal.msg("已取消图片提交！");
   });
 
   imageDialog.value = false;
 };
 
-//try
+//文件上传回调
 const handleUploadFile = (file) => {
   const fileType = file.name.substring(file.name.lastIndexOf(".") + 1);
 
@@ -383,7 +375,6 @@ const handleUploadFile = (file) => {
         const fileType2 = fileList.value[i].name.substring(
           fileList.value[i].name.lastIndexOf(".") + 1
         );
-        console.log(fileList.value[0].name, 333);
         if (fileType2 === "zip") {
           ImgOne[i].src = zipLogo;
         } else if (fileType2 === "rar") {
@@ -400,7 +391,6 @@ const handleUploadFile = (file) => {
         const fileType2 = fileList.value[i].name.substring(
           fileList.value[i].name.lastIndexOf(".") + 1
         );
-        console.log(fileList.value[0].name, 333);
         if (fileType2 === "zip") {
           ImgOne[i].src = zipLogo;
         } else if (fileType2 === "rar") {
@@ -416,8 +406,6 @@ const handleBeforeUpload = (file) => {
   // 拿到文件后缀名
   const fileType = file.name.substring(file.name.lastIndexOf(".") + 1);
   const whiteList = ["png", "jpg", "jpeg", "bmp", "webp", "zip", "rar"];
-  console.log("图片上传类型", fileType);
-
   if (whiteList.indexOf(fileType) === -1) {
     $modal.msgError(
       "只能上传图片或压缩包格式的文件！",
@@ -428,8 +416,8 @@ const handleBeforeUpload = (file) => {
   }
 };
 
+//图片上传成功回调
 async function uploadImageSuccess(res) {
-  console.log(res.msg, "lll");
   $modal.msgSuccess(res.msg);
 
   fileList.value = [];
@@ -439,6 +427,7 @@ async function uploadImageSuccess(res) {
   rowClick(curNode);
 }
 
+//图片上传失败回调
 function uploadImageError() {
   $modal.msgError("添加图片失败");
 }
@@ -455,7 +444,6 @@ const showImg = () => {
   showImageViewer.value = true;
 };
 const close = () => {
-  //必须要这个事件 不然点击右上角关闭按钮没有反应
   showImageViewer.value = false;
 };
 
@@ -486,6 +474,7 @@ const rules = reactive({
   isShow: [{ required: true, message: "请选择", trigger: "blur" }],
 });
 
+//添加节点
 function createData() {
   dataForm.value.validate((valid) => {
     if (valid) {
@@ -499,7 +488,6 @@ function createData() {
         treeType: props.treeType,
       }).then(
         (res) => {
-          console.log(res, "0000");
           $modal.msgSuccess("添加节点成功");
           getTreeList();
         },
@@ -512,6 +500,7 @@ function createData() {
   });
 }
 
+//更新节点状态
 function updateData() {
   dataForm.value.validate((valid) => {
     if (valid) {
@@ -522,60 +511,51 @@ function updateData() {
       }).then(
         () => {
           $modal.msgSuccess("修改成功");
-          async () => {
-            await getTreeList();
-          };
+          getTreeList();
         },
         () => {
           $modal.msgError("修改失败");
+          getTreeList();
         }
       );
       dialogFormVisible.value = false;
-      rowClick(tree.value.getCurrentNode());
     }
   });
 }
 
-
 const nodeIsShow = ref(true);
+//更新节点状态
 const switchChange = () => {
-  console.log(nodeIsShow.value,'opop');
+  //const curNodes = tree.value.getCurrentNode();
   updateNode({
     //尝试改改
-    isShow: nodeIsShow ? 1 : 0,
+    isShow: nodeIsShow.value ? 1 : 0,
     treeName: form.treeName,
     treeId: tree.value.getCurrentNode().treeId,
   }).then(
     () => {
       $modal.msgSuccess("修改成功");
-      async () => {
-        await getTreeList();
-      };
+      getTreeList();
     },
     () => {
       $modal.msgError("修改失败");
+      getTreeList();
     }
   );
-  rowClick(tree.value.getCurrentNode());
 };
-
 
 // 树控件
 const routesData = ref([]);
 
 const getTreeList = () => {
   getTree(props.treeType, 0, 1).then((res) => {
-    /* console.log(res.data,'lklk');
-    console.log(res.data.children[0]?.isShow,'okok');
-    if(res.data.children[0]?.isShow == 1){
-      nodeIsShow.value = true;
-    }else{
-      nodeIsShow.value = false;
-    }  */
     routesData.value = res.data.children;
     nextTick(() => {
       if (!tree.value.getCurrentNode())
+      {
         tree.value.setCurrentKey(routesData.value[0]?.treeId);
+      }
+      tree.value.setCurrentKey(tree.value.getCurrentNode().treeId)
       rowClick(tree.value.getCurrentNode());
     });
   });
@@ -624,24 +604,21 @@ function deleteNode() {
       $modal.msgSuccess("删除节点成功");
       getTreeList();
     });
+    tree.value.setCurrentKey(routesData.value[0]?.treeId);
+    rowClick();
   });
 }
 // 点击树节点时的回调
 async function rowClick(nodeObj) {
   currentpageNum.value = 1;
-
-
   form.treeName = nodeObj.treeName;
-  if (nodeObj.isShow == 1) {
+  if (nodeObj.isShow === 1) {
     form.isShow = true;
     nodeIsShow.value = true;
   } else {
     form.isShow = false;
     nodeIsShow.value = false;
   }
-
-  console.log(nodeObj.isShow,'oooo');
-
   loading.value = true;
   imageSrcList.value = await getImagesBynodeId(nodeObj.treeId);
   totalPage.value = imageSrcList.value.length;
@@ -649,7 +626,6 @@ async function rowClick(nodeObj) {
   if (imageSrcList.length === 0) {
     $modal.msgWarning("此节点无图片");
   }
-  console.log(imageSrcList.value, "888");
   loading.value = false;
 }
 </script>
@@ -674,6 +650,26 @@ async function rowClick(nodeObj) {
   ) {
   background-color: #fff !important;
 }
+
+:deep(.el-card__body){
+  position: relative;
+  padding: 10px 15px 15px 15px !important;
+}
+
+.image_item:hover .delete_button{
+  opacity: 1;
+  transition: 0.4s ease-in-out;
+}
+
+.delete_button{
+  position: absolute;
+  top: 150px;
+  left: 10px;
+  z-index: 9;
+  opacity: 0;
+  transition: 0.4s ease-in-out;
+}
+
 
 .card {
   background-color: #fff;

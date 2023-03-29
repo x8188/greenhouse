@@ -1,15 +1,39 @@
 <template>
-  <div style="width:100%;min-height: calc(100vh - 84px);background-color:#EEEEEE">
-    <el-container style="padding:20px;border: 1px solid #eee" v-loading="loading" :element-loading-text="loadingText"
-      element-loading-background="rgba(0, 0, 0, 0.8)">
+  <div
+    style="
+      width: 100%;
+      min-height: calc(100vh - 84px);
+      background-color: #eeeeee;
+    "
+  >
+    <el-container
+      style="padding: 20px; border: 1px solid #eee"
+      v-loading="loading"
+      :element-loading-text="loadingText"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+    >
       <!--树-->
-      <el-aside width="20%" class="mokuai card shadow" style="min-height: calc(100vh - 180px)">
-        <el-tree ref="tree" :data="routesData" :props="defaultProps" node-key="treeId" default-expand-all
-          highlight-current :current-node-key="1" @node-click="rowClick" class="permission-tree" />
+      <el-aside
+        width="20%"
+        class="mokuai card shadow"
+        style="min-height: calc(100vh - 180px)"
+      >
+        <el-tree
+          ref="tree"
+          :data="routesData"
+          :props="defaultProps"
+          node-key="treeId"
+          default-expand-all
+          highlight-current
+          :current-node-key="1"
+          @node-click="rowClick"
+          class="permission-tree"
+        />
       </el-aside>
       <!-- //右边的盒子-->
 
-      <el-main width="78%" style="padding:0" class="right-box">
+      <el-main width="78%" style="padding: 0" class="right-box">
+        <!--另一种图片展示样式-->
         <!--操作部分 
         <h3>叶片检测：</h3>
         <div v-if="imageSrcList.length === 0">无图片</div>
@@ -36,11 +60,24 @@
           </el-col>
         </el-row>
       -->
-        <el-carousel :interval="4000" :autoplay="false" trigger="click" type="card" height="200px">
+        <el-carousel
+          :interval="4000"
+          :autoplay="false"
+          trigger="click"
+          type="card"
+          height="200px"
+        >
           <el-carousel-item v-for="(src, index) in imageSrcList" :key="index">
-            <el-image :src="getImageUrlByUrl(src.lessPictureUrl)" fit="contain" @click.passive="clickImage(index)" lazy>
+            <el-image
+              :src="getImageUrlByUrl(src.lessPictureUrl)"
+              fit="contain"
+              @click.passive="clickImage(index)"
+              lazy
+            >
               <template #placeholder>
-                <div class="image-slot">Loading<span class="dot">...</span></div>
+                <div class="image-slot">
+                  Loading<span class="dot">...</span>
+                </div>
               </template>
               <template #error>
                 <div>
@@ -56,41 +93,43 @@
 
         <el-row v-if="imageSrcList.length !== 0">
           <el-col :span="12">
-            <el-button disabled>
-              待检图片
-            </el-button>
-            <el-image :src="getImageUrlByUrl(curImageSrc.lessPictureUrl)" :preview-src-list="[getImageUrlByUrl(curImageSrc.pictureUrl)]
-            " class="check_btn">
+            <el-button disabled> 待检图片 </el-button>
+            <el-image
+              :src="getImageUrlByUrl(curImageSrc.lessPictureUrl)"
+              :preview-src-list="[getImageUrlByUrl(curImageSrc.pictureUrl)]"
+              class="check_btn"
+            >
               <template #placeholder>
-                <div class="image-slot">Loading<span class="dot">...</span></div>
+                <div class="image-slot">
+                  Loading<span class="dot">...</span>
+                </div>
               </template>
               <template #error>
-                <div class="image_div">
-                </div>
+                <div class="image_div"></div>
               </template>
             </el-image>
             <div v-loading="bladeLoading">
               <!--<el-button @click="checkBlade" v-hasPermi="['system:blade:check']">-->
-              <el-button @click="checkBlade">
-                叶片检测
-              </el-button>
-              <el-image class="check_btn" :src="getImageUrlByUrl(lessBladeSrc)" :preview-src-list="[getImageUrlByUrl(bladeSrc)]">
+              <el-button @click="checkBlade"> 叶片检测 </el-button>
+              <el-image
+                class="check_btn"
+                :src="getImageUrlByUrl(lessBladeSrc)"
+                :preview-src-list="[getImageUrlByUrl(bladeSrc)]"
+              >
                 <template #placeholder>
-                  <div class="image-slot">Loading<span class="dot">...</span></div>
+                  <div class="image-slot">
+                    Loading<span class="dot">...</span>
+                  </div>
                 </template>
                 <template #error>
-                  <div class="image_div">
-
-                  </div>
+                  <div class="image_div"></div>
                 </template>
               </el-image>
             </div>
           </el-col>
-          <el-col :span="12" style="padding-left:10px">
+          <el-col :span="12" style="padding-left: 10px">
             <div class="bladeContainer">
-              <div class="bladeTitle">
-                叶片检测结果
-              </div>
+              <div class="bladeTitle">叶片检测结果</div>
             </div>
             <el-table :data="tableData" stripe style="width: 100%">
               <el-table-column prop="variety" label="类别" />
@@ -104,43 +143,46 @@
 </template>
 
 <script setup name="bladeCheck">
-import { ref, getCurrentInstance } from 'vue';
-import { getTree } from '@/api/tree';
-import { getImagesBynodeId, getCheckedLeafImgByImg } from '@/api/identifypre/blade';
-import { getImageUrlByUrl } from '@/utils/tree';
+import { ref, getCurrentInstance } from "vue";
+import { getTree } from "@/api/tree";
+import {
+  getImagesBynodeId,
+  getCheckedLeafImgByImg,
+} from "@/api/identifypre/blade";
+import { getImageUrlByUrl } from "@/utils/tree";
 
 // vue实例
-const { proxy: { $modal } } = getCurrentInstance();
-
-
+const {
+  proxy: { $modal },
+} = getCurrentInstance();
 
 // 加载
 const loading = ref(false);
 const imageLoading = ref(false);
-const loadingText = ref('加载中...');
+const loadingText = ref("加载中...");
 
 // 表格数据
 const tableData = ref([
   {
-    variety: '检测日期',
-    data: ''
+    variety: "检测日期",
+    data: "",
   },
   {
-    variety: '出苗率',
-    data: ''
+    variety: "出苗率",
+    data: "",
   },
   {
-    variety: '弱苗位置',
-    data: ''
+    variety: "弱苗位置",
+    data: "",
   },
   {
-    variety: '无苗位置',
-    data: ''
+    variety: "无苗位置",
+    data: "",
   },
   {
-    variety: '补苗量',
-    data: ''
-  }
+    variety: "补苗量",
+    data: "",
+  },
 ]);
 
 // 图片列表
@@ -148,14 +190,17 @@ const currentPage = ref(1);
 const totalPage = ref(null); // 图片总页数
 const imageSrcList = ref([]); // 图片列表
 const imageList = ref([]);
-const curImageSrc = ref(''); // 正在看的图片连接
+const curImageSrc = ref(""); // 正在看的图片连接
+const bladeLoading = ref(false);
+const bladeSrc = ref("");
+const lessBladeSrc = ref(""); // 叶片检测后略缩图片链接
 
 function clickImage(index) {
   curImageSrc.value = imageSrcList.value[index];
 }
 
 function showImg() {
-  $modal.msg('等待图片加载');
+  $modal.msg("等待图片加载");
 }
 
 /*
@@ -181,41 +226,40 @@ async function nextPage() {
 }
 */
 
-const bladeLoading = ref(false);
-const bladeSrc = ref(''); // 叶片检测后略缩图片链接
-const lessBladeSrc = ref('')
 // 检测方法
 function checkBlade() {
   bladeLoading.value = true;
   imageLoading.value = true;
-  getCheckedLeafImgByImg(curImageSrc.value.pictureUrl).then(res => {
-    bladeSrc.value = res.picture;
-    lessBladeSrc.value = res.lesspicture;
-    delete res.lesspicture;
-    tableData.value.map(item => {
-      item.data = res[item.variety];
-      return item;
-    });
-    bladeLoading.value = false;
-    imageLoading.value = false;
-  }, err => {
-    bladeLoading.value = false;
-    imageLoading.value = false;
-  });
+  getCheckedLeafImgByImg(curImageSrc.value.pictureUrl).then(
+    (res) => {
+      bladeSrc.value = res.picture;
+      lessBladeSrc.value = res.lesspicture;
+      delete res.lesspicture;
+      tableData.value.map((item) => {
+        item.data = res[item.variety];
+        return item;
+      });
+      bladeLoading.value = false;
+      imageLoading.value = false;
+    },
+    (err) => {
+      bladeLoading.value = false;
+      imageLoading.value = false;
+    }
+  );
 }
 
 // 树控件
 const routesData = ref([]);
 const defaultProps = ref({
-  children: 'children',
-  label: 'treeName'
+  children: "children",
+  label: "treeName",
 });
-
 const treeType = 2;
 const tree = ref(null);
 
 const getTreeList = () => {
-  getTree(treeType, 0, 1).then(res => {
+  getTree(treeType, 0, 1).then((res) => {
     routesData.value = res.data.children;
     nextTick(() => {
       if (!tree.value.getCurrentNode())
@@ -228,8 +272,6 @@ const getTreeList = () => {
 getTreeList();
 
 async function rowClick(nodeObj) {
-  //再不能检测情况下的更改
-  console.log(tableData.value[0].data,'ppp');
   tableData.value[0].data = "";
   tableData.value[1].data = "";
   tableData.value[2].data = "";
@@ -239,39 +281,37 @@ async function rowClick(nodeObj) {
   lessBladeSrc.value = "";
   loading.value = true;
   imageList.value = await getImagesBynodeId(nodeObj.treeId);
-  //imageSrcList.value = imageList.value.slice(0, imageList.value.length > 5 ? 5 : imageList.value.length);
   imageSrcList.value = imageList.value;
   if (imageList.value.length > 1) {
-    showImg()
+    showImg();
   }
   if (imageList.value.length == 0) {
-    $modal.msg('此节点无图片！');
+    $modal.msg("此节点无图片！");
   }
   currentPage.value = 1;
   totalPage.value = Math.ceil(imageList.value.length / 5);
-  curImageSrc.value = imageSrcList.value[0] ? imageSrcList.value[0] : '';
+  curImageSrc.value = imageSrcList.value[0] ? imageSrcList.value[0] : "";
   loading.value = false;
 }
-
 </script>
 <style lang="scss" scoped>
 :deep(.el-tree-node__label) {
-    font-size: 16px;
-    
+  font-size: 16px;
 }
 
 :deep(.el-tree) {
-    background-color: rgb(218,227,241);
+  background-color: rgb(218, 227, 241);
 }
 
-:deep(.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content) {
-    background-color: #fff !important;
+:deep(
+    .el-tree--highlight-current
+      .el-tree-node.is-current
+      > .el-tree-node__content
+  ) {
+  background-color: #fff !important;
 }
 
 .right-box {
-  // background-color: #fff;
-  // border:1px solid #ccc;
-  // margin-bottom: 50px;
   margin-left: 20px;
 }
 
@@ -282,19 +322,12 @@ async function rowClick(nodeObj) {
   font-size: 20px;
 }
 
-
 .mokuai {
   margin-bottom: 0;
-  background-color: rgb(218,227,241);
-  // box-shadow:2px 2px 5px #000;
-  // border:1px solid #ccc;
-  // margin-bottom: 50px;
+  background-color: rgb(218, 227, 241);
 }
 
 .right-box {
-  // background-color: #fff;
-  // border:1px solid #ccc;
-  // margin-bottom: 50px;
   margin-left: 20px;
 }
 
@@ -335,21 +368,19 @@ async function rowClick(nodeObj) {
 
 .shadow {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
-  /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
-         0 1px 8px 0 rgba(0, 0, 0, 0.2); */
 }
 
-.bladeContainer{
+.bladeContainer {
   height: 40px;
   margin: auto;
   margin-bottom: 10px;
   width: 120px;
-  background-color: rgb(218,227,241);
+  background-color: rgb(218, 227, 241);
   border-radius: 40px;
   text-align: center;
 }
 
-.bladeTitle{
+.bladeTitle {
   font-size: 14px;
   line-height: 40px;
   color: grey;

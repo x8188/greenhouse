@@ -113,10 +113,9 @@ function getList() {
       ...item,
       fileStatus: item.fileStatus === 1
     }));
-    //console.log(fileList, '666');
     total.value = res.total;
   }).catch(err => {
-    //console.log(fileList, '888');
+    //console.log(fileList);
   });
 }
 
@@ -133,9 +132,7 @@ const isIndeterminate = ref(true);
 function handleCheckAllChange(val) {
   checkAll.value = val;
   isIndeterminate.value = false;
-  //
   checkedDates.value = val ? dates.value : [];
-  //
   declaredDates.value = val ? fileList.value : [];
 }
 
@@ -237,9 +234,6 @@ getTreeList();
 function rowClick(nodeObj) {
   histogrM3DShow.value = false
   loading.value = true;
- /*  tableData.value = [];
-  xData.value = [];
-  yData.value = []; */
   histogramLoading.value = false;
   checkAll.value = false;
   declaredDates.value = [];
@@ -250,8 +244,6 @@ function rowClick(nodeObj) {
     loading.value = false;
   }, err => {
     loading.value = false;
-    console.log('该节点下无文件');
-    //$modal.msgError('该节点下无文件');
   });
   getList();
 
@@ -331,8 +323,6 @@ function getDates(dateArr) {
 
 .shadow {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
-  /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
-         0 1px 8px 0 rgba(0, 0, 0, 0.2); */
 }
 
 .time_title_container{
