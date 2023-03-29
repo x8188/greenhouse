@@ -4,7 +4,7 @@
       <el-col :sm="24" :lg="24">
         <blockquote  style="font-size: 24px">
           <img src="@/assets/logo/logo.png" style="width:50px;height:50px" alt="">
-          <div>欢迎来到表型管理系统！</div>
+          <div>欢迎来到作物表型数据管理平台！</div>
           <br />
         </blockquote>
         <hr />

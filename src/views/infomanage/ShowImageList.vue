@@ -12,6 +12,7 @@
       :element-loading-text="loadingText"
       element-loading-background="rgba(0, 0, 0, 0.8)"
     >
+      <!-- 树 -->
       <el-aside
         width="20%"
         class="mokuai card shadow"
@@ -35,7 +36,7 @@
         <div style="width: 100%">
           <el-button
             type="primary"
-            class="filter-item"
+            class="filter-item addNode-button"
             style="margin: 10px"
             @click.prevent="addChildNode"
             v-hasPermi="['system:node:add']"
@@ -44,7 +45,7 @@
           >
           <el-button
             type="danger"
-            class="filter-item"
+            class="filter-item deleteNode-button"
             style="margin: 10px"
             @click.prevent="deleteNode"
             v-hasPermi="['system:node:remove']"
@@ -52,7 +53,7 @@
           >
           <el-button
             type="info"
-            class="filter-item"
+            class="filter-item reviseNode-button"
             style="margin: 10px"
             @click.prevent="updateChildNode"
             v-hasPermi="['system:node:update']"
@@ -60,19 +61,19 @@
           >
           <el-button
             type="primary"
-            class="filter-item"
+            class="filter-item addNode-button"
             style="margin: 10px"
             @click.prevent="addImage"
             v-hasPermi="['system:image:add']"
             >添加图片</el-button
           >
-          
+
           当前节点状态：
-           <el-switch
+          <el-switch
             v-hasPermi="['system:node:update']"
             v-model="nodeIsShow"
             @change="switchChange()"
-          /> 
+          />
         </div>
         <!-- 内容部分 -->
         <div v-if="imageSrcList.length === 0" style="height: 500px">
@@ -124,7 +125,7 @@
                 </el-image>
               </div>
             </div>
- 
+
             <el-button
               class="delete_button"
               icon="Delete"
@@ -133,7 +134,7 @@
               type="danger"
               @click="deleteImage(item.pictureId, item.pictureUrl)"
               v-hasPermi="['system:image:remove']"
-            ></el-button> 
+            ></el-button>
           </el-card>
         </div>
         <!--分页组件-->
@@ -141,8 +142,9 @@
           <el-pagination
             background
             :current-page="currentpageNum"
+            :page-sizes="[4, 8, 12, 16, 24, 28, 32, 36]"
             :page-size="pageSize"
-            layout="prev, pager, next, jumper"
+            layout="total, sizes, prev, pager, next, jumper"
             :total="totalPage"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -150,12 +152,13 @@
         </div>
       </el-main>
     </el-container>
+    <!-- 新增节点对话框 -->
     <el-dialog
       :title="textMap[dialogStatus]"
       v-model="dialogFormVisible"
       center
       draggable
-      width="50%"
+      width="30%"
     >
       <el-form
         ref="dataForm"
@@ -166,6 +169,9 @@
       >
         <el-form-item label="节点新名称：" prop="treeName">
           <el-input v-model="form.treeName" placeholder="输入节点新名称" />
+        </el-form-item>
+        <el-form-item label="节点描述：">
+          <el-input placeholder="输入节点描述" />
         </el-form-item>
         <el-form-item label="是否公开：" prop="isShow">
           <el-switch v-model="form.isShow" />
@@ -191,7 +197,7 @@
       v-model="imageDialog"
       center
       draggable
-      width="50%"
+      width="30%"
     >
       <el-upload
         v-model:file-list="fileList"
@@ -551,11 +557,10 @@ const getTreeList = () => {
   getTree(props.treeType, 0, 1).then((res) => {
     routesData.value = res.data.children;
     nextTick(() => {
-      if (!tree.value.getCurrentNode())
-      {
+      if (!tree.value.getCurrentNode()) {
         tree.value.setCurrentKey(routesData.value[0]?.treeId);
       }
-      tree.value.setCurrentKey(tree.value.getCurrentNode().treeId)
+      tree.value.setCurrentKey(tree.value.getCurrentNode().treeId);
       rowClick(tree.value.getCurrentNode());
     });
   });
@@ -630,7 +635,7 @@ async function rowClick(nodeObj) {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 :deep(.el-tree-node__label) {
   font-size: 16px;
 }
@@ -640,7 +645,7 @@ async function rowClick(nodeObj) {
 }
 
 :deep(.el-tree) {
-  background-color: rgb(218, 227, 241);
+  background-color: rgb(183, 202, 189);
 }
 
 :deep(
@@ -651,17 +656,17 @@ async function rowClick(nodeObj) {
   background-color: #fff !important;
 }
 
-:deep(.el-card__body){
+:deep(.el-card__body) {
   position: relative;
   padding: 10px 15px 15px 15px !important;
 }
 
-.image_item:hover .delete_button{
+.image_item:hover .delete_button {
   opacity: 1;
   transition: 0.4s ease-in-out;
 }
 
-.delete_button{
+.delete_button {
   position: absolute;
   top: 150px;
   left: 10px;
@@ -669,7 +674,6 @@ async function rowClick(nodeObj) {
   opacity: 0;
   transition: 0.4s ease-in-out;
 }
-
 
 .card {
   background-color: #fff;
@@ -703,6 +707,33 @@ async function rowClick(nodeObj) {
 
 .u-main .el-form-item__label {
   font-size: 20px;
+}
+
+/* 新增节点对话框 */
+:deep(.el-dialog__header) {
+  margin-right: 0px;
+  padding-right: 16px;
+  background: rgb(154, 190, 175);
+  margin-top: 10px;
+
+  .el-dialog__title {
+    color: white;
+  }
+}
+
+:deep(.dialog-footer) {
+  .el-button--primary {
+    background: rgb(85, 123, 116);
+  }
+}
+
+:deep(.upload-demo) {
+  margin-bottom: 20px;
+}
+
+:deep(.el-switch.is-checked .el-switch__core) {
+  border-color: green;
+  background-color: green;
 }
 </style>
 <style lang="scss" scoped>
@@ -824,7 +855,7 @@ async function rowClick(nodeObj) {
 
 .mokuai {
   margin-bottom: 0;
-  background-color: rgb(218, 227, 241);
+  background-color: rgb(183, 202, 189);
   // box-shadow:2px 2px 5px #000;
   // border:1px solid #ccc;
   // margin-bottom: 50px;
@@ -862,11 +893,16 @@ async function rowClick(nodeObj) {
   }
 }
 </style>
-<style  scoped>
+<style lang="less" scoped>
 .shadow {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
   /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
          0 1px 8px 0 rgba(0, 0, 0, 0.2); */
+}
+
+/* 按钮样式 */
+.addNode-button{
+  background: rgb(85, 123, 116);
 }
 </style>
 

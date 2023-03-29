@@ -34,7 +34,7 @@
         <div style="width: 100%">
           <el-button
             type="primary"
-            class="filter-item"
+            class="filter-item addNode-button"
             style="margin: 10px"
             @click.prevent="addChildNode"
             v-hasPermi="['system:node:add']"
@@ -101,6 +101,7 @@
             <el-button
               type="primary"
               icon="Search"
+              class="search-button"
               size="small"
               @click="handleQuery"
               >搜索</el-button
@@ -118,6 +119,7 @@
               plain
               icon="Plus"
               size="small"
+              class="addExcel"
               @click="handleAdd"
               v-hasPermi="['system:logininfor:add']"
               >新增</el-button
@@ -203,7 +205,7 @@
             </template>
           </el-table-column>
         </el-table>
-
+        <!-- 分页 -->
         <el-pagination
           v-show="total > 0"
           :total="total"
@@ -222,7 +224,7 @@
       v-model="dialogTreeFormVisible"
       center
       draggable
-      width="50%"
+      width="30%"
     >
       <el-form
         ref="dataTreeForm"
@@ -261,7 +263,7 @@
       @close="dialogClosed"
       center
       draggable
-      width="50%"
+      width="30%"
     >
       <el-form
         ref="form"
@@ -816,13 +818,13 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 :deep(.el-tree-node__label) {
   font-size: 16px;
 }
 
 :deep(.el-tree) {
-  background-color: rgb(218, 227, 241);
+  background-color: rgb(183, 202, 189);
 }
 
 :deep(
@@ -866,6 +868,26 @@ onMounted(() => {
 .u-main .el-form-item__label {
   font-size: 20px;
 }
+
+
+/* 新增节点对话框 */
+:deep(.el-dialog__header){
+  margin-right: 0px;
+  padding-right: 16px;
+  background: rgb(154,190,175);
+  margin-top: 10px;
+
+  .el-dialog__title{
+    color:white;
+  }
+}
+
+:deep(.dialog-footer){
+  .el-button--primary{
+    background: rgb(85,123,116);
+  }
+}
+
 </style>
 <style lang="scss" scoped>
 .image_box {
@@ -935,7 +957,7 @@ onMounted(() => {
 
 .mokuai {
   margin-bottom: 0;
-  background-color: rgb(218, 227, 241);
+  background-color: rgb(183, 202, 189);
   // box-shadow:2px 2px 5px #000;
   // border:1px solid #ccc;
   // margin-bottom: 50px;
@@ -971,6 +993,15 @@ onMounted(() => {
   .permission-tree {
     margin-bottom: 30px;
   }
+}
+.addNode-button,.search-button{
+  background: rgb(85, 123, 116);
+}
+
+.addExcel{
+  background: grey;
+  color:#fff;
+
 }
 </style>
 <style  scoped>
