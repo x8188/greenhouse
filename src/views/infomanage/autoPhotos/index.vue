@@ -75,6 +75,34 @@
             @change="switchChange()"
           />
         </div>
+        <!-- 设置图片上传路径 -->
+        <div class="upload_path">
+          <el-card class="card-container">
+            <div class="big-wrapper" style="margin-top: 10px">
+              <div class="card-title">
+                <div class="card-title-line"></div>
+                <div class="card-title-content">图片自动上传地址</div>
+              </div>
+              <el-card class="SearchBox-card nodeBox">
+                <div class="ipBox">
+                  <span>IP地址</span>
+                  <el-input v-model="autoPath.ipPath" disabled></el-input>
+                </div>
+                <div class="photoBox">
+                  <span>图片目录</span>
+                  <el-input v-model="autoPath.photoPath" disabled></el-input>
+                </div>
+              </el-card>
+              <div class="button-box">
+                <el-button
+                  type="primary"
+                  class="addNode-button"
+                  >开始自动上传</el-button
+                >
+              </div>
+            </div>
+          </el-card>
+        </div>
         <!-- 内容部分 -->
         <div v-if="imageSrcList.length === 0" style="height: 500px">
           无图片或未选择节点
@@ -170,6 +198,12 @@
         <el-form-item label="节点新名称：" prop="treeName">
           <el-input v-model="form.treeName" placeholder="输入节点新名称" />
         </el-form-item>
+        <el-form-item label="IP地址：" prop="ip">
+          <el-input v-model="form.ip" placeholder="请输入IP地址" />
+        </el-form-item>
+        <el-form-item label="图片目录：" prop="remotePicture">
+          <el-input v-model="form.remotePicture" placeholder="输入图片目录" />
+        </el-form-item>
         <el-form-item label="节点描述：">
           <el-input placeholder="输入节点描述" />
         </el-form-item>
@@ -188,6 +222,40 @@
             保存
           </el-button>
           <el-button @click="dialogFormVisible = false">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 修改路径对话框 -->
+    <el-dialog
+      title="设置图片上传路径"
+      v-model="autoDialog"
+      center
+      draggable
+      width="30%"
+    >
+      <el-form
+        ref="dataForm"
+        :model="autoPath"
+        :rules="pathRules"
+        label-position="left"
+        label-width="110px"
+      >
+        <el-form-item label="IP地址：" prop="ipPath">
+          <el-input v-model="autoPath.ipPath" placeholder="IP地址" />
+        </el-form-item>
+        <el-form-item label="图片目录：" prop="photoPath">
+          <el-input v-model="autoPath.photoPath" placeholder="图片目录" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button
+            type="primary"
+            
+          >
+            保存
+          </el-button>
+          <el-button @click="autoDialog = false">取消</el-button>
         </div>
       </template>
     </el-dialog>
@@ -229,8 +297,8 @@
     </el-dialog>
   </div>
 </template>
-
-<script setup name="showImageList">
+  
+  <script setup name="autoPhotos">
 import { ref, reactive, toRefs, getCurrentInstance, nextTick } from "vue";
 import { getTreeNodeIdsByNode, getImageUrlByUrl } from "@/utils/tree";
 import { getTree, addNode, updateNode, deleteNodes } from "@/api/tree.js";
@@ -242,12 +310,14 @@ import {
 import zipLogo from "@/assets/zip/zip.webp";
 import { fromPairs } from "lodash";
 
-const props = defineProps({
-  treeType: {
-    type: Number,
-    default: 1,
-  },
-});
+/* const props = defineProps({
+    treeType: {
+      type: Number,
+      default: 1,
+    },
+  }); */
+
+const treeType = ref(1);
 
 // vue实例
 const {
@@ -315,6 +385,12 @@ const imageList = [
   },
 ];
 
+//图片上传地址
+const autoPath = reactive({
+  ipPath: "http://43.143.200.52",
+  photoPath: "C:\\",
+});
+
 function deleteImage(pictureId, pictureUrl) {
   $modal.confirm("是否删除该图片?").then(() => {
     const curNode = tree.value.getCurrentNode();
@@ -336,8 +412,14 @@ function addImage(imageUrl) {
   imageDialog.value = true;
 }
 
+// 重置图片上传地址
+const resetAutoPath = () => {
+  autoDialog.value = true;
+};
+
 // 添加图片对话框
 const imageDialog = ref(false);
+const autoDialog = ref(false);
 
 const fileList = ref([]);
 
@@ -463,6 +545,8 @@ const textMap = {
 
 const form = reactive({
   treeName: "",
+  ip:"",
+  remotePicture:"",
   isShow: true,
 });
 
@@ -476,8 +560,15 @@ function resetForm() {
 const dataForm = ref(null);
 
 const rules = reactive({
-  treeName: [{ required: true, message: "请输入结点名称", trigger: "blur" }],
+  treeName: [{ required: true, message: "请输入节点名称", trigger: "blur" }],
+  ip: [{ required: true, message: "请输入IP地址", trigger: "blur" }],
+  remotePicture: [{ required: true, message: "请输入图片目录", trigger: "blur" }],
   isShow: [{ required: true, message: "请选择", trigger: "blur" }],
+});
+
+const pathRules = reactive({
+  ipPath: [{ required: true, message: "请输入IP地址", trigger: "blur" }],
+  photoPath: [{ required: true, message: "请输入图片目录", trigger: "blur" }],
 });
 
 //添加节点
@@ -491,7 +582,7 @@ function createData() {
         isShow: form.isShow ? 1 : 0,
         treeName: form.treeName,
         parentId: id,
-        treeType: props.treeType,
+        treeType: treeType.value,
       }).then(
         (res) => {
           $modal.msgSuccess("添加节点成功");
@@ -554,7 +645,7 @@ const switchChange = () => {
 const routesData = ref([]);
 
 const getTreeList = () => {
-  getTree(props.treeType, 0, 1).then((res) => {
+  getTree(treeType.value, 0, 1).then((res) => {
     routesData.value = res.data.children;
     nextTick(() => {
       if (!tree.value.getCurrentNode()) {
@@ -613,6 +704,7 @@ function deleteNode() {
     rowClick();
   });
 }
+
 // 点击树节点时的回调
 async function rowClick(nodeObj) {
   currentpageNum.value = 1;
@@ -634,8 +726,8 @@ async function rowClick(nodeObj) {
   loading.value = false;
 }
 </script>
-
-<style lang="less" scoped>
+  
+  <style lang="less" scoped>
 :deep(.el-tree-node__label) {
   font-size: 16px;
 }
@@ -681,6 +773,91 @@ async function rowClick(nodeObj) {
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
+}
+
+/* 上方卡片 */
+
+.card-container {
+  width: 90%;
+  border-radius: 50px;
+  margin-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  :deep(.el-card__body) {
+    padding: 15px 20px 20px 20px !important;
+  }
+}
+
+.big-wrapper {
+  width: 95%;
+  margin: auto;
+}
+
+.card-container .SearchBox-card {
+  border-radius: 20px;
+}
+
+.searchtable {
+  margin-bottom: 10px;
+}
+
+.SearchBox-card {
+  margin: 10px;
+  margin-bottom: 20px;
+
+  .ipBox {
+    display: flex;
+    margin-bottom: 15px;
+
+    span {
+      width: 15%;
+    }
+  }
+
+  .photoBox {
+    display: flex;
+
+    span {
+      width: 15%;
+    }
+  }
+}
+
+.searchbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.input-title {
+  color: grey;
+  font-size: 12px;
+}
+
+.input-title span {
+  color: rgb(78, 151, 211);
+}
+
+/*card的title */
+.card-title {
+  width: 30%;
+  color: rgb(64, 64, 112);
+  border-radius: 10px;
+  height: 40px;
+  display: flex;
+}
+.card-title-line {
+  width: 2%;
+  height: 40px;
+  background-color: rgb(154, 190, 175);
+}
+
+.card-title-content {
+  float: left;
+  margin-left: 20px;
+  font-size: 16px;
+  line-height: 40px;
 }
 
 .u-main .el-tag + .el-tag {
@@ -736,7 +913,7 @@ async function rowClick(nodeObj) {
   background-color: green;
 }
 </style>
-<style lang="scss" scoped>
+  <style lang="scss" scoped>
 .image_box {
   width: 100%;
   display: flex;
@@ -753,42 +930,41 @@ async function rowClick(nodeObj) {
   height: 200px;
 }
 
- .img-list {
-   padding-left: 1%;
-    padding-right: 1%; 
-   width: 100%;
-   position: relative;
+.img-list {
+  padding-left: 1%;
+  padding-right: 1%;
+  width: 100%;
+  position: relative;
   right: 0;
 }
 
- .img-list .item {
-   cursor: pointer;
- }
+.img-list .item {
+  cursor: pointer;
+}
 
 /* .img-list .item .wrapper {
-   position: relative;
-   width: 100%;
-   overflow: hidden;
-   -webkit-border-radius: 2px;
-   -moz-border-radius: 2px;
-   border-radius: 2px;
-   -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33); 
-} */
+     position: relative;
+     width: 100%;
+     overflow: hidden;
+     -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+     border-radius: 2px;
+     -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+     -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33); 
+  } */
 
 /* .img-list .item .wrapper .imgBox {
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   right: 0;
- }
- */
- .image_slot {
-   width: 100%;
- }
-
+     position: absolute;
+     top: 0;
+     bottom: 0;
+     left: 0;
+     right: 0;
+   }
+   */
+.image_slot {
+  width: 100%;
+}
 
 .el-row {
   margin-bottom: 20px;
@@ -872,18 +1048,19 @@ async function rowClick(nodeObj) {
   }
 }
 </style>
-<style lang="less" scoped>
+  <style lang="less" scoped>
 .shadow {
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
   /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
-         0 1px 8px 0 rgba(0, 0, 0, 0.2); */
+           0 1px 8px 0 rgba(0, 0, 0, 0.2); */
 }
 
 /* 按钮样式 */
-.addNode-button{
+.addNode-button {
   background: rgb(85, 123, 116);
 }
 </style>
-
-
-
+  
+  
+  
+  

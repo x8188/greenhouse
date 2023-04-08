@@ -1,11 +1,36 @@
 <template>
-  <body>
-    <el-container>
+  <body class="body-wrapper">
+    <!--  树结构 -->
+    <el-container
+      class="body-wrapper-aside"
+      style="padding: 20px; border: 1px solid #eee"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+    >
+      <!-- 放树 -->
+      <el-aside
+        width="20%"
+        class="mokuai card shadow"
+        style="min-height: calc(100vh - 180px)"
+      >
+        <el-tree
+          ref="tree"
+          :data="routesData"
+          :props="defaultProps"
+          node-key="treeId"
+          default-expand-all
+          highlight-current
+          :current-node-key="1"
+          @node-click="rowClick"
+          class="permission-tree"
+        />
+      </el-aside>
+    </el-container>
+    <el-container class="body-wrapper-main">
       <el-main>
         <el-card class="card-container">
           <div class="big-wrapper" style="margin-top: 10px">
             <!-- 第一部分搜索框 -->
-            <div class="card-title">
+            <!-- <div class="card-title">
               <div class="card-title-line"></div>
               <div class="card-title-content">通过节点名称搜索查询</div>
             </div>
@@ -29,21 +54,23 @@
                 e.g. <span>种类一</span> or <span>种类二</span>or
                 <span>种类三</span>
               </div>
-            </el-card>
+            </el-card> -->
             <div class="card-title">
               <div class="card-title-line"></div>
-              <div class="card-title-content">通过选择具体节点查询</div>
+              <div class="card-title-content">请选择您要查询的树种类</div>
             </div>
             <el-card class="SearchBox-card nodeBox">
-              <p>选择节点</p>
-              <el-cascader
-                v-model="value"
-                :options="options"
-                :props="props"
-                @change="handleChangeCascader"
-                class="node-cascader"
-              />
-              <el-button>searching……</el-button>
+              <p>选择侧边栏树的种类</p>
+              <el-select v-model="treeSelect" style="margin-right:20px">
+                <el-option
+                  v-for="item in treeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled"
+                />
+              </el-select>
+              <el-button @click="treeChange">确定</el-button>
             </el-card>
           </div>
         </el-card>
@@ -106,24 +133,106 @@
 
 <script setup>
 import * as echarts from "echarts";
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, nextTick, onMounted } from "vue";
+import { getTree } from "@/api/tree.js";
+// vue实例
+const {
+  proxy: { $modal, $download },
+} = getCurrentInstance();
+
+/* 树表单内容相关 */
+
+// 树控件
+const routesData = ref([]);
+
+// 树组件节点属性
+const defaultProps = ref({
+  children: "children",
+  label: "treeName",
+});
+
+const treeType = ref(1); // 树的种类
+const tree = ref(null); // 数的dom实例
+
+// 获取整棵树
+const getTreeList = () => {
+  getTree(treeType.value, 0, 1).then((res) => {
+    routesData.value = res.data.children;
+    console.log(routesData.value, "9090");
+    nextTick(() => {
+      if (!tree.value.getCurrentNode())
+        tree.value.setCurrentNode(routesData.value[0]);
+      rowClick(tree.value.getCurrentNode());
+    });
+  });
+};
+
+/* 获取树节点数据 */
+function getTreeNodeSpecies(){
+
+}
+
+//树控件点击回调
+function rowClick(nodeObj) {
+  formLabelAlign.name = nodeObj.treeName;
+  formLabelAlign.user = 'admin';
+  formLabelAlign.time = nodeObj.createTime;
+  formLabelAlign.father = nodeObj.parentId;
+  formLabelAlign.number = nodeObj.children.length;
+  formLabelAlign.dataNum = nodeObj.children.length;
+  tree.value.setCurrentNode(routesData.value[0]);
+}
+/* 
+onMounted(() => {
+  getTreeList();
+}); */
 
 /* 节点信息表单  */
 const formLabelAlign = reactive({
-  name: "种类一",
-  user: "admin",
-  time: "2023-3-23",
-  father: "种苗品种",
-  number: 10,
-  dataNum: 10,
+  name: "",
+  user: "",
+  time: "",
+  father: "",
+  number:'',
+  dataNum:"",
 });
 
-const keyword = ref('')
+const keyword = ref("");
 const value = ref([]);
 
 const handleChangeCascader = (value) => {
   console.log(value);
 };
+
+/* 树节点选择框 */
+const treeSelect = ref('')
+const treeOptions = [
+  {
+    value: '1',
+    label: '种苗品种',
+  },
+  {
+    value: '2',
+    label: '表型品种',
+  },
+  {
+    value: '3',
+    label: '表型数据',
+  },
+]
+
+/* 选择框函数 */
+const treeChange = () =>{
+  getTree(treeSelect.value, 0, 1).then((res) => {
+    routesData.value = res.data.children;
+    console.log(routesData.value, "9090");
+    nextTick(() => {
+      if (!tree.value.getCurrentNode())
+        tree.value.setCurrentNode(routesData.value[0]);
+      rowClick(tree.value.getCurrentNode());
+    });
+  });
+}
 
 /* 饼图数据 */
 const pieOption = {
@@ -262,274 +371,60 @@ const lineOption = {
 };
 
 /* 选择框数据 */
-const options = [
+const options = ref([
   {
-    value: "guide",
-    label: "Guide",
+    value: "species",
+    label: "以表型品种分类",
     children: [
       {
         value: "disciplines",
-        label: "Disciplines",
+        label: "品种一",
         children: [
           {
             value: "consistency",
-            label: "Consistency",
+            label: "表型一",
           },
           {
             value: "feedback",
-            label: "Feedback",
+            label: "表型二",
           },
           {
             value: "efficiency",
-            label: "Efficiency",
+            label: "表型三",
           },
           {
             value: "controllability",
-            label: "Controllability",
-          },
-        ],
-      },
-      {
-        value: "navigation",
-        label: "Navigation",
-        children: [
-          {
-            value: "side nav",
-            label: "Side Navigation",
-          },
-          {
-            value: "top nav",
-            label: "Top Navigation",
+            label: "表型四",
           },
         ],
       },
     ],
   },
   {
-    value: "component",
-    label: "Component",
+    value: "manage",
+    label: "以管理员分类",
     children: [
       {
-        value: "basic",
-        label: "Basic",
+        value: "member",
+        label: "成员名称",
         children: [
           {
-            value: "layout",
-            label: "Layout",
+            value: "menberName1",
+            label: "赵一",
           },
           {
-            value: "color",
-            label: "Color",
+            value: "menberName2",
+            label: "王二",
           },
           {
-            value: "typography",
-            label: "Typography",
-          },
-          {
-            value: "icon",
-            label: "Icon",
-          },
-          {
-            value: "button",
-            label: "Button",
-          },
-        ],
-      },
-      {
-        value: "form",
-        label: "Form",
-        children: [
-          {
-            value: "radio",
-            label: "Radio",
-          },
-          {
-            value: "checkbox",
-            label: "Checkbox",
-          },
-          {
-            value: "input",
-            label: "Input",
-          },
-          {
-            value: "input-number",
-            label: "InputNumber",
-          },
-          {
-            value: "select",
-            label: "Select",
-          },
-          {
-            value: "cascader",
-            label: "Cascader",
-          },
-          {
-            value: "switch",
-            label: "Switch",
-          },
-          {
-            value: "slider",
-            label: "Slider",
-          },
-          {
-            value: "time-picker",
-            label: "TimePicker",
-          },
-          {
-            value: "date-picker",
-            label: "DatePicker",
-          },
-          {
-            value: "datetime-picker",
-            label: "DateTimePicker",
-          },
-          {
-            value: "upload",
-            label: "Upload",
-          },
-          {
-            value: "rate",
-            label: "Rate",
-          },
-          {
-            value: "form",
-            label: "Form",
-          },
-        ],
-      },
-      {
-        value: "data",
-        label: "Data",
-        children: [
-          {
-            value: "table",
-            label: "Table",
-          },
-          {
-            value: "tag",
-            label: "Tag",
-          },
-          {
-            value: "progress",
-            label: "Progress",
-          },
-          {
-            value: "tree",
-            label: "Tree",
-          },
-          {
-            value: "pagination",
-            label: "Pagination",
-          },
-          {
-            value: "badge",
-            label: "Badge",
-          },
-        ],
-      },
-      {
-        value: "notice",
-        label: "Notice",
-        children: [
-          {
-            value: "alert",
-            label: "Alert",
-          },
-          {
-            value: "loading",
-            label: "Loading",
-          },
-          {
-            value: "message",
-            label: "Message",
-          },
-          {
-            value: "message-box",
-            label: "MessageBox",
-          },
-          {
-            value: "notification",
-            label: "Notification",
-          },
-        ],
-      },
-      {
-        value: "navigation",
-        label: "Navigation",
-        children: [
-          {
-            value: "menu",
-            label: "Menu",
-          },
-          {
-            value: "tabs",
-            label: "Tabs",
-          },
-          {
-            value: "breadcrumb",
-            label: "Breadcrumb",
-          },
-          {
-            value: "dropdown",
-            label: "Dropdown",
-          },
-          {
-            value: "steps",
-            label: "Steps",
-          },
-        ],
-      },
-      {
-        value: "others",
-        label: "Others",
-        children: [
-          {
-            value: "dialog",
-            label: "Dialog",
-          },
-          {
-            value: "tooltip",
-            label: "Tooltip",
-          },
-          {
-            value: "popover",
-            label: "Popover",
-          },
-          {
-            value: "card",
-            label: "Card",
-          },
-          {
-            value: "carousel",
-            label: "Carousel",
-          },
-          {
-            value: "collapse",
-            label: "Collapse",
+            value: "menberName3",
+            label: "孙三",
           },
         ],
       },
     ],
   },
-  {
-    value: "resource",
-    label: "Resource",
-    children: [
-      {
-        value: "axure",
-        label: "Axure Components",
-      },
-      {
-        value: "sketch",
-        label: "Sketch Templates",
-      },
-      {
-        value: "docs",
-        label: "Design Documentation",
-      },
-    ],
-  },
-];
+]);
 
 /* 子节点数据数目饼图 */
 onMounted(() => {
@@ -554,13 +449,61 @@ function initHistogram2() {
 </script>
 
 <style lang="less" scoped>
+:deep(.el-tree-node__label) {
+  font-size: 16px;
+}
+
+:deep(.el-tree) {
+  background-color: rgb(183, 202, 189);
+  width: 100%;
+}
+
+:deep(
+    .el-tree--highlight-current
+      .el-tree-node.is-current
+      > .el-tree-node__content
+  ) {
+  background-color: #fff !important;
+}
+
+.card {
+  background-color: #fff;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.mokuai {
+  margin-bottom: 0;
+  background-color: rgb(183, 202, 189);
+}
+
+.shadow {
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+.body-wrapper {
+  display: flex;
+  flex-direction: row;
+
+  .body-wrapper-aside {
+    width: 20%;
+  }
+
+  .body-wrapper-main {
+    width: 80%;
+  }
+}
+
 :deep(.el-button) {
   background: rgb(85, 123, 116);
   color: #fff;
 }
 
 .card-container {
-  width: 95%;
+  width: 97%;
   border-radius: 50px;
   margin: auto;
 

@@ -32,70 +32,76 @@ import { reactive, ref, onMounted } from "vue";
 import { getTree } from "@/api/tree.js";
 /* 选择框数据 */
 const selectOptions = ref([
-{
-    value: "guide",
-    label: "Guide",
+  {
+    value: "species",
+    label: "以表型品种分类",
     children: [
       {
         value: "disciplines",
-        label: "Disciplines",
+        label: "品种一",
         children: [
           {
             value: "consistency",
-            label: "Consistency",
+            label: "表型一",
           },
           {
             value: "feedback",
-            label: "Feedback",
+            label: "表型二",
           },
           {
             value: "efficiency",
-            label: "Efficiency",
+            label: "表型三",
           },
           {
             value: "controllability",
-            label: "Controllability",
-          },
-        ],
-      },
-      {
-        value: "navigation",
-        label: "Navigation",
-        children: [
-          {
-            value: "side nav",
-            label: "Side Navigation",
-          },
-          {
-            value: "top nav",
-            label: "Top Navigation",
+            label: "表型四",
           },
         ],
       },
     ],
-  }, 
+  },
+  {
+    value: "manage",
+    label: "以管理员分类",
+    children: [
+      {
+        value: "member",
+        label: "成员名称",
+        children: [
+          {
+            value: "menberName1",
+            label: "赵一",
+          },
+          {
+            value: "menberName2",
+            label: "王二",
+          },
+          {
+            value: "menberName3",
+            label: "孙三",
+          },
+        ],
+      },
+    ],
+  },
 ]);
 
-const routesData = ref([
-
-]);
+const routesData = ref([]);
 
 const treeType = ref(1); // 树的种类
 
-const getTreeList = () =>{
-    getTree(treeType.value, 0, 1).then((res) => {
-        routesData.value = res.data.children; 
-        //过滤routesData数组
-        console.log(routesData.value[0].length,'999');
-        routesData.value.map((item) =>{
-            
-        })
+const getTreeList = () => {
+  getTree(treeType.value, 0, 1).then((res) => {
+    routesData.value = res.data.children;
+    //过滤routesData数组
+    console.log(routesData.value[0].length, "999");
+    routesData.value.map((item) => {});
   });
-}
+};
 
-onMounted(() =>{
-    getTreeList();
-})
+onMounted(() => {
+  getTreeList();
+});
 </script>
 
 <style lang="less" scoped>
