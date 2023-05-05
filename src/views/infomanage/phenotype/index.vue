@@ -339,7 +339,7 @@ import { listFile, updateFile, delFile } from "@/api/infomanage/phenoType";
 import useUserStore from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
 import ShowCSVTable from "./ShowCSVTable.vue";
-import { parseTime } from "@/utils/ruoyi";
+import { parseTime } from "@/utils/param";
 import { getTreeNodeIdsByNode } from "@/utils/tree";
 import { ElMessage } from "element-plus";
 
@@ -403,6 +403,7 @@ function resetForm() {
 
 // 开启文件详情窗口
 async function openDrawer(row) {
+  console.log(row.fileUrl,'222');
   fileName.value = row.fileName;
   curFileUrl.value = row.fileUrl;
   drawer.value = true;
@@ -544,6 +545,8 @@ function handleDelete() {
   }
 }
 
+const allFileId = ref([])
+
 // 请求文件列表
 function getList() {
   tableLoading.value = true;
@@ -558,6 +561,10 @@ function getList() {
         ...item,
         fileStatus: item.fileStatus === 1,
       }));
+      fileList.value.forEach((item) => {
+        allFileId.value.push(item.fileId);
+      });
+      console.log(allFileId.value, "lplp");
       total.value = res.total;
     })
     .catch((err) => {

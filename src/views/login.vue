@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">作物表型数据管理平台</h3>
+      <h3 class="title">作物表型管理平台</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -45,6 +45,7 @@
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
       <el-form-item style="width:100%;">
         <el-button
+          class="button_style"
           :loading="loading"
           size="large"
           type="primary"
@@ -78,7 +79,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright © 2023</span>
     </div>
   </div>
 </template>
@@ -175,14 +176,32 @@ getCode();
 getCookie();
 </script>
 
+
 <style lang='scss' scoped>
+:deep(.is-checked){
+  color: #707070;
+}
+
+:deep(.el-checkbox__label){
+  color: #707070 !important;
+}
+
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: #707070;
+  border-color: #707070;
+}
+
+.button_style{
+  background-color: #707070;
+  border: #707070;
+}
 .login {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   // background-image: url("../assets/images/login-background.jpg");
-  background-image: url("../assets/images/background2.png");
+  background-image: url("@/assets/img/banner/banner1.jpg");
   background-size: cover;
 }
 .title {

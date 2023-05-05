@@ -1,237 +1,283 @@
 <template>
-  <div class="app-container home">
-    <el-row :gutter="20">
-      <el-col :sm="24" :lg="24">
-        <blockquote  style="font-size: 24px">
-          <img src="@/assets/logo/logo.png" style="width:50px;height:50px" alt="">
-          <div>欢迎来到作物表型数据管理平台！</div>
-          <br />
-        </blockquote>
-        <hr />
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :sm="24" :lg="12" style="padding-left: 20px">
-       
-        <p>
-          <!--
-          <el-button
-            type="primary"
-            icon="Cloudy"
-            plain
-            @click="goTarget('https://gitee.com/y_project/RuoYi-Vue')"
-            >访问码云</el-button
-          >
-
-          -->
-          <el-button
-            icon="HomeFilled"
-            plain
-            >主页内容</el-button
-          >
-        </p>
-      </el-col>
-
-      <!-- <el-col :sm="24" :lg="12" style="padding-left: 50px">
-        <el-row>
-         
-        </el-row>
-      </el-col>
-    </el-row>
-    <el-divider />
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
-        
-
-          
-
-            
-      </el-col> -->
-      
-    </el-row>
-
-    <div class="projectcard_bigContainer">
-      <router-link to="/identifypre/plug" className="projectcard_container">
-        <div className="project_imgbox">
-            <img src="@/assets/home/1.png" />
-            <div className="project_text">
-                <h4>穴盘检测</h4>
-                <span>苗盘生长点检测</span>
-                <span>苗盘穴孔检测</span>
-                <span>苗盘超绿检测</span>
-            </div>
+  <div class="home_container">
+    <div class="container-fuild">
+      <!-- 导航 -->
+      <div class="header-nav">
+        <!-- 导航logo -->
+        <div class="header-nav-logo">
+          <img src="@/assets/img/hzauLogo.png" />
         </div>
-      </router-link>
-      <router-link to="/identifypre/blade" className="projectcard_container">
-        <div className="project_imgbox">
-            <img src="@/assets/home/2.png" />
-            <div className="project_text">
-                <h4>叶片检测</h4>
-                <span>叶片检测</span>
+      </div>
+      <!-- banner -->
+      <div class="article_banner">
+        <img src="@/assets/img/banner/banner1.jpg" alt="banner" />
+      </div>
+      <!-- 科研项目 -->
+      <div class="container-stage" style="margin-top: 30px;">
+        <div class="stage-row">
+          <div class="stage-col" v-for="(item, index) in typeList" :key="index">
+            <div class="col-container">
+              <img :src="item.logo" alt=""/>
+              <div class="overlay">
+                <span>{{ item.title }}</span>
+                <h4>
+                  <a href="">{{ item.titleDescription }}</a>
+                </h4>
+              </div>
             </div>
+           <!--  <div>
+              <p>{{ item.description }}</p>
+            </div> -->
+          </div>
         </div>
-      </router-link>
-      <router-link to="/identifypre/growthpre" className="projectcard_container">
-        <div className="project_imgbox">
-            <img src="@/assets/home/3.png" />
-            <div className="project_text">
-                <h4>生长预测</h4>
-            </div>
-        </div>
-      </router-link>
-
+      </div>
     </div>
-
   </div>
 </template>
 
 <script setup name="Index">
-import useUserStore from '@/store/modules/user';
-const user = useUserStore()
-const version = ref('3.8.2')
+import useUserStore from "@/store/modules/user";
+import type1 from "@/assets/img/1.jpg"
+import type2 from "@/assets/img/2.jpg"
+import type3 from "@/assets/img/3.jpg"
+const user = useUserStore();
+const version = ref("3.8.2");
 
 function goTarget(url) {
-  window.open(url, '__blank')
+  window.open(url, "__blank");
 }
+
+const typeList = reactive([
+  {
+    logo: type1,
+    title: "表型文件",
+    description:"这是作物表型管理平台的表型管理部分"
+  },
+  {
+    logo: type2,
+    title: "数据转换",
+    description:"这是作物表型管理平台的图片管理部分"
+  },
+  {
+    logo: type3,
+    title: "用户管理",
+    description:"这是作物表型管理平台的图片自动上传部分"
+  },
+  {
+    logo: type2,
+    title: "角色管理",
+    description:"这是作物表型管理平台的图片自动上传部分"
+  },
+])
+
+
 </script>
 
-<style scoped lang="scss">
-
-
-.app-container{
-  background: linear-gradient(90.21deg, #eeeeee -5.91%, #c5ebc0 111.58%);
-  opacity: 1;
+<style scoped lang="less">
+.home_container {
+  width: 100%;
 }
 
-.projectcard_bigContainer{
+.container-fuild {
+  position: relative;
+}
+
+.container-fuild::after {
+  position: absolute;
+  left: 0;
+  bottom: -40px;
+  content: "";
+  height: 50px;
+  width: 100%;
+  background: url(@/assets/img/brush-down.png);
+  z-index: 2;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  box-sizing: border-box;
+}
+
+
+/* 顶部 */
+.container-fuild {
+  background: #fff;
+  transition: all ease 0.6s;
+  width: 100%;
+  height: 80px;
+  left: 0;
+  top: 0;
+}
+
+/* 导航栏 */
+.container-fuild .header-nav {
+  height: 110px;
   display: flex;
+  justify-content: space-between;
 }
 
-.projectcard_container{
-    margin: .5vw 1vw;
-    width: 26vw;
+/* 导航栏logo */
+.container-fuild .header-nav .header-nav-logo {
+  width: 400px;
+  height: 100%;
+  float: left;
+  position: relative;
 }
 
-.project_imgbox {
-  width:380px;
-  height: 300px;
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 1vw;
-    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+/* 导航栏logo图片 */
+.container-fuild .header-nav .header-nav-logo img {
+  height: 65px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }
 
-.project_imgbox img{
-   width: 100%;
-   height: 100%;
+.article_banner {
+  width: 100%;
+  height: 22vh;
+  overflow: hidden;
+}
+.article_banner img {
+  width: 100vw;
+  height: 100%;
+  object-fit: cover;
 }
 
-.project_imgbox::before {
-    content: "";
-    background: linear-gradient(90.21deg, #a6b8c5 -5.91%, #4996a0 111.58%);
-    opacity: 0.85;
-    position: absolute;
-    width: 100%;
-    height: 0;
-    transition: 0.4s ease-in-out;
+
+/* 为什么选择我们 */
+.container {
+  width: 1170px;
+  margin: auto;
 }
 
-.project_imgbox:hover::before {
-    height: 100%;
+.text-center {
+  text-align: center;
+  margin-top: 30px;
 }
 
-.project_text {
-    position: absolute;
-    text-align: center;
-    top: 65%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: 0.5s ease-in-out;
-    opacity: 0;
-    width: 100%;
-    color: aliceblue;
+.server-wrapper {
+  margin: 10px;
 }
 
-.project_imgbox:hover .project_text {
-    top: 50%;
-    opacity: 1;
+.center-block {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
 }
 
-.project_text h4 {
-    font-size: 2vw;
-    font-weight: 700;
-    letter-spacing: .1vw;
-    line-height: 3vw;
-}
-
-.project_text span {
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
   display: flex;
-  flex-direction: column;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 1vw;
-    letter-spacing: .2px;
+  color: #1f4e3d;
+  border-color: #1f4e3d;
 }
 
-.home {
-  blockquote {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    border-left: 5px solid #eee;
-  }
-  hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee;
-  }
-  .col-item {
-    margin-bottom: 20px;
-  }
+.col-md-3 {
+  width: 25%;
+}
 
-  ul {
-    padding: 0;
-    margin: 0;
-  }
+/* 科研项目 */
+.container-stage {
+  width: auto;
+  min-width: auto;
+  max-width: inherit;
+  padding-right: 0;
+  .stage-row {
+    --bs-gutter-x: 30px;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+    justify-content: center !important;
 
-  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
+    .stage-col {
+      flex: 0 0 auto;
+      width: 23%;
+      max-width: 90%;
+      padding-right: calc(var(--bs-gutter-x) * 0.5);
+      padding-left: calc(var(--bs-gutter-x) * 0.5);
+      margin-top: var(--bs-gutter-y);
 
-  ul {
-    list-style-type: none;
-  }
+      .col-container {
+        position: relative;
+        padding-bottom: 30px;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-end;
 
-  h4 {
-    margin-top: 0px;
-  }
+        img {
+          border: none;
+          outline: none;
+          max-width: 100%;
+          height: 300px;
+          vertical-align: middle;
+        }
 
-  h2 {
-    margin-top: 10px;
-    font-size: 26px;
-    font-weight: 100;
-  }
+        .overlay {
+          background: #1f4e3d;
+          display: inline-block;
+          position: absolute;
+          z-index: 1;
+          bottom: -10px;
+          right: 16%;
+          padding: 40px 80px;
+          min-width: 65%;
+          height: 100px;
+          transition: height 0.3s;
+          box-sizing: border-box;
+          //visibility: hidden;
+          //opacity: 0;
 
-  p {
-    margin-top: 10px;
+          span {
+           display: inline-block;
+            font-family: "Handlee", cursive;
+            font-weight: 800;
+            color: #fff;
+            opacity: 0.95;
+          }
 
-    b {
-      font-weight: 700;
-    }
-  }
+          h4 {
+            font-size: 20px;
+            a {
+              pointer-events: none;
+              color: #fff;
+            }
+          }
+        }
 
-  .update-log {
-    ol {
-      display: block;
-      list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
-      padding-inline-start: 40px;
+        .overlay::after {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          content: "";
+          height: 100px;
+          width: 100px;
+          background: url(../assets/img/leaf-2.png);
+          background-position-x: 0%;
+          background-position-y: 0%;
+          background-repeat: repeat;
+          background-size: auto;
+          background-repeat: no-repeat;
+          background-position: right bottom;
+          background-size: contain;
+          z-index: -1;
+          opacity: 0.1;
+        }
+      }
+
+      .col-container:hover .overlay {
+        visibility: visible;
+        height: 120px;
+        opacity: 1;
+        box-sizing: border-box;
+        margin-top: opx;
+      }
     }
   }
 }

@@ -29,32 +29,6 @@
       <el-main>
         <el-card class="card-container">
           <div class="big-wrapper" style="margin-top: 10px">
-            <!-- 第一部分搜索框 -->
-            <!-- <div class="card-title">
-              <div class="card-title-line"></div>
-              <div class="card-title-content">通过节点名称搜索查询</div>
-            </div>
-            <el-card class="SearchBox-card">
-              <div class="searchbox">
-                <el-input
-                  prefix-icon="el-icon-search"
-                  v-model="keyword"
-                  @click="searchData"
-                  clearable
-                  placeholder="搜索节点名称"
-                  class="searchtable"
-                  style="width: 75%"
-                >
-                </el-input>
-                <el-button style="margin-bottom: 10px; width: 15%"
-                  >searching……</el-button
-                >
-              </div>
-              <div class="input-title">
-                e.g. <span>种类一</span> or <span>种类二</span>or
-                <span>种类三</span>
-              </div>
-            </el-card> -->
             <div class="card-title">
               <div class="card-title-line"></div>
               <div class="card-title-content">请选择您要查询的树种类</div>
@@ -135,6 +109,7 @@
 import * as echarts from "echarts";
 import { reactive, ref, nextTick, onMounted } from "vue";
 import { getTree } from "@/api/tree.js";
+import { treeCount } from "@/api/infomanage/types";
 // vue实例
 const {
   proxy: { $modal, $download },
@@ -181,6 +156,11 @@ function rowClick(nodeObj) {
   formLabelAlign.number = nodeObj.children.length;
   formLabelAlign.dataNum = nodeObj.children.length;
   tree.value.setCurrentNode(routesData.value[0]);
+  console.log(pieOption.series[0].data[0],'lll');
+  for(let i=0;i<pieOption.series[0].data.length;i++){
+    pieOption.series[0].data[i].value = pieOption.series[0].data[i].value - 100;
+    initHistogram();
+  }
 }
 /* 
 onMounted(() => {
@@ -446,6 +426,8 @@ function initHistogram2() {
 
   lineOption && myChart2.setOption(lineOption);
 }
+
+
 </script>
 
 <style lang="less" scoped>

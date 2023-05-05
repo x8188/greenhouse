@@ -36,7 +36,7 @@
         <div style="width: 100%">
           <el-button
             type="primary"
-            class="filter-item addNode-button"
+            class="filter-item -button"
             style="margin: 10px"
             @click.prevent="addChildNode"
             v-hasPermi="['system:node:add']"
@@ -67,6 +67,14 @@
             v-hasPermi="['system:image:add']"
             >添加图片</el-button
           >
+          <el-button
+            type="primary"
+            class="filter-item addNode-button"
+            style="margin: 10px"
+            @click.prevent="autoUploadDialog"
+            v-hasPermi="['system:image:add']"
+            >图片自动上传</el-button
+          >
 
           当前节点状态：
           <el-switch
@@ -80,69 +88,66 @@
           无图片或未选择节点
         </div>
         <div class="image_box img-list" v-else>
-          <el-card
-            class="image_item item"
-            v-for="(item, index) in imageSrcList.slice(
-              (currentpageNum - 1) * pageSize,
-              currentpageNum * pageSize
-            )"
-            :key="item.pictureId"
-          >
-            <div class="wrapper">
-              <div class="imgBox">
-                <el-image
-                  :src="getImageUrlByUrl(item.lessPictureUrl)"
-                  :preview-src-list="
-                    imageSrcList
-                      .slice(
-                        (currentpageNum - 1) * pageSize,
-                        currentpageNum * pageSize
-                      )
-                      .map((item) => getImageUrlByUrl(item.pictureUrl))
-                  "
-                  ref="previewImg"
-                  :initial-index="index"
-                  style="
-                    min-width: 168px;
-                    height: 168px;
-                    text-align: center;
-                    line-height: 168px;
-                    font-size: 40px;
-                  "
-                  fit="fill"
-                  lazy
-                >
-                  <template #placeholder>
-                    <div class="image-slot">
-                      Loading<span class="dot">...</span>
-                    </div>
-                  </template>
-                  <template #error>
-                    <el-icon>
-                      <Picture />
-                    </el-icon>
-                  </template>
-                </el-image>
+          <div class="imgCard_container">
+            <el-card
+              class="image_item item"
+              :style="{ width: myWidth, height: myHeight }"
+              v-for="(item, index) in imageSrcList.slice(
+                (currentpageNum - 1) * pageSize,
+                currentpageNum * pageSize
+              )"
+              :key="item.pictureId"
+            >
+              <div class="wrapper">
+                <div class="imgBox">
+                  <el-image
+                    :src="getImageUrlByUrl(item.lessPictureUrl)"
+                    :preview-src-list="
+                      imageSrcList
+                        .slice(
+                          (currentpageNum - 1) * pageSize,
+                          currentpageNum * pageSize
+                        )
+                        .map((item) => getImageUrlByUrl(item.pictureUrl))
+                    "
+                    ref="previewImg"
+                    :initial-index="index"
+                    :style="
+                     { height: imgHeight }"
+                    lazy
+                  >
+                    <template #placeholder>
+                      <div class="image-slot">
+                        Loading<span class="dot">...</span>
+                      </div>
+                    </template>
+                    <template #error>
+                      <el-icon>
+                        <Picture />
+                      </el-icon>
+                    </template>
+                  </el-image>
+                </div>
               </div>
-            </div>
 
-            <el-button
-              class="delete_button"
-              icon="Delete"
-              size="large"
-              circle
-              type="danger"
-              @click="deleteImage(item.pictureId, item.pictureUrl)"
-              v-hasPermi="['system:image:remove']"
-            ></el-button>
-          </el-card>
+              <el-button
+                class="delete_button"
+                icon="Delete"
+                size="large"
+                circle
+                type="danger"
+                @click="deleteImage(item.pictureId, item.pictureUrl)"
+                v-hasPermi="['system:image:remove']"
+              ></el-button>
+            </el-card>
+          </div>
         </div>
         <!--分页组件-->
         <div class="demo-pagination-block">
           <el-pagination
             background
             :current-page="currentpageNum"
-            :page-sizes="[4, 8, 12, 16, 24, 28, 32, 36]"
+            :page-sizes="[4, 8, 12, 20, 30, 42]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="totalPage"
@@ -227,17 +232,56 @@
         <el-button @click="suspendSubmitImage">取消</el-button>
       </div>
     </el-dialog>
+    <!-- 图片自动上传对话框 -->
+    <el-dialog
+      title="图片自动上传"
+      v-model="autoDialog"
+      center
+      draggable
+      width="30%"
+    >
+      <el-form
+        ref="dataForm"
+        :model="form"
+        :rules="autoRules"
+        label-position="left"
+        label-width="110px"
+      >
+        <el-form-item label="IP地址：" prop="ip">
+          <el-input v-model="form.ip" placeholder="输入IP地址" />
+        </el-form-item>
+        <el-form-item label="图片目录：" prop="remotePicture">
+          <el-input v-model="form.remotePicture" placeholder="输入图片目录" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click.passive="autoUpload">
+            保存
+          </el-button>
+          <el-button @click="autoDialog = false">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup name="showImageList">
-import { ref, reactive, toRefs, getCurrentInstance, nextTick } from "vue";
+import {
+  ref,
+  reactive,
+  toRefs,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+} from "vue";
 import { getTreeNodeIdsByNode, getImageUrlByUrl } from "@/utils/tree";
 import { getTree, addNode, updateNode, deleteNodes } from "@/api/tree.js";
 import { getToken } from "@/utils/auth";
 import {
   getImagesBynodeId,
   deleteImageByIdAndUrl,
+  updateByIp,
 } from "@/api/infomanage/types";
 import zipLogo from "@/assets/zip/zip.webp";
 import { fromPairs } from "lodash";
@@ -258,8 +302,38 @@ const {
 const loading = ref(false);
 const loadingText = ref("加载中...");
 
+//图片自动上传
+function autoUploadDialog() {
+  autoDialog.value = true;
+}
+
+//自动上传点击事件
+function autoUpload() {
+  const curNode = tree.value.getCurrentNode();
+  updateByIp(form.ip, form.remotePicture, curNode.treeId).then(
+    () => {
+      $modal.msgSuccess("开启自动上传成功");
+      rowClick(curNode);
+    },
+    () => {}
+  );
+  autoDialog.value = false;
+}
+
+const autoForm = reactive({
+  treeName: "",
+  ip: "",
+  remotePicture: "",
+  isShow: true,
+});
+
 // 图片
 const imageSrcList = ref([]);
+
+//图片宽高
+const myWidth = ref("23%");
+const myHeight = ref("180px");
+const imgHeight = ref("170px")
 
 //分页
 const totalPage = ref(0);
@@ -338,6 +412,9 @@ function addImage(imageUrl) {
 
 // 添加图片对话框
 const imageDialog = ref(false);
+
+//自动上传对话框
+const autoDialog = ref(false);
 
 const fileList = ref([]);
 
@@ -453,6 +530,45 @@ const close = () => {
   showImageViewer.value = false;
 };
 
+//图片大小自适应
+watch(pageSize, () => {
+  if (pageSize.value === 4) {
+    myWidth.value = "43%";
+    myHeight.value = "250px";
+    imgHeight.value = "230px"
+  } else if (pageSize.value === 8) {
+    myWidth.value = "23%";
+    myHeight.value = "180px";
+    imgHeight.value = "160px"
+  } else if (pageSize.value === 12) {
+    myWidth.value = "23%";
+    myHeight.value = "180x";
+    imgHeight.value = "160px"
+  } else if (pageSize.value === 20) {
+    myWidth.value = "18%";
+    myHeight.value = "140px";
+    imgHeight.value = "120px";
+  } else if (pageSize.value === 30) {
+    myWidth.value = "15%";
+    myHeight.value = "120px";
+    imgHeight.value = "100px";
+  } else if (pageSize.value === 42) {
+    myWidth.value = "12.5%";
+    myHeight.value = "100px";
+    imgHeight.value = "80px";
+  }
+});
+
+onMounted(() => {
+  if (pageSize.value === 4) {
+    myWidth.value = "43%";
+    myHeight.value = "250px";
+  } else if (pageSize.value === 12) {
+    myWidth.value = "23%";
+    myHeight.value = "180x";
+  }
+});
+
 // 对话框
 const dialogFormVisible = ref(false);
 const dialogStatus = ref("create");
@@ -463,6 +579,8 @@ const textMap = {
 
 const form = reactive({
   treeName: "",
+  ip: "",
+  remotePicture: "",
   isShow: true,
 });
 
@@ -478,6 +596,13 @@ const dataForm = ref(null);
 const rules = reactive({
   treeName: [{ required: true, message: "请输入结点名称", trigger: "blur" }],
   isShow: [{ required: true, message: "请选择", trigger: "blur" }],
+});
+
+const autoRules = reactive({
+  ip: [{ required: true, message: "请输入IP地址", trigger: "blur" }],
+  remotePicture: [
+    { required: true, message: "请输入图片目录", trigger: "blur" },
+  ],
 });
 
 //添加节点
@@ -626,6 +751,7 @@ async function rowClick(nodeObj) {
   }
   loading.value = true;
   imageSrcList.value = await getImagesBynodeId(nodeObj.treeId);
+  console.log(imageSrcList.value, "000");
   totalPage.value = imageSrcList.value.length;
   pageSize.value = 12;
   if (imageSrcList.length === 0) {
@@ -636,6 +762,11 @@ async function rowClick(nodeObj) {
 </script>
 
 <style lang="less" scoped>
+:deep(.el-image) {
+  text-align: center;
+  font-size: 40px;
+}
+
 :deep(.el-tree-node__label) {
   font-size: 16px;
 }
@@ -656,9 +787,13 @@ async function rowClick(nodeObj) {
   background-color: #fff !important;
 }
 
-:deep(.el-card__body) {
+:deep(.el-card) {
   position: relative;
-  padding: 10px 15px 15px 15px !important;
+}
+
+:deep(.el-card__body) {
+  padding: 8px 8px 8px 8px !important;
+  object-fit: fill;
 }
 
 .image_item:hover .delete_button {
@@ -666,9 +801,16 @@ async function rowClick(nodeObj) {
   transition: 0.4s ease-in-out;
 }
 
+.imgCard_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .delete_button {
   position: absolute;
-  top: 150px;
+  bottom: 10px;
   left: 10px;
   z-index: 9;
   opacity: 0;
@@ -742,53 +884,32 @@ async function rowClick(nodeObj) {
   display: flex;
   flex-wrap: wrap;
   overflow: auto;
-  height: calc(100vh - 180px);
-  justify-content: flex-start;
+  max-height: calc(100vh - 190px);
+
+  img {
+    width: 100%;
+  }
 }
 
 .image_item {
   box-sizing: border-box;
   margin: 10px 5px;
-  width: 23%;
-  height: 200px;
 }
 
- .img-list {
-   padding-left: 1%;
-    padding-right: 1%; 
-   width: 100%;
-   position: relative;
+.img-list {
+  padding-left: 1%;
+  padding-right: 1%;
+  width: 100%;
+  position: relative;
   right: 0;
 }
 
- .img-list .item {
-   cursor: pointer;
- }
-
-/* .img-list .item .wrapper {
-   position: relative;
-   width: 100%;
-   overflow: hidden;
-   -webkit-border-radius: 2px;
-   -moz-border-radius: 2px;
-   border-radius: 2px;
-   -moz-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33); 
-} */
-
-/* .img-list .item .wrapper .imgBox {
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   right: 0;
- }
- */
- .image_slot {
-   width: 100%;
- }
-
+.img-list .item {
+  cursor: pointer;
+}
+.image_slot {
+  width: 100%;
+}
 
 .el-row {
   margin-bottom: 20px;
@@ -880,7 +1001,7 @@ async function rowClick(nodeObj) {
 }
 
 /* 按钮样式 */
-.addNode-button{
+.addNode-button {
   background: rgb(85, 123, 116);
 }
 </style>

@@ -48,3 +48,11 @@ export function delFile(fileId) {
     method: 'delete'
   });
 }
+
+//发送文件
+export function getNewFiles(){
+  return request({
+    url:'/system/file/prcess',
+    method:'get'
+  })
+}

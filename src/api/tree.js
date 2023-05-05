@@ -1,7 +1,19 @@
 import request from '@/utils/request';
 
 // 获取整棵树
-export function getTree(treeType, parentId, isShow) {
+/* export function getTree(treeType, parentId, isShow) {
+  return request({
+    url: '/system/tree/list',
+    method: 'get',
+    params: {
+      treeType,
+      parentId,
+      isShow
+    }
+  });
+} */
+
+export function getTree(treeType,parentId, isShow) {
   return request({
     url: '/system/tree/list',
     method: 'get',

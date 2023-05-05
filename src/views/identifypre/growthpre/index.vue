@@ -9,7 +9,7 @@
       </el-aside>
       <!-- //右边的盒子 -->
       <el-main width="78%" style="padding:0" class="right-box">
-        <ShowCSVTable :url="curFileUrl" max-custom-h="200px" @getDates="getDates" />
+        <ShowCSVTable v-show="true" :url="curFileUrl" max-custom-h="200px" @getDates="getDates" />
 
         <div v-show="fileList.length">
           <div class="time_title_container">
@@ -199,6 +199,7 @@ function downloadPreResult() {
     $modal.msgWarning('未预测结果，请先预测')
     return
   }
+  console.log(predictedUrl,'ooo');
   $download.resource(predictedUrl);
 }
 
@@ -258,11 +259,10 @@ function getDates(dateArr) {
 <style lang="scss" scoped>
 :deep(.el-tree-node__label) {
     font-size: 16px;
-    
 }
 
 :deep(.el-tree) {
-    background-color: rgb(218,227,241);
+    background-color: #fff;
 }
 
 :deep(.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content) {
@@ -275,7 +275,7 @@ function getDates(dateArr) {
 
 .mokuai {
   margin-bottom: 0;
-  background-color: rgb(218,227,241);
+  background-color: #fff;
 }
 
 .right-box {

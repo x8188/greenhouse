@@ -67,6 +67,14 @@
             v-hasPermi="['system:image:add']"
             >添加图片</el-button
           >
+          <el-button
+            type="info"
+            class="filter-item"
+            style="margin: 10px"
+            @click.prevent="downloadPython"
+            v-hasPermi="['system:image:add']"
+            >下载远程连接文件</el-button
+          >
 
           当前节点状态：
           <el-switch
@@ -86,16 +94,17 @@
               <el-card class="SearchBox-card nodeBox">
                 <div class="ipBox">
                   <span>IP地址</span>
-                  <el-input v-model="autoPath.ipPath" disabled></el-input>
+                  <el-input v-model="form.ip" disabled></el-input>
                 </div>
                 <div class="photoBox">
                   <span>图片目录</span>
-                  <el-input v-model="autoPath.photoPath" disabled></el-input>
+                  <el-input v-model="form.remotePicture" disabled></el-input>
                 </div>
               </el-card>
               <div class="button-box">
                 <el-button
                   type="primary"
+                  @click="autoUpload"
                   class="addNode-button"
                   >开始自动上传</el-button
                 >
@@ -249,12 +258,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button
-            type="primary"
-            
-          >
-            保存
-          </el-button>
+          <el-button type="primary"> 保存 </el-button>
           <el-button @click="autoDialog = false">取消</el-button>
         </div>
       </template>
@@ -303,12 +307,19 @@ import { ref, reactive, toRefs, getCurrentInstance, nextTick } from "vue";
 import { getTreeNodeIdsByNode, getImageUrlByUrl } from "@/utils/tree";
 import { getTree, addNode, updateNode, deleteNodes } from "@/api/tree.js";
 import { getToken } from "@/utils/auth";
+
 import {
   getImagesBynodeId,
   deleteImageByIdAndUrl,
+  updateByIp,
 } from "@/api/infomanage/types";
 import zipLogo from "@/assets/zip/zip.webp";
 import { fromPairs } from "lodash";
+
+// vue实例
+const {
+  proxy: { $download },
+} = getCurrentInstance();
 
 /* const props = defineProps({
     treeType: {
@@ -387,14 +398,31 @@ const imageList = [
 
 //图片上传地址
 const autoPath = reactive({
-  ipPath: "http://43.143.200.52",
-  photoPath: "C:\\",
+  ipPath: "localhost",
+  photoPath: "C:\\Users\\Administrator\\Desktop\\tabletype\\新建文件夹",
 });
+
+//自动上传点击事件
+function autoUpload() {
+  const curNode = tree.value.getCurrentNode(); 
+  updateByIp(
+    form.ip,
+    form.remotePicture,
+    curNode.treeId,
+  ).then(
+    () => {
+      $modal.msgSuccess("开启自动上传成功");
+      rowClick(curNode);
+      
+    },
+    () => {}
+  );
+  
+}
 
 function deleteImage(pictureId, pictureUrl) {
   $modal.confirm("是否删除该图片?").then(() => {
     const curNode = tree.value.getCurrentNode();
-    const pictureIds = pictureId;
     deleteImageByIdAndUrl(pictureId, pictureUrl).then(
       () => {
         $modal.msgSuccess("删除图片成功");
@@ -410,6 +438,10 @@ function deleteImage(pictureId, pictureUrl) {
 // 打开添加图片对话框
 function addImage(imageUrl) {
   imageDialog.value = true;
+}
+
+function downloadPython() {
+  $download.resource("C:\\Users\\Administrator\\Desktop\\tabletype\\main.exe");
 }
 
 // 重置图片上传地址
@@ -545,8 +577,8 @@ const textMap = {
 
 const form = reactive({
   treeName: "",
-  ip:"",
-  remotePicture:"",
+  ip: "",
+  remotePicture: "",
   isShow: true,
 });
 
@@ -562,7 +594,9 @@ const dataForm = ref(null);
 const rules = reactive({
   treeName: [{ required: true, message: "请输入节点名称", trigger: "blur" }],
   ip: [{ required: true, message: "请输入IP地址", trigger: "blur" }],
-  remotePicture: [{ required: true, message: "请输入图片目录", trigger: "blur" }],
+  remotePicture: [
+    { required: true, message: "请输入图片目录", trigger: "blur" },
+  ],
   isShow: [{ required: true, message: "请选择", trigger: "blur" }],
 });
 
@@ -580,6 +614,8 @@ function createData() {
         : 0;
       addNode({
         isShow: form.isShow ? 1 : 0,
+        ip:form.ip,
+        parentFile:form.remotePicture,
         treeName: form.treeName,
         parentId: id,
         treeType: treeType.value,
@@ -644,9 +680,15 @@ const switchChange = () => {
 // 树控件
 const routesData = ref([]);
 
+const allFileId = ref([]);
+
 const getTreeList = () => {
   getTree(treeType.value, 0, 1).then((res) => {
     routesData.value = res.data.children;
+    routesData.value.forEach((item) => {
+      allFileId.value.push(item.fileId);
+    });
+    console.log(allFileId.value,'lplp');
     nextTick(() => {
       if (!tree.value.getCurrentNode()) {
         tree.value.setCurrentKey(routesData.value[0]?.treeId);
@@ -707,8 +749,11 @@ function deleteNode() {
 
 // 点击树节点时的回调
 async function rowClick(nodeObj) {
+  console.log(nodeObj,'opop');
   currentpageNum.value = 1;
   form.treeName = nodeObj.treeName;
+  form.ip = nodeObj.ip;
+  form.remotePicture = nodeObj.parentFile;
   if (nodeObj.isShow === 1) {
     form.isShow = true;
     nodeIsShow.value = true;

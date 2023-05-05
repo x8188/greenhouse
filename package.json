@@ -1,18 +1,14 @@
 {
-  "name": "ruoyi",
+  "name": "feidian",
   "version": "3.8.2",
-  "description": "若依管理系统",
-  "author": "若依",
+  "description": "作物表型管理系统",
+  "author": "feidian",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
     "preview": "vite preview"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://gitee.com/y_project/RuoYi-Vue.git"
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",

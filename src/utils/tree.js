@@ -22,10 +22,9 @@ export async function getJsonByCSV(url) {
   //console.log(data,'9090')
   let utf8decoder = new TextDecoder('gbk');
   let binary = utf8decoder.decode(data);
+  console.log(binary,'9999')
   const ctx = xlsx.read(binary, { type: 'binary', codepage: 936 });
   const result = xlsx.utils.sheet_to_json(ctx.Sheets[ctx.SheetNames[0]], { header: 1 });
-  //console.log(url,'6667');
-  //console.log(result,'7776');    
   return result
 }
 
