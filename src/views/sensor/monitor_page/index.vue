@@ -57,7 +57,7 @@ export default {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: #7fb7a191;
+  /* background-color: #7fb7a191; */
 }
 
 .nutrient-monitoring,
