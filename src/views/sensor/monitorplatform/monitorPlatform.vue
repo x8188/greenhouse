@@ -49,26 +49,20 @@ const navigateToTargetPage = () => {
 
 } */
 .detail {
-  display: flex;
-  width: 100%;
-  height: 100px;
+  /* display: flex; */
+  cursor: pointer;
+  width: 10%;
   border-radius: 5px;
+  height: 50px;
+  width: 120px;
   /* max-width: 500px; */
   margin:0 auto;
-  height: 70px;
-  opacity: 0.5;
+  /* opacity: 0.5; */
   background-color: #7fb7a1;
   
 }
 .detail:hover{
-  display: flex;
-  width: 100%;
-  height: 100px;
-  border-radius: 5px;
-  /* max-width: 500px; */
-  margin:0 auto;
-  height: 70px;
-    opacity: 0.8;
+  /* opacity: 0.8; */
   background-color: #7fb7a191;
 }
 @media (max-width: 500px) {
@@ -94,18 +88,20 @@ const navigateToTargetPage = () => {
   color:#f1f1f1;
 } */
 .three {
-  width: 20px;
-  margin: 0 635px 0 635px;
+  /* width: 20px; */
+  /* margin: 0 635px 0 635px; */
   font-size: 20px;
+  padding: 10px;
   font-weight: 500;
-  color: #f1f1f1;
-  display: flex;
+  color: #fff;
+  text-align: center;
+  /* display: flex;
   flex-wrap: nowrap;
   align-items: center;
   align-content: center;
-  justify-content: center;
+  justify-content: center; */
 
-  height: 100%
+  /* height: 100% */
 }
  
  

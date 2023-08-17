@@ -43,6 +43,9 @@ import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 
+// 丝带div样式
+import '@/assets/styles/raised.css'
+
 const app = createApp(App)
 
 // 全局方法挂载

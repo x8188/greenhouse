@@ -25,7 +25,7 @@ defineProps({
   }
 })
 
-const title = ref('作物表型数据管理平台');
+const title = ref('温室管理平台');
 const settingsStore = useSettingsStore();
 const sideTheme = computed(() => settingsStore.sideTheme);
 </script>
