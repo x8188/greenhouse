@@ -7,7 +7,7 @@
         根据视频数据渲染视频内容 -->
         
         <div class="tv-bg">
-          <div style="margin:0 auto;width:90%;height:360px;background:black;">
+          <div style="margin:0 auto;width:100%;height:360px;background:black;">
             <video
             controls='controls'
             :src="videoUrl" 
@@ -105,7 +105,7 @@ import videoUrl from "../../../assets/sensor_imge/show_school.mp4"
 
 .tv-bg {
     width:100%;
-    height: 610px;
+    height: 450px;
     /* background: url("../../../assets/sensor_imge/screen_bottom/1.png"); */
     background-repeat: no-repeat;
     background-size: 100% auto;

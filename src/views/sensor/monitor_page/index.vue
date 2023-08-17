@@ -1,14 +1,17 @@
 <template>
-  <div class="app"> 
-    <div class="weather-monitoring">
-      <weather-monitor></weather-monitor>
+  <div>
+    <div class="app">
+      <div class="weather-monitoring">
+        <weather-monitor></weather-monitor>
+      </div>
+      <div class="video">
+        <video-page></video-page>
+      </div>
+      <div class="nutrient-monitoring">
+        <nutrient-monitor></nutrient-monitor>
+      </div>
     </div>
-    <div class="video">
-      <video-page></video-page>
-    </div>
-    <div class="nutrient-monitoring">
-      <nutrient-monitor></nutrient-monitor>
-    </div> 
+
     <div class="monitor-platform">
       <monitor-platform></monitor-platform>
     </div>
@@ -20,11 +23,10 @@ import { reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import weatherMonitor from "./weatherMonitor.vue";
 import nutrientMonitor from "./nutrientMonitor.vue";
-import videoPage from './videoPage.vue' 
+import videoPage from "./videoPage.vue";
 import monitorPlatform from "../monitorplatform/monitorPlatform.vue";
 // import {ref} from 'vue'
 // import { onMounted, onUnmounted } from 'vue'
-
 
 //
 export default {
@@ -32,12 +34,12 @@ export default {
     weatherMonitor,
     nutrientMonitor,
     videoPage,
-    monitorPlatform
-},
+    monitorPlatform,
+  },
 
   // setup() {
   //   const displayData = ref(null) //存储大屏展示数据的响应式变量
-    
+
   // },
   // 从后端 API 获取传感器数据
   // const fetchSensorData = () => {
@@ -67,15 +69,15 @@ export default {
   margin-bottom: 20px;
   width: 35%;
   padding: 0 20px; */
-  
+
   display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   align-items: flex-start;
   flex-direction: column;
   width: 30%;
 }
-.video{
+.video {
   /* flex: 1 1 40%; */
   display: flex;
   justify-content: center;

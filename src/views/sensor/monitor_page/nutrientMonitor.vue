@@ -1,8 +1,29 @@
 <template>
-  <div class="agriculture-monitoring">
+  <div class="agriculture-monitoring" style="width: 60%;margin: 0 auto;">
     <h2 class="two"></h2>
     <div class="sensor-values">
-      <div class="sensor-value">
+      <div class="ui raised segment" style="height: 120px;background-image: linear-gradient(to left top, #fffaf5, #fffbf9, #fffcfd, #fffeff, #ffffff);">
+        <a class="ui teal ribbon label">二氧化碳</a>
+        <ul>
+          <li>{{ data.co2 }} lux </li>
+          <li>{{ data.detectedTime }}</li>
+        </ul>
+      </div>
+      <div class="ui raised segment" style="height: 120px;background-image: linear-gradient(to left top, #effbf0, #eefdfa, #f4fdff, #fbfeff, #ffffff);">
+        <a class="ui teal ribbon label">电源</a>
+        <ul>
+          <li>{{ data.dewTemp }} V</li>
+          <li>{{ data.detectedTime }}</li>
+        </ul>
+      </div>
+      <div class="ui raised segment" style="height: 120px;background-image: linear-gradient(to left top, #f9f7fc, #faf9fd, #fcfbfe, #fdfdfe, #ffffff);">
+        <a class="ui teal ribbon label">信号强度</a>
+        <ul>
+          <li> {{ data.rssi }} dBm</li>
+          <li>{{ data.detectedTime }}</li>
+        </ul>
+      </div>
+      <!-- <div class="sensor-value">
         <div class="sensor-label">二氧化碳</div>
         <div class="sensor-reading">{{ data.co2 }} lux</div>
         <div class="sensor-time">{{ data.detectedTime }}</div>
@@ -18,7 +39,7 @@
         <div class="sensor-reading"> {{ data.rssi }} dBm</div>
         <div class="sensor-time">{{ data.detectedTime }}</div>
          
-      </div>
+      </div> -->
        
     </div>
   </div>
@@ -62,7 +83,7 @@ function updateData() {
   /* border: 1px solid #ccc;; */
   /* box-shadow:0 0 1px;
   border-radius: 5px; */
-  text-align: center;
+  /* text-align: center; */
 }
 .sensor-value {
   display: flex;
@@ -86,8 +107,6 @@ function updateData() {
   justify-content: center;
 }
 .sensor-values {
-  display: flex;
-  flex-wrap: wrap;
   width: 100%;
 
   /* 其他样式设置 */
