@@ -75,60 +75,56 @@
 // import Vue from "vue";
 import { onMounted, ref, render } from "vue";
 import * as echarts from "echarts";
-import { 
-  getChartData ,
+import {
+  getChartData,
   getHunidityData,
   getTempData,
   getCoData,
-  getLightData
+  getLightData,
 } from "@/api/sensor/meteor";
 import { getNtrData } from "@/api/sensor/nutrientMonitor";
 import { getWeaData } from "@/api/sensor/weatherMonitor";
 
- 
- 
+const data = {
+  co2: ref(0),
+  dewTemp: ref(0),
+  rssi: ref(0),
+  ambientTemperature: ref(0),
+  ambientHumidity: ref(0),
+  lightIntensity: ref(0),
+  detectedTime: ref(92),
+};
+onMounted(() => {
+  updateData();
+  // 创建图表实例
+  var chart = echarts.init(document.getElementById("main"));
 
-    const data = {
-      co2: ref(0),
-      dewTemp: ref(0),
-      rssi: ref(0),
-      ambientTemperature: ref(0),
-      ambientHumidity: ref(0),
-      lightIntensity: ref(0),
-      detectedTime: ref(92),
-    };
-    onMounted(() => {
-  updateData()
-   // 创建图表实例
-   var chart = echarts.init(document.getElementById('main'));
-
-// 绘制图表
-chart.setOption({
-  
-  // 图表配置项
-  // 例如：x 轴、y 轴、数据系列等配置
-  xAxis: {
-    type: "category",
-    data: ['1','2','3','4','5','6','7','8','9','10']
-  },
-  yAxis: {
-    type: "value",
-  },
-  series: [
-    {
-      name: "数据",
-      type: "line",
-      smooth: true, // 平滑折线图
-      data: [14,45,1,13,13,5,6,2,3,2]
+  // 绘制图表
+  chart.setOption({
+    // 图表配置项
+    // 例如：x 轴、y 轴、数据系列等配置
+    xAxis: {
+      type: "category",
+      data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
     },
-  ],
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        name: "数据",
+        type: "line",
+        smooth: true, // 平滑折线图
+        data: [14, 45, 1, 13, 13, 5, 6, 2, 3, 2],
+      },
+    ],
+  });
 });
-})
-    function updateData() {
+function updateData() {
   getWeaData().then((res) => {
     data.ambientTemperature.value = res.data[0].ambientTemperature;
     data.ambientHumidity.value = res.data[0].ambientHumidity;
-    data.lightIntensity.value =res.data[0].llightIntensity;
+    data.lightIntensity.value = res.data[0].llightIntensity;
     data.detectedTime.value = res.data[0].detectedTime;
   });
   getNtrData().then((res) => {
@@ -138,29 +134,26 @@ chart.setOption({
   });
 }
 
-      
-    // //监听选项变化
-    // const handleOptionChange = () => {
-    //   fetchData;
-    // };
-    // // 监听时间范围变化，重新获取数据
-    // const handleDateRangeChange = () => {
-    //   fetchData();
-    // };
-    // // 组件初始化时获取数据
-    // onMounted(() => {
-    //   fetchData();
-    // });
-    // return {
-    //   chartData ,
-    //   selectedOption,
-    //   selectedRange,
-    //   selectedDateRange,
-    //   handleOptionChange,
-    //   handleDateRangeChange,
-    // };
-
-
+// //监听选项变化
+// const handleOptionChange = () => {
+//   fetchData;
+// };
+// // 监听时间范围变化，重新获取数据
+// const handleDateRangeChange = () => {
+//   fetchData();
+// };
+// // 组件初始化时获取数据
+// onMounted(() => {
+//   fetchData();
+// });
+// return {
+//   chartData ,
+//   selectedOption,
+//   selectedRange,
+//   selectedDateRange,
+//   handleOptionChange,
+//   handleDateRangeChange,
+// };
 
 // function upChartRange = () => {
 //        getChartData().then(data => {
@@ -221,11 +214,11 @@ chart.setOption({
 }
 .charts {
   margin-left: 250px;
-  width:500px;
-  height:500px;
+  width: 500px;
+  height: 500px;
   margin-top: 10px;
 }
-.el-footer{
+.el-footer {
   width: 500px;
   height: 500px;
 }
