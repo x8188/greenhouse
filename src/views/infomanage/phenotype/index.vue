@@ -30,193 +30,222 @@
         />
       </el-aside>
       <!-- //右边的盒子 -->
-      <el-main width="78%" style="padding: 0" class="right-box">
-        <div style="width: 100%">
-          <el-button
-            type="primary"
-            class="filter-item addNode-button"
-            style="margin: 10px"
-            @click.prevent="addChildNode"
-            v-hasPermi="['system:node:add']"
-          >
-            添加子节点</el-button
-          >
-          <el-button
-            type="danger"
-            class="filter-item"
-            style="margin: 10px"
-            @click.prevent="deleteNode"
-            v-hasPermi="['system:node:remove']"
-            >删除节点</el-button
-          >
-          <el-button
-            type="info"
-            class="filter-item"
-            style="margin: 10px"
-            @click.prevent="updateChildNode"
-            v-hasPermi="['system:node:update']"
-            >修改节点</el-button
-          >
-        </div>
-        <el-form
-          :model="queryParams"
-          ref="queryForm"
-          size="small"
-          :inline="true"
-          v-show="showSearch"
-          label-width="68px"
-        >
-          <el-form-item label="文件ID" prop="fileId">
-            <el-input
-              v-model="queryParams.fileId"
-              placeholder="请输入文件ID"
-              clearable
-              @keyup.enter="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="文件名称" prop="fileName">
-            <el-input
-              v-model="queryParams.fileName"
-              placeholder="请输入文件名称"
-              clearable
-              @keyup.enter="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="文件描述" prop="description">
-            <el-input
-              v-model="queryParams.description"
-              placeholder="请输入文件描述"
-              clearable
-              @keyup.enter="handleQuery"
-            />
-          </el-form-item>
-          <!-- <el-form-item label="日期" prop="dateTime">
-            <el-date-picker
-              v-model="queryParams.dateTime"
-              type="datetime"
-              placeholder="选择一个日期"
-            />
-          </el-form-item> -->
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="Search"
-              class="search-button"
-              size="small"
-              @click="handleQuery"
-              >搜索</el-button
-            >
-            <el-button icon="Refresh" size="small" @click="resetQuery"
-              >重置</el-button
-            >
-          </el-form-item>
-        </el-form>
-        <!-- 操作部分 -->
-        <el-row class="mb8" :gutter="15">
-          <el-col :span="1.5">
-            <el-button
-              type="primary"
-              plain
-              icon="Plus"
-              size="small"
-              class="addExcel"
-              @click="handleAdd"
-              v-hasPermi="['system:logininfor:add']"
-              >新增</el-button
-            >
-          </el-col>
-          <el-col :span="1.5">
-            <!--<el-button type="danger" plain icon="Delete" size="small" :disabled="multiple"
-              @click="handleDelete" v-hasPermi="['system:logininfor:remove']">删除</el-button>
-          -->
-            <el-button
-              type="danger"
-              plain
-              icon="Delete"
-              size="small"
-              @click="handleDelete"
-              :disabled="deleteDisabled"
-              v-hasPermi="['system:logininfor:remove']"
-              >删除</el-button
-            >
-          </el-col>
-        </el-row>
-        <!-- 表格部分 -->
-        <el-table
-          v-loading="tableLoading"
-          :data="fileList"
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="文件ID" align="center" prop="fileId" />
-          <el-table-column label="文件名" align="center" prop="fileName" />
-          <el-table-column label="描述" align="center" prop="description" />
-          <el-table-column
-            label="是否公开"
-            align="center"
-            prop="fileStatus"
-            v-hasPermi="['system:file:edit']"
-          >
-            <template #default="scope">
-              <el-switch
-                v-model="fileList[scope.$index].fileStatus"
-                @change="updateFileStatus(scope.row)"
+
+      <el-container>
+        <el-main width="78%" style="padding: 0" class="right-box">
+              <div style="width: 100%;">
+                <el-button
+                  type="primary"
+                  class="filter-item addNode-button"
+                  style="margin: 10px"
+                  @click.prevent="addChildNode"
+                  v-hasPermi="['system:node:add']"
+                >
+                  添加子节点</el-button
+                >
+                <el-button
+                  type="danger"
+                  class="filter-item"
+                  style="margin: 10px"
+                  @click.prevent="deleteNode"
+                  v-hasPermi="['system:node:remove']"
+                  >删除节点</el-button
+                >
+                <el-button
+                  type="info"
+                  class="filter-item"
+                  style="margin: 10px"
+                  @click.prevent="updateChildNode"
+                  v-hasPermi="['system:node:update']"
+                  >修改节点</el-button
+                >
+              </div>
+              <el-form 
+                :model="queryParams"
+                ref="queryForm"
+                size="small"
+                :inline="true"
+                v-show="showSearch"
+                
+                
               >
-              </el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="文件时间" align="center" prop="dateTime" />
-          <el-table-column
-            label="操作"
-            align="center"
-            class-name="small-padding fixed-width"
-          >
-            <template #default="scope">
-              <el-button
-                size="small"
-                type="text"
-                icon="Download"
-                @click="handleDownload(scope.row)"
-                >下载
-              </el-button>
-              <el-button
-                size="small"
-                type="text"
-                icon="Document"
-                @click="openDrawer(scope.row)"
-                >预览
-              </el-button>
-              <el-button
-                size="small"
-                type="text"
-                icon="Edit"
-                @click="handleUpdate(scope.row)"
+                <el-form-item label="编号" 
+                  class = "my_item" 
+                  prop="fileId" 
+                  style="margin-left: 10px;"
+                >
+                  <el-input
+                    v-model="queryParams.fileId"
+                    placeholder="请输入编号"
+                    clearable
+                    @keyup.enter="handleQuery"
+                  />
+                </el-form-item>
+                <el-form-item label="文件名称" prop="fileName">
+                  <el-input
+                    v-model="queryParams.fileName"
+                    placeholder="请输入文件名称"
+                    clearable
+                    @keyup.enter="handleQuery"
+                  />
+                </el-form-item>
+                <el-form-item label="文件描述" prop="description">
+                  <el-input
+                    v-model="queryParams.description"
+                    placeholder="请输入文件描述"
+                    clearable
+                    @keyup.enter="handleQuery"
+                  />
+                </el-form-item>
+                <!-- <el-form-item label="日期" prop="dateTime">
+                  <el-date-picker
+                    v-model="queryParams.dateTime"
+                    type="datetime"
+                    placeholder="选择一个日期"
+                  />
+                </el-form-item> -->
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    icon="Search"
+                    class="search-button"
+                    size="small"
+                    @click="handleQuery"
+                    >搜索</el-button
+                  >
+                  <el-button icon="Refresh" size="small" @click="resetQuery"
+                    >重置</el-button
+                  >
+                </el-form-item>
+              </el-form>
+              <!-- 操作部分 -->
+              <el-row class="mb8" :gutter="15">
+                <el-col :span="1.5"  class="mb81">
+                  <el-button
+                    type="primary"
+                    plain
+                    icon="Plus"
+                    size="small"
+                    class="addExcel"
+                    @click="handleAdd"
+                    v-hasPermi="['system:logininfor:add']"
+                    >新增</el-button
+                  >
+                </el-col>
+                <el-col :span="1.5" class="mb81">
+                  <!--<el-button type="danger" plain icon="Delete" size="small" :disabled="multiple"
+                    @click="handleDelete" v-hasPermi="['system:logininfor:remove']">删除</el-button>
+                -->
+                  <el-button
+                    type="danger"
+                    plain
+                    icon="Delete"
+                    size="small"
+                    @click="handleDelete"
+                    :disabled="deleteDisabled"
+                    v-hasPermi="['system:logininfor:remove']"
+                    >删除</el-button
+                  >
+                </el-col>
+              </el-row>
+          
+
+          <el-container>
+            <!-- 表格部分 -->
+            <el-table
+              v-loading="tableLoading"
+              :data="fileList"
+              stripe
+              border="true"
+              fit
+              height="100%"
+              width="100%"
+
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column fixed="left" type="selection" min-width="30" align="center" />
+              <el-table-column label="编号" align="center" min-width="30" prop="fileId" />
+              <el-table-column label="数据名称" align="center" min-width="80" prop="fileName" />
+              <el-table-column label="描述" align="center" min-width="110" prop="description" />
+              <el-table-column label="时间" align="center" prop="dateTime" />
+              <el-table-column
+                label="是否公开"
+                align="center"
+                prop="fileStatus"
+                width="70"
                 v-hasPermi="['system:file:edit']"
-                >修改</el-button
               >
-              <el-button
-                size="small"
-                type="text"
-                icon="Delete"
-                @click="deleteFile(scope.row)"
-                v-hasPermi="['system:file:remove']"
-                >删除</el-button
+                <template #default="scope">
+                  <el-switch
+                    v-model="fileList[scope.$index].fileStatus"
+                    @change="updateFileStatus(scope.row)"
+                  >
+                  </el-switch>
+                </template>
+              </el-table-column>
+              
+              <el-table-column fixed="right" 
+                label="操作"
+                align="center"
+                min-width="110" 
+                class-name="small-padding fixed-width"
               >
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          v-show="total > 0"
-          :total="total"
-          v-model:currentPage="queryParams.pageNum"
-          v-model:page-size="queryParams.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="getList"
-          @current-change="getList"
-          :background="false"
-        />
-      </el-main>
+                <template #default="scope">
+                  <el-button
+                    size="small"
+                    type="text"
+                    icon="Download"
+                    @click="handleDownload(scope.row)"
+                    >下载
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="text"
+                    icon="Document"
+                    @click="openDrawer(scope.row)"
+                    >预览
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="text"
+                    icon="Edit"
+                    @click="handleUpdate(scope.row)"
+                    v-hasPermi="['system:file:edit']"
+                    >修改</el-button
+                  >
+                  <el-button
+                    size="small"
+                    type="text"
+                    icon="Delete"
+                    @click="deleteFile(scope.row)"
+                    v-hasPermi="['system:file:remove']"
+                    >删除</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-container>
+          
+          
+        </el-main>
+
+        <el-footer class="footer">
+          <!-- 分页 -->
+          <el-pagination
+            v-show="total > 0"
+            :total="total"
+            v-model:currentPage="queryParams.pageNum"
+            v-model:page-size="queryParams.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="getList"
+            @current-change="getList"
+            :background="false"
+            class="pag"
+          />
+        </el-footer>
+      </el-container>
+
+      
     </el-container>
     <!-- 节点对话框 -->
     <el-dialog
@@ -230,7 +259,7 @@
         ref="dataTreeForm"
         :model="treeForm"
         :rules="treeRules"
-        label-position="left"
+        label-position="right"
         label-width="110px"
       >
         <el-form-item label="节点新名称：" prop="treeName">
@@ -256,6 +285,8 @@
         </div>
       </template>
     </el-dialog>
+
+
     <el-dialog
       :title="textMap[dialogStatus]"
       v-model="dialogFormVisible"
@@ -326,7 +357,8 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-drawer v-model="drawer" :title="fileName" size="70%">
+    <el-drawer v-model="drawer" :with-header="false" size="70%">
+      <!-- <div>{{fileName}}</div> -->
       <ShowCSVTable :url="curFileUrl" max-custom-h="85vh" />
     </el-drawer>
   </div>
@@ -343,6 +375,7 @@ import { parseTime } from "@/utils/param";
 import { getTreeNodeIdsByNode } from "@/utils/tree";
 import { ElMessage } from "element-plus";
 
+// import '@/assets/styles/GRADIENT.less'
 // vue实例
 const {
   proxy: { $modal, $download },
@@ -1001,8 +1034,24 @@ onMounted(() => {
     margin-bottom: 30px;
   }
 }
+
+.footer{
+  //ackground-color: red;
+  position: relative;
+
+  .pag{
+    position: absolute;
+    bottom: 0;
+    //background-color: blue;
+  }
+}
+
+.my_item{
+  
+}
+
 .addNode-button,.search-button{
-  background: rgb(85, 123, 116);
+  // background: rgb(85, 123, 116);
 }
 
 .addExcel{
@@ -1010,6 +1059,8 @@ onMounted(() => {
   color:#fff;
 
 }
+
+
 </style>
 <style  scoped>
 .shadow {
@@ -1017,4 +1068,20 @@ onMounted(() => {
   /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
          0 1px 8px 0 rgba(0, 0, 0, 0.2); */
 }
+
+/* /deep/ .el-dialog {
+     display: flex;
+     flex-direction: column;
+     margin:0 !important;
+     position:absolute;
+     top:50%;
+     left:50%;
+     transform:translate(-50%,-50%);
+     max-height:calc(100% - 200px);
+     max-width:calc(100% - 30px);
+}
+/deep/ .el-dialog .el-dialog__body {
+     flex:1;
+     overflow: auto;
+} */
 </style>
