@@ -37,19 +37,7 @@ export default {
     monitorPlatform,
   },
 
-  // setup() {
-  //   const displayData = ref(null) //存储大屏展示数据的响应式变量
-
-  // },
-  // 从后端 API 获取传感器数据
-  // const fetchSensorData = () => {
-  //   // 使用适当的 API 请求库（如 axios）从后端获取数据
-  //   // 更新 nutrientSensors 和 weatherSensors 中的传感器数值
-  // };
-
-  // onMounted(() => {
-  //   fetchSensorData(); // 在组件挂载后获取传感器数据
-  // });
+  
 };
 </script>
 

@@ -22,23 +22,7 @@
           <li>{{ data.lightIntensity }} ppm</li>
           <li>{{ data.detectedTime }}</li>
         </ul>
-      </div>
-      <!-- <div class="sensor">
-        <div class="sensor-name">空气温度</div>
-
-        <p class="sensor-num">{{ data.ambientTemperature }} &#8451;</p>
-        <div class="sensor-time">{{ data.detectedTime }}</div>
-      </div>
-      <div class="sensor">
-        <div class="sensor-name">空气湿度</div>
-        <p class="sensor-num">{{ data.ambientHumidity }} %</p>
-        <div class="sensor-time">{{ data.detectedTime }}</div>
-      </div>
-      <div class="sensor">
-        <div class="sensor-name">光照强度</div>
-        <p class="sensor-num">{{ data.lightIntensity }} ppm</p>
-        <div class="sensor-time">{{ data.detectedTime }}</div>
-      </div> -->
+      </div> 
     </div>
   </div>
 </template>
@@ -81,20 +65,13 @@ function updateData() {
   
   <style scoped>
 .weather-monitoring {
-  background: color #f1f1f1;
-  /* display: flex; */
-  /* flex-wrap: wrap; */
-  /* border: 1px solid #ccc;; */
-  width: 100%;
-  /* box-shadow:0 0 1px;
-  border-radius: 5px; */
-  /* text-align: center; */
+  background: color #f1f1f1; 
+  width: 100%; 
 }
 .sensor-data {
   width: 100%;
 }
 .one {
-  /* background-color: rgb(120, 171, 154); */
   width: 100%;
   justify-content: center;
   height: 20px;
@@ -103,17 +80,13 @@ function updateData() {
   display: flex;
   flex-wrap: wrap;
   font-size: 21px;
-  font-weight: 500;
-  /* justify-content: center; */
-  /* flex: 1 1 50%; */
+  font-weight: 500; 
   width: 100%;
   height: 120px;
   margin: 10px;
   padding: 10px;
   opacity: 0.5;
-  background-color: #7fb7a191;
-  /* border: 1px solid #ccc; */
-  /* box-shadow:0 0 1px; */
+  background-color: #7fb7a191; 
   border-radius: 5px;
 }
 .sensor-name {
@@ -131,8 +104,6 @@ function updateData() {
 }
 .sensor-time {
   width: 100%;
-  /* height: 100%; */
-  /* height: 60px; */
   justify-content: center;
   align-items: center;
   margin-top: 3px;
