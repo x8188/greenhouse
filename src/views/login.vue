@@ -192,9 +192,17 @@ getCookie();
 }
 
 .button_style{
-  background-color: #707070;
+  // background-color: #707070;
   border: #707070;
   background-image: linear-gradient(to right, #1b9c94, #0f9c8b, #0d9b80, #179a75, #249968, #3c9f64, #50a561, #63ab5d, #82b963, #a0c76b, #bed574, #dce37f);
+  text-align: center;
+    display: block;
+    height: 50px;
+    padding: 12px;
+    font: 900 18px '';
+    border-radius: 10px;
+    color: #fff;
+    letter-spacing: 3px;
 }
 .login {
   display: flex;
