@@ -1001,9 +1001,9 @@ async function rowClick(nodeObj) {
 }
 
 /* 按钮样式 */
-.addNode-button {
-  background: rgb(85, 123, 116);
-}
+// .addNode-button {
+//   background: rgb(85, 123, 116);
+// }
 </style>
 
 

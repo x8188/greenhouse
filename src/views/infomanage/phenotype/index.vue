@@ -66,10 +66,10 @@
           v-show="showSearch"
           label-width="68px"
         >
-          <el-form-item label="文件ID" prop="fileId">
+          <el-form-item label="编号" prop="fileId">
             <el-input
               v-model="queryParams.fileId"
-              placeholder="请输入文件ID"
+              placeholder="请输入编号"
               clearable
               @keyup.enter="handleQuery"
             />
@@ -148,8 +148,8 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="文件ID" align="center" prop="fileId" />
-          <el-table-column label="文件名" align="center" prop="fileName" />
+          <el-table-column label="编号" align="center" prop="fileId" />
+          <el-table-column label="数据名称" align="center" prop="fileName" />
           <el-table-column label="描述" align="center" prop="description" />
           <el-table-column
             label="是否公开"
@@ -165,7 +165,7 @@
               </el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="文件时间" align="center" prop="dateTime" />
+          <el-table-column label="时间" align="center" prop="dateTime" />
           <el-table-column
             label="操作"
             align="center"
@@ -326,7 +326,8 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-drawer v-model="drawer" :title="fileName" size="70%">
+    <el-drawer v-model="drawer" :with-header="false" size="70%">
+      <!-- <div>{{fileName}}</div> -->
       <ShowCSVTable :url="curFileUrl" max-custom-h="85vh" />
     </el-drawer>
   </div>
@@ -343,6 +344,7 @@ import { parseTime } from "@/utils/param";
 import { getTreeNodeIdsByNode } from "@/utils/tree";
 import { ElMessage } from "element-plus";
 
+// import '@/assets/styles/GRADIENT.less'
 // vue实例
 const {
   proxy: { $modal, $download },
@@ -1002,7 +1004,7 @@ onMounted(() => {
   }
 }
 .addNode-button,.search-button{
-  background: rgb(85, 123, 116);
+  // background: rgb(85, 123, 116);
 }
 
 .addExcel{
