@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="themeBg"></div>
    <div class="app">
       <div class="weather-monitoring">
         <weather-monitor></weather-monitor>
@@ -13,22 +14,47 @@
     </div>
 
     <div class="someInfo">
+
+      <div>
+        <div class="box">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <div class="content">
+          <!-- <h2>实时秒钟</h2> -->
+          <p style="font-size: 40px;font-weight: bolder;"><a>{{ currentTime }}</a></p>
+          <p style="font-size: 15px;"><a>小车运行时长：</a></p>
+          <p style="font-size: 20px;font-weight: bolder;"><a>xx天xx小时xx分</a></p>
+        </div>
+        
+        </div>
+
+      </div>
       <div class="Info"> 
-        <p>环境展示</p>
+        <div class="InfoTitle">
+          <el-icon :size="25"><PictureFilled /></el-icon> &nbsp;温室环境
+        </div>
+        
         <img src="../assets/sensor_imge/wenshi.jpg" alt="" class="wenshi">
       </div>
       <div class="Info">
-        <p>养分气象监测</p>
+        <div class="InfoTitle">
+          <el-icon :size="25"><TrendCharts /></el-icon> &nbsp;养分气象监测
+        </div>
          <div id="lineChart"></div>
       </div>
       <div class="Info">
-        <p>模拟数据</p>
+        <div class="InfoTitle">
+          <el-icon :size="25"><TrendCharts /></el-icon> &nbsp;模拟数据
+        </div>
+        
         <div id="histogramChart"></div>
       </div>
-      <div class="Info">
+      <!-- <div class="Info">
         <p>模拟数据</p>
         <div id="scatterChart"></div>
-      </div>
+      </div> -->
     </div>
 
     <div class="someInfo" style="margin-top: 50px">
@@ -54,17 +80,7 @@
       </button>
     </div>
 
-    <!-- <div class="box">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <div class="content">
-          <h2>My animated Border </h2>
-          <p><a>All our modules are designed to play nicely with responsive of course. At the end of the day it comes down to the theme you use - our code doesn't get in your way.</a></p>
-        </div>
-        
-    </div> -->
+
 
     <div class="monitor-platform">
       <monitor-platform></monitor-platform>
@@ -83,6 +99,7 @@ import monitorPlatform from "@/views/sensor/monitorplatform/monitorPlatform.vue"
 // import { onMounted, onUnmounted } from 'vue'
 import * as echarts from "echarts";
 
+
 /*export default {
   components: {
     weatherMonitor,
@@ -90,9 +107,6 @@ import * as echarts from "echarts";
     videoPage,
     monitorPlatform,
   },*/
-
-
-
   
    /* 折线图数据 */
 const lineOption = {
@@ -216,21 +230,28 @@ function initHistogram() {
   let myChart = echarts.init(chartDoms);
   lineOption && myChart.setOption(lineOption);
 // 散点图
-  let chartDoms2 = document.querySelector("#scatterChart");
-  let myChart2 = echarts.init(chartDoms2);
-  lineOption && myChart2.setOption(scatterOption);
+  // let chartDoms2 = document.querySelector("#scatterChart");
+  // let myChart2 = echarts.init(chartDoms2);
+  // lineOption && myChart2.setOption(scatterOption);
 //柱状图
 let chartDoms3 = document.querySelector("#histogramChart");
   let myChart3 = echarts.init(chartDoms3);
   lineOption && myChart3.setOption(histogramOption);
 }
 
+const currentTime = ref(new Date().toLocaleTimeString());
+let timer=ref(null);
 onMounted(()=>{
   console.log('123');
   initHistogram();
+  timer = setInterval(() => {
+        currentTime.value = new Date().toLocaleTimeString();
+      }, 1000);
 })
 
-    
+onBeforeUnmount(() => {
+      clearInterval(timer.value);
+    });
 
   // setup() {
   //   const displayData = ref(null) //存储大屏展示数据的响应式变量
@@ -255,6 +276,7 @@ onMounted(()=>{
   justify-content: space-between;
   align-items: flex-start;
   /* background-color: #7fb7a191; */
+  padding-bottom: 1em;
 }
 
 .nutrient-monitoring,
@@ -294,8 +316,8 @@ onMounted(()=>{
   justify-content: space-around;
 }
 .Info {
-  height: 300px;
-  width: 300px;
+  height: 325px;
+  width: 350px;
 
   padding: 20px;
 
@@ -309,25 +331,25 @@ onMounted(()=>{
 
   /* 使背景模糊化 */
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px #3c9f64;
+  box-shadow: 0 0 10px #3c9f64;
   border-radius: 15px;
 
 }
 .wenshi{
-  height:200px;
-    width: 200px;
+    height: 70%;
+    width: 100%;
 }
 #lineChart{
     height:300px;
-    width: 300px;
+    width: 350px;
   }
 #scatterChart{
   height:300px;
-  width: 300px;
+  width: 350px;
 }
 #histogramChart{
   height:300px;
-  width: 300px;
+  width: 350px;
 }
 
 
@@ -360,6 +382,8 @@ body {
   box-shadow: inset 0 0 0 var(--border-size) currentcolor;
   transition: background 0.8s ease;
 
+  // font-size: 15px;
+  // padding: 1em 2em;
   &:hover {
     background: rgba(100, 0, 0, 0.03);
   }
@@ -417,12 +441,12 @@ body {
 }
 
 .box {
-  position: absolute;
+  // position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
+  transform: translate(-0%, -0%);
+  width: 325px;
+  height: 325px;
   background: #114525a6;
   box-sizing: border-box;
   overflow: hidden;
@@ -516,5 +540,35 @@ body {
   }
 }
 
+.themeBg {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  --color-filter: hue-rotate(25.4219deg);
+  background-size: cover;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.2)
+    ),
+    url("../assets/img/homeback3.png");
+  /* background-image: linear-gradient(transparent, rgb(250, 250, 250) 85%),
+    url("../img/homeback.png"); */
 
+  z-index: -2;
+
+  opacity: 0.6
+}
+
+.InfoTitle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  font-weight: bolder;
+  letter-spacing: 0.15em;
+}
 </style>
