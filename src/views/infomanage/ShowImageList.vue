@@ -16,7 +16,7 @@
       <el-aside
         width="20%"
         class="mokuai card shadow"
-        style="min-height: calc(100vh - 180px)"
+        style="min-height: calc(100vh - 180px);"
       >
         <el-tree
           ref="tree"
@@ -31,131 +31,141 @@
         />
       </el-aside>
       <!-- //右边的盒子 -->
-      <el-main width="78%" style="padding: 0" class="right-box">
-        <!-- 操作部分 -->
-        <div style="width: 100%">
-          <el-button
-            type="primary"
-            class="filter-item -button"
-            style="margin: 10px"
-            @click.prevent="addChildNode"
-            v-hasPermi="['system:node:add']"
-          >
-            添加子节点</el-button
-          >
-          <el-button
-            type="danger"
-            class="filter-item deleteNode-button"
-            style="margin: 10px"
-            @click.prevent="deleteNode"
-            v-hasPermi="['system:node:remove']"
-            >删除节点</el-button
-          >
-          <el-button
-            type="info"
-            class="filter-item reviseNode-button"
-            style="margin: 10px"
-            @click.prevent="updateChildNode"
-            v-hasPermi="['system:node:update']"
-            >修改节点</el-button
-          >
-          <el-button
-            type="primary"
-            class="filter-item addNode-button"
-            style="margin: 10px"
-            @click.prevent="addImage"
-            v-hasPermi="['system:image:add']"
-            >添加图片</el-button
-          >
-          <el-button
-            type="primary"
-            class="filter-item addNode-button"
-            style="margin: 10px"
-            @click.prevent="autoUploadDialog"
-            v-hasPermi="['system:image:add']"
-            >图片自动上传</el-button
-          >
 
-          当前节点状态：
-          <el-switch
-            v-hasPermi="['system:node:update']"
-            v-model="nodeIsShow"
-            @change="switchChange()"
-          />
-        </div>
-        <!-- 内容部分 -->
-        <div v-if="imageSrcList.length === 0" style="height: 500px">
-          无图片或未选择节点
-        </div>
-        <div class="image_box img-list" v-else>
-          <div class="imgCard_container">
-            <el-card
-              class="image_item item"
-              :style="{ width: myWidth, height: myHeight }"
-              v-for="(item, index) in imageSrcList.slice(
-                (currentpageNum - 1) * pageSize,
-                currentpageNum * pageSize
-              )"
-              :key="item.pictureId"
+      <el-container>
+        <el-main width="78%" style="padding: 0" class="right-box">
+          <!-- 操作部分 -->
+          <div style="width: 100%">
+            <el-button
+              type="primary"
+              class="filter-item -button"
+              style="margin: 10px"
+              @click.prevent="addChildNode"
+              v-hasPermi="['system:node:add']"
             >
-              <div class="wrapper">
-                <div class="imgBox">
-                  <el-image
-                    :src="getImageUrlByUrl(item.lessPictureUrl)"
-                    :preview-src-list="
-                      imageSrcList
-                        .slice(
-                          (currentpageNum - 1) * pageSize,
-                          currentpageNum * pageSize
-                        )
-                        .map((item) => getImageUrlByUrl(item.pictureUrl))
-                    "
-                    ref="previewImg"
-                    :initial-index="index"
-                    :style="
-                     { height: imgHeight }"
-                    lazy
-                  >
-                    <template #placeholder>
-                      <div class="image-slot">
-                        Loading<span class="dot">...</span>
-                      </div>
-                    </template>
-                    <template #error>
-                      <el-icon>
-                        <Picture />
-                      </el-icon>
-                    </template>
-                  </el-image>
-                </div>
-              </div>
+              添加子节点</el-button
+            >
+            <el-button
+              type="danger"
+              class="filter-item deleteNode-button"
+              style="margin: 10px"
+              @click.prevent="deleteNode"
+              v-hasPermi="['system:node:remove']"
+              >删除节点</el-button
+            >
+            <el-button
+              type="info"
+              class="filter-item reviseNode-button"
+              style="margin: 10px"
+              @click.prevent="updateChildNode"
+              v-hasPermi="['system:node:update']"
+              >修改节点</el-button
+            >
+            <el-button
+              type="primary"
+              class="filter-item addNode-button"
+              style="margin: 10px"
+              @click.prevent="addImage"
+              v-hasPermi="['system:image:add']"
+              >添加图片</el-button
+            >
+            <el-button
+              type="primary"
+              class="filter-item addNode-button"
+              style="margin: 10px"
+              @click.prevent="autoUploadDialog"
+              v-hasPermi="['system:image:add']"
+              >图片自动上传</el-button
+            >
 
-              <el-button
-                class="delete_button"
-                icon="Delete"
-                size="large"
-                circle
-                type="danger"
-                @click="deleteImage(item.pictureId, item.pictureUrl)"
-                v-hasPermi="['system:image:remove']"
-              ></el-button>
-            </el-card>
+            当前节点状态：
+            <el-switch
+              v-hasPermi="['system:node:update']"
+              v-model="nodeIsShow"
+              @change="switchChange()"
+            />
           </div>
-        </div>
-        <!--分页组件-->
-        <div class="demo-pagination-block">
-          <el-pagination
-            background
-            :current-page="currentpageNum"
-            :page-sizes="[4, 8, 12, 20, 30, 42]"
-            :page-size="pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="totalPage"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
-        </div>
-      </el-main>
+          <!-- 内容部分 -->
+          <div v-if="imageSrcList.length === 0" style="height: 500px">
+            无图片或未选择节点
+          </div>
+          <div class="image_box img-list" v-else>
+            <div class="imgCard_container">
+              <el-card
+                class="image_item item"
+                :style="{ width: myWidth, height: myHeight }"
+                v-for="(item, index) in imageSrcList.slice(
+                  (currentpageNum - 1) * pageSize,
+                  currentpageNum * pageSize
+                )"
+                :key="item.pictureId"
+              >
+                <div class="wrapper">
+                  <div class="imgBox">
+                    <el-image
+                      :src="getImageUrlByUrl(item.lessPictureUrl)"
+                      :preview-src-list="
+                        imageSrcList
+                          .slice(
+                            (currentpageNum - 1) * pageSize,
+                            currentpageNum * pageSize
+                          )
+                          .map((item) => getImageUrlByUrl(item.pictureUrl))
+                      "
+                      ref="previewImg"
+                      :initial-index="index"
+                      :style="
+                      { height: imgHeight }"
+                      lazy
+                    >
+                      <template #placeholder>
+                        <div class="image-slot">
+                          Loading<span class="dot">...</span>
+                        </div>
+                      </template>
+                      <template #error>
+                        <el-icon>
+                          <Picture />
+                        </el-icon>
+                      </template>
+                    </el-image>
+                  </div>
+                </div>
+
+                <el-button
+                  class="delete_button"
+                  icon="Delete"
+                  size="large"
+                  circle
+                  type="danger"
+                  @click="deleteImage(item.pictureId, item.pictureUrl)"
+                  v-hasPermi="['system:image:remove']"
+                ></el-button>
+              </el-card>
+            </div>
+          </div>
+          
+        </el-main>
+        <el-footer class="footer">
+          <!--分页组件-->
+          <div class="demo-pagination-block">
+              <el-pagination
+                background
+                :current-page="currentpageNum"
+                :page-sizes="[4, 8, 12, 20, 30, 42]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalPage"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              />
+          </div>
+        </el-footer>
+      </el-container>
+
+      
+      
+
     </el-container>
     <!-- 新增节点对话框 -->
     <el-dialog
@@ -169,7 +179,7 @@
         ref="dataForm"
         :model="form"
         :rules="rules"
-        label-position="left"
+        :label-position="left"
         label-width="110px"
       >
         <el-form-item label="节点新名称：" prop="treeName">
@@ -209,7 +219,7 @@
         class="upload-demo"
         ref="upload"
         accept=".jpeg,.jpg,.png,.bmp,.webp,.zip,.rar"
-        list-type="picture-card"
+        drag
         :action="uploadUrl"
         :auto-upload="false"
         :headers="{ Authorization: 'Bearer ' + getToken() }"
@@ -220,17 +230,20 @@
         :on-change="handleUploadFile"
         :http-request="httpRequest"
         :multiple="true"
+        width="100%"
       >
-        <el-button type="primary">Click to upload</el-button>
-
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <template #tip>
           <div class="el-upload__tip">请上传图片或压缩包</div>
         </template>
       </el-upload>
-      <div class="dialog-footer">
-        <el-button type="primary" @click="submitImage"> 添加 </el-button>
-        <el-button @click="suspendSubmitImage">取消</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitImage"> 添加 </el-button>
+          <el-button @click="suspendSubmitImage">取消</el-button>
+        </div>
+      </template>
     </el-dialog>
     <!-- 图片自动上传对话框 -->
     <el-dialog
@@ -244,7 +257,7 @@
         ref="dataForm"
         :model="form"
         :rules="autoRules"
-        label-position="left"
+        label-position="right"
         label-width="110px"
       >
         <el-form-item label="IP地址：" prop="ip">
@@ -966,6 +979,20 @@ async function rowClick(nodeObj) {
   // border:1px solid #ccc;
   // margin-bottom: 50px;
   margin-left: 20px;
+  //background: pink;
+  
+}
+.footer{
+  margin-left: 20px;
+  position: relative;
+  //background-color: purple;
+
+  .demo-pagination-block {
+    position: absolute;
+    bottom: 0;
+    //margin-top: 3%;
+    //background: blue;
+  }
 }
 
 .u-title {
@@ -991,7 +1018,11 @@ async function rowClick(nodeObj) {
   .permission-tree {
     margin-bottom: 30px;
   }
+  
 }
+
+
+
 </style>
 <style lang="less" scoped>
 .shadow {
