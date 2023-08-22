@@ -1,28 +1,86 @@
 <template>
-  <div class="weather-monitoring" style="width: 60%;margin: 0 auto;">
+  <div class="weather-monitoring" style="width: 60%; margin: 0 auto">
     <h2 class="one"></h2>
     <div class="sensor-data">
-      <div class="ui raised segment" style="height: 120px;    background-image: linear-gradient(to left top, #fffaf5, #fffbf9, #fffcfd, #fffeff, #ffffff);">
+      <div
+        class="ui raised segment"
+        style="
+          background-image: linear-gradient(
+            to left top,
+            #fffaf5,
+            #fffbf9,
+            #fffcfd,
+            #fffeff,
+            #ffffff
+          );
+        "
+      >
         <a class="ui teal ribbon label">空气温度</a>
-        <ul>
-          <li>{{ data.ambientTemperature }} &#8451; </li>
-          <li>{{ data.detectedTime }}</li>
-        </ul>
+        <div class="datadiv">
+          <img
+            src="@/assets/img/wen.png"
+            alt=""
+            style="width: 60px; height: 60px"
+          />
+          <ul>
+            <div class="datafont">{{ data.ambientTemperature }} &#8451;</div>
+            <li>{{ data.detectedTime }}</li>
+          </ul>
+        </div>
       </div>
-      <div class="ui raised segment" style="height: 120px;background-image: linear-gradient(to left top, #effbf0, #eefdfa, #f4fdff, #fbfeff, #ffffff);">
+      <div
+        class="ui raised segment"
+        style="
+          background-image: linear-gradient(
+            to left top,
+            #effbf0,
+            #eefdfa,
+            #f4fdff,
+            #fbfeff,
+            #ffffff
+          );
+        "
+      >
         <a class="ui teal ribbon label">空气湿度</a>
-        <ul>
-          <li>{{ data.ambientHumidity }} %</li>
-          <li>{{ data.detectedTime }}</li>
-        </ul>
+        <div class="datadiv">
+          <img
+            src="@/assets/img/shi.png"
+            alt=""
+            style="width: 60px; height: 60px"
+          />
+          <ul>
+            <div class="datafont">{{ data.ambientHumidity }} %</div>
+            <li>{{ data.detectedTime }}</li>
+          </ul>
+        </div>
       </div>
-      <div class="ui raised segment" style="height: 120px;background-image: linear-gradient(to left top, #f9f7fc, #faf9fd, #fcfbfe, #fdfdfe, #ffffff);">
+      <div
+        class="ui raised segment"
+        style="
+          background-image: linear-gradient(
+            to left top,
+            #f9f7fc,
+            #faf9fd,
+            #fcfbfe,
+            #fdfdfe,
+            #ffffff
+          );
+        "
+      >
         <a class="ui teal ribbon label">光照强度</a>
-        <ul>
-          <li>{{ data.lightIntensity }} ppm</li>
-          <li>{{ data.detectedTime }}</li>
-        </ul>
-      </div> 
+        <div class="datadiv">
+          <img
+            src="@/assets/img/light.png"
+            alt=""
+            style="width: 60px; height: 60px"
+          />
+          <ul>
+            <!-- <div class="datafont">{{ data.lightIntensity }} ppm</div> -->
+            <div class="datafont">0 ppm</div>
+            <li>{{ data.detectedTime }}</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -67,8 +125,8 @@ function updateData() {
   
   <style scoped>
 .weather-monitoring {
-  background: color #f1f1f1; 
-  width: 100%; 
+  background: color #f1f1f1;
+  width: 100%;
 }
 .sensor-data {
   width: 100%;
@@ -82,13 +140,13 @@ function updateData() {
   display: flex;
   flex-wrap: wrap;
   font-size: 21px;
-  font-weight: 500; 
+  font-weight: 500;
   width: 100%;
   height: 120px;
   margin: 10px;
   padding: 10px;
   opacity: 0.5;
-  background-color: #7fb7a191; 
+  background-color: #7fb7a191;
   border-radius: 5px;
 }
 .sensor-name {
@@ -111,4 +169,16 @@ function updateData() {
   margin-top: 3px;
 }
 
+.datadiv{
+  display: flex; 
+  align-items: center
+}
+
+.datafont{
+  font-size: 30px;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: -40px;
+    margin-bottom: 20px;
+}
 </style>
