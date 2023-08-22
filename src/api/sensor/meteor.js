@@ -3,52 +3,80 @@ import request from '@/utils/request'
 export function getChartData(){
     return request({
       url: '/greenhouse/data/all',
-      method: 'get',
-      params: {
-        
-      },
+      method: 'get', 
       timeout: 1000*600000
     })
   }
-  export function getHunidityData(){
+  export function getHunidityData(params){
     return request({
       url: '/greenhouse/data/ambientHumidity',
-      method: 'get',
-      params: {
-        
-      },
+      method: 'post',
+      data:params, 
       timeout: 1000*600000
+
     })
   }
-  export function getTempData(){
+  export function getTempData(params){
     return request({
       url: '/greenhouse/data/ambientTemperature',
-      method: 'get',
-      params: {
-        
-      },
+      method: 'post',
+      data:params, 
       timeout: 1000*600000
     })
   }
-  export function getCoData(){
+  export function getCoData(params){
     return request({
       url: '/greenhouse/data/CO2',
-      method: 'get',
-      params: {
-        
-      },
+      method: 'post',
+      data:params, 
       timeout: 1000*600000
     })
   }
-  export function getLightData(){
+  export function getLightData(params){
     return request({
       url: '/greenhouse/data/lightIntensity',
-      method: 'get',
+      method: 'post',
+      data:params, 
+      timeout: 1000*600000
+    })
+  }
+  export function getLightDataByTime(i){
+    return request({
+      url: '/greenhouse/data/lightIntensityTime',
+      method: 'get', 
       params: {
-        
+        i
       },
       timeout: 1000*600000
     })
   }
-  
-  
+  export function getHunidityDataByTime(i){
+    return request({
+      url: '/greenhouse/data/ambientHumidityTime',
+      method: 'get', 
+      params: {
+        i
+      },
+      timeout: 1000*600000
+    })
+  }
+  export function getTempDataByTime(i){
+    return request({
+      url: '/greenhouse/data/ambientTemperatureTime',
+      method: 'get', 
+      params: {
+        i
+      },
+      timeout: 1000*600000
+    })
+  }
+  export function getCoDataByTime(i){
+    return request({
+      url: '/greenhouse/data/CO2Time',
+      method: 'get', 
+      params: {
+        i
+      },
+      timeout: 1000*600000
+    })
+  }

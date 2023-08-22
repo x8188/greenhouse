@@ -76,7 +76,7 @@
 import { reactive, onMounted ,ref} from "vue";
 import { useRouter } from "vue-router";
 import weatherMonitor from "@/views/sensor/monitor_page/weatherMonitor.vue";
-import nutrientMonitor from "@/views/sensor/monitor_page/nutrientMonitor.vue";
+import nutrientMonitor from "@/views/sensor/monitor_page/nutrientMonitor.vue"
 import videoPage from "@/views/sensor/monitor_page/videoPage.vue";
 import monitorPlatform from "@/views/sensor/monitorplatform/monitorPlatform.vue";
 // import {ref} from 'vue'
