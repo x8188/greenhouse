@@ -73,7 +73,7 @@ function updateData() {
      data.co2.value = res.data[lastDataIndex].co2;
      data.dewTemp.value = res.data[lastDataIndex].dewTemp
      data.rssi.value = res.data[lastDataIndex].rssi
-     data.detectedTime.value = res.data[lastDataIndex].detectedTime
+     data.detectedTime.value = res.data[lastDataIndex ].detectedTime
   });
 }
 </script>
