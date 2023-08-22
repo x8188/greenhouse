@@ -34,8 +34,7 @@
   </div>
 </template> 
 <script lang="ts" >
-import { useRouter } from "vue-router";
-import meteor from "./meteor.vue";
+import { useRouter } from "vue-router"; 
 import { ref } from "vue";
 
 // import {
@@ -72,7 +71,7 @@ export default {
     // },
   },
   components: {
-    meteor,
+ 
   },
 
   setup() {

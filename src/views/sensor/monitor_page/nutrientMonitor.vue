@@ -120,11 +120,14 @@ onMounted(() => {
   }, 60000); // 时间间隔为一分钟（单位为毫秒）
 });
 function updateData() {
-  getNtrData().then((res) => {
-    data.co2.value = res.data[0].co2;
-    data.dewTemp.value = res.data[0].dewTemp;
-    data.rssi.value = res.data[0].rssi;
-    data.detectedTime.value = res.data[0].detectedTime;
+  getNtrData().then((res) => { 
+    const lastDataIndex = res.data.length - 1 ;
+     data.co2.value = res.data[lastDataIndex].co2;
+     data.dewTemp.value = res.data[lastDataIndex].dewTemp
+     data.rssi.value = res.data[lastDataIndex].rssi
+     data.detectedTime.value = res.data[lastDataIndex ].detectedTime
+
+ 
   });
 }
 </script>

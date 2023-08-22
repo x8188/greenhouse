@@ -113,10 +113,12 @@ function updateData() {
   // };
 
   getWeaData().then((res) => {
-    data.ambientTemperature.value = res.data[0].ambientTemperature;
-    data.ambientHumidity.value = res.data[0].ambientHumidity;
-    data.lightIntensity.value = res.data[0].llightIntensity;
-    data.detectedTime.value = res.data[0].detectedTime;
+    console.log(res);
+    const lastDataIndex = res.data.length - 1 ;
+    data.ambientTemperature.value = res.data[lastDataIndex].ambientTemperature;
+    data.ambientHumidity.value = res.data[lastDataIndex].ambientHumidity;
+    data.lightIntensity.value = res.data[lastDataIndex].llightIntensity;
+    data.detectedTime.value = res.data[lastDataIndex].detectedTime;
   });
 }
 </script>
