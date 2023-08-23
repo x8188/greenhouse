@@ -5,8 +5,10 @@
       <el-header class="header">
         <div
           class="features"
+          :class="{ 'active': state.selectedOption === 'temp' }"
           label="空气温度"
           value="temp"
+          
           @click="handleOptionChange('temp')"
         >
           <div class="features-title">空气温度</div>
@@ -19,6 +21,7 @@
         </div>
         <div
           class="features"
+          :class="{ 'active': state.selectedOption === 'hun' }"
           label="空气湿度"
           value="hun"
           @click="handleOptionChange('hun')"
@@ -33,6 +36,7 @@
         </div>
         <div
           class="features"
+          :class="{ 'active': state.selectedOption === 'light' }"
           label="光照强度"
           value="light"
           @click="handleOptionChange('light')"
@@ -47,6 +51,7 @@
         </div>
         <div
           class="features"
+          :class="{ 'active': state.selectedOption === 'co' }"
           label="二氧化碳"
           value="co"
           @click="handleOptionChange('co')"
@@ -61,6 +66,7 @@
         </div>
         <div
           class="features"
+          :class="{ 'active': state.selectedOption === 'power' }"
           label="电源"
           value="power"
           @click="handleOptionChange('power')"
@@ -75,6 +81,7 @@
         </div>
         <div
           class="features"
+          :class="{ 'active': selectedOption === 'signal' }"
           label="信号强度"
           value="signal"
           @click="handleOptionChange('signal')"
@@ -101,7 +108,7 @@
         >
           <el-col :span="24">
             <el-radio-group
-              v-model="selectedTime"
+              v-model="state.selectedTime"
               @change="handleTimeChange"
               @click="handleClick"
               style="margin-right: 2%"
@@ -187,7 +194,7 @@ const state = reactive({
 });
 
 const selectedOption = ref("");
-const selectedTime = ref("");
+let selectedTime = ref("");
 const updateChart = ref("");
 
 const handleOptionChange = (value) => {
@@ -219,11 +226,10 @@ const handleOptionChange = (value) => {
 
 // }
 
-const handleTimeChange = (value) => {
-  state.selectedTime = value;
-
+const handleTimeChange = () => {
+  state.timeTotime=null
   const clickedTime = new Date(); // 当前点击时刻
-  const pastTime = new Date(clickedTime.getTime() - value * 60 * 60 * 1000); // value小时之前的时间
+  const pastTime = new Date(clickedTime.getTime() - state.selectedTime * 60 * 60 * 1000); // value小时之前的时间
   const clickedTimeString = formatDate(clickedTime); // 格式化点击时刻的时间字符串
   const pastTimeString = formatDate(pastTime); // 格式化value小时之前的时间字符串
   console.log(clickedTimeString);
@@ -231,6 +237,7 @@ const handleTimeChange = (value) => {
   getData(pastTimeString, clickedTimeString);
 };
 const handleTimeChange2 = () => {
+  state.selectedTime=null
   console.log(state.timeTotime, "uiui");
 
   const endTime = state.timeTotime[1];
@@ -242,6 +249,7 @@ const handleTimeChange2 = () => {
   console.log(endTimeString);
   console.log(startTimeString);
   getData(startTimeString, endTimeString);
+
   // console.log(endTime);
   // console.log(startTime);
   // getData(startTime, endTime);
@@ -260,6 +268,7 @@ const formatDate = (date) => {
 const getData = async () => {
   if (state.selectedOption && state.selectedTime) {
     // let data;
+    
     if (state.selectedOption === "co") {
       const res = await getCoDataByTime(state.selectedTime);
       console.log(res);
@@ -271,6 +280,7 @@ const getData = async () => {
     } else if (state.selectedOption === "temp") {
       const res = await getTempDataByTime(state.selectedTime);
       console.log(res);
+      console.log(selectedTime)
       state.data = res.data;
     } else if (state.selectedOption === "light") {
       const res = await getLightDataByTime(state.selectedTime);
@@ -280,34 +290,35 @@ const getData = async () => {
     if (state.data) {
       updateChart.value();
     }
-  }
-  if (state.selectedOption && state.timeTotime) {
+  } 
+  if (state.selectedOption && state.timeTotime) { 
     const endTime = state.timeTotime[1];
     const startTime = state.timeTotime[0];
     const endTimeString = formatDate(endTime);
     const startTimeString = formatDate(startTime);
-    if (state.selectedOption === "co") {
+
+    if (state.selectedOption === "co") { 
       const res = await getCoData({
         starttime: startTimeString,
         endtime: endTimeString,
       });
       console.log(res);
-      state.data = res.data;
-    } else if (state.selectedOption === "hun") {
+      state.data = res.data; 
+    } else if (state.selectedOption === "hun") { 
       const res = await getHunidityData({
         starttime: startTimeString,
         endtime: endTimeString,
       });
       console.log(res);
       state.data = res.data;
-    } else if (state.selectedOption === "temp") {
+    } else if (state.selectedOption === "temp") { 
       const res = await getTempData({
         starttime: startTimeString,
         endtime: endTimeString,
       });
       console.log(res);
-      state.data = res.data;
-    } else if (state.selectedOption === "light") {
+      state.data = res.data; 
+    } else if (state.selectedOption === "light") { 
       const res = await getLightData({
         starttime: startTimeString,
         endtime: endTimeString,
@@ -317,6 +328,8 @@ const getData = async () => {
     }
     if (state.data) {
       updateChart.value();
+    } else {
+      state.data = [];
     }
   }
 };
@@ -345,6 +358,9 @@ onMounted(() => {
       },
       yAxis: {
         type: "value",
+        axisLabel:{
+          fontSize:18
+        },
         lineStyle: {
           color: ["#f3f3f3"],
         },
@@ -400,15 +416,17 @@ onMounted(() => {
 });
 function updateData() {
   getWeaData().then((res) => {
-    data.ambientTemperature.value = res.data[0].ambientTemperature;
-    data.ambientHumidity.value = res.data[0].ambientHumidity;
-    data.lightIntensity.value = res.data[0].lightIntensity;
-    data.detectedTime.value = res.data[0].detectedTime;
+    const lastDataIndex = res.data.length - 1;
+    data.ambientTemperature.value = res.data[lastDataIndex].ambientTemperature;
+    data.ambientHumidity.value = res.data[lastDataIndex].ambientHumidity;
+    data.lightIntensity.value = res.data[lastDataIndex].lightIntensity;
+    data.detectedTime.value = res.data[lastDataIndex].detectedTime;
   });
   getNtrData().then((res) => {
-    data.co2.value = res.data[0].co2;
-    data.dewTemp.value = res.data[0].dewTemp;
-    data.rssi.value = res.data[0].rssi;
+    const lastDataIndex = res.data.length - 1;
+    data.co2.value = res.data[lastDataIndex].co2;
+    data.dewTemp.value = res.data[lastDataIndex].dewTemp;
+    data.rssi.value = res.data[lastDataIndex].rssi;
   });
 }
 
@@ -437,10 +455,10 @@ defineExpose({
       rgba(255, 255, 255, 0.2),
       rgba(255, 255, 255, 0.2)
     ),
-    url("../../../assets/sensor_imge/meteor_imge.jpg");
-  z-index: -2;
+    url("../../../assets/sensor_imge/meteor_imge2.jpg");
+  z-index: -3;
 
-  opacity: 0.6;
+  opacity: 0.4;
 }
 .header {
   display: flex;
@@ -486,19 +504,28 @@ defineExpose({
   box-shadow: 0px 0px 10px #31b6e7 inset;
   /* background-color: #4eaee9a7 ; */
 }
+.active {
+  /* 定义活动状态的样式 */
+  /* 例如，可以设置背景色或文本颜色等 */
+  box-shadow: 0px 0px 10px #31b6e7 inset;
+  /* background-color: #c84343;
+  color: #000000; */
+}
 .feature-select {
+  
   backdrop-filter: blur(10px);
   box-shadow: 0 0 10px #3c9f64;
 }
 .features-title {
+  font-size: 25px;
   font-family: 微软雅黑;
   font-weight: bold;
-  padding-top: 25px;
+  padding-top: 32px;
 }
 .features-value {
   font-family: 微软雅黑;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 24px;
   color: #008eef;
 }
 .features-imge {
