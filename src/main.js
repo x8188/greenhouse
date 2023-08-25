@@ -1,3 +1,7 @@
+import '@babel/polyfill' //(一定要在最上面，第一行)
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import { createApp } from 'vue'
 
 import Cookies from 'js-cookie'
@@ -42,7 +46,6 @@ import ImagePreview from "@/components/ImagePreview"
 import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
-
 const app = createApp(App)
 
 // 全局方法挂载
