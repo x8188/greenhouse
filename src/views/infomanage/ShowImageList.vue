@@ -7,155 +7,171 @@
     "
   >
     <el-container
-      style="padding: 20px; border: 1px solid #eee"
+      style="padding: 20px; border: 1px solid #eee; height: calc(100vh - 100px);"
       v-loading="loading"
       :element-loading-text="loadingText"
       element-loading-background="rgba(0, 0, 0, 0.8)"
     >
+
+    
       <!-- 树 -->
       <el-aside
         width="20%"
-        class="mokuai card shadow"
-        style="min-height: calc(100vh - 180px)"
+        class="mokuai card shadow element-plus-tree"
+        style="min-height: calc(100vh - 180px); padding: 0%;"
       >
-        <el-tree
-          ref="tree"
-          :data="routesData"
-          :props="defaultProps"
-          node-key="treeId"
-          default-expand-all
-          highlight-current
-          :current-node-key="1"
-          @node-click="rowClick"
-          class="permission-tree"
-        />
+              <div>
+                <el-tree
+                  ref="tree"
+                  :data="routesData"
+                  :props="defaultProps"
+                  node-key="treeId"
+                  default-expand-all
+                  highlight-current
+                  :current-node-key="1"
+                  @node-click="rowClick"
+                  class="permission-tree"
+                />
+        </div> 
+
+        
       </el-aside>
       <!-- //右边的盒子 -->
-      <el-main width="78%" style="padding: 0" class="right-box">
-        <!-- 操作部分 -->
-        <div style="width: 100%">
-          <el-button
-            type="primary"
-            class="filter-item -button"
-            style="margin: 10px"
-            @click.prevent="addChildNode"
-            v-hasPermi="['system:node:add']"
-          >
-            添加子节点</el-button
-          >
-          <el-button
-            type="danger"
-            class="filter-item deleteNode-button"
-            style="margin: 10px"
-            @click.prevent="deleteNode"
-            v-hasPermi="['system:node:remove']"
-            >删除节点</el-button
-          >
-          <el-button
-            type="info"
-            class="filter-item reviseNode-button"
-            style="margin: 10px"
-            @click.prevent="updateChildNode"
-            v-hasPermi="['system:node:update']"
-            >修改节点</el-button
-          >
-          <el-button
-            type="primary"
-            class="filter-item addNode-button"
-            style="margin: 10px"
-            @click.prevent="addImage"
-            v-hasPermi="['system:image:add']"
-            >添加图片</el-button
-          >
-          <el-button
-            type="primary"
-            class="filter-item addNode-button"
-            style="margin: 10px"
-            @click.prevent="autoUploadDialog"
-            v-hasPermi="['system:image:add']"
-            >图片自动上传</el-button
-          >
 
-          当前节点状态：
-          <el-switch
-            v-hasPermi="['system:node:update']"
-            v-model="nodeIsShow"
-            @change="switchChange()"
-          />
-        </div>
-        <!-- 内容部分 -->
-        <div v-if="imageSrcList.length === 0" style="height: 500px">
-          无图片或未选择节点
-        </div>
-        <div class="image_box img-list" v-else>
-          <div class="imgCard_container">
-            <el-card
-              class="image_item item"
-              :style="{ width: myWidth, height: myHeight }"
-              v-for="(item, index) in imageSrcList.slice(
-                (currentpageNum - 1) * pageSize,
-                currentpageNum * pageSize
-              )"
-              :key="item.pictureId"
+      <el-container>
+        <el-main width="78%" style="padding: 0" class="right-box">
+          <!-- 操作部分 -->
+          <div style="width: 100%">
+            <el-button
+              type="primary"
+              class="filter-item -button"
+              style="margin: 10px"
+              @click.prevent="addChildNode"
+              v-hasPermi="['system:node:add']"
             >
-              <div class="wrapper">
-                <div class="imgBox">
-                  <el-image
-                    :src="getImageUrlByUrl(item.lessPictureUrl)"
-                    :preview-src-list="
-                      imageSrcList
-                        .slice(
-                          (currentpageNum - 1) * pageSize,
-                          currentpageNum * pageSize
-                        )
-                        .map((item) => getImageUrlByUrl(item.pictureUrl))
-                    "
-                    ref="previewImg"
-                    :initial-index="index"
-                    :style="
-                     { height: imgHeight }"
-                    lazy
-                  >
-                    <template #placeholder>
-                      <div class="image-slot">
-                        Loading<span class="dot">...</span>
-                      </div>
-                    </template>
-                    <template #error>
-                      <el-icon>
-                        <Picture />
-                      </el-icon>
-                    </template>
-                  </el-image>
-                </div>
-              </div>
+              添加子节点</el-button
+            >
+            <el-button
+              type="danger"
+              class="filter-item deleteNode-button"
+              style="margin: 10px"
+              @click.prevent="deleteNode"
+              v-hasPermi="['system:node:remove']"
+              >删除节点</el-button
+            >
+            <el-button
+              type="info"
+              class="filter-item reviseNode-button"
+              style="margin: 10px"
+              @click.prevent="updateChildNode"
+              v-hasPermi="['system:node:update']"
+              >修改节点</el-button
+            >
+            <el-button
+              type="primary"
+              class="filter-item addNode-button"
+              style="margin: 10px"
+              @click.prevent="addImage"
+              v-hasPermi="['system:image:add']"
+              >添加图片</el-button
+            >
+            <el-button
+              type="primary"
+              class="filter-item addNode-button"
+              style="margin: 10px"
+              @click.prevent="autoUploadDialog"
+              v-hasPermi="['system:image:add']"
+              >图片自动上传</el-button
+            >
 
-              <el-button
-                class="delete_button"
-                icon="Delete"
-                size="large"
-                circle
-                type="danger"
-                @click="deleteImage(item.pictureId, item.pictureUrl)"
-                v-hasPermi="['system:image:remove']"
-              ></el-button>
-            </el-card>
+            当前节点状态：
+            <el-switch
+              v-hasPermi="['system:node:update']"
+              v-model="nodeIsShow"
+              @change="switchChange()"
+            />
           </div>
-        </div>
-        <!--分页组件-->
-        <div class="demo-pagination-block">
-          <el-pagination
-            background
-            :current-page="currentpageNum"
-            :page-sizes="[4, 8, 12, 20, 30, 42]"
-            :page-size="pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="totalPage"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
-        </div>
-      </el-main>
+          <!-- 内容部分 -->
+          <div v-if="imageSrcList.length === 0" style="height: 500px">
+            无图片或未选择节点
+          </div>
+          <div class="image_box img-list" v-else>
+            <div class="imgCard_container">
+              <el-card
+                class="image_item item"
+                :style="{ width: myWidth, height: myHeight }"
+                v-for="(item, index) in imageSrcList.slice(
+                  (currentpageNum - 1) * pageSize,
+                  currentpageNum * pageSize
+                )"
+                :key="item.pictureId"
+              >
+                <div class="wrapper">
+                  <div class="imgBox">
+                    <el-image
+                      :src="getImageUrlByUrl(item.lessPictureUrl)"
+                      :preview-src-list="
+                        imageSrcList
+                          .slice(
+                            (currentpageNum - 1) * pageSize,
+                            currentpageNum * pageSize
+                          )
+                          .map((item) => getImageUrlByUrl(item.pictureUrl))
+                      "
+                      ref="previewImg"
+                      :initial-index="index"
+                      :style="
+                      { height: imgHeight }"
+                      lazy
+                    >
+                      <template #placeholder>
+                        <div class="image-slot">
+                          Loading<span class="dot">...</span>
+                        </div>
+                      </template>
+                      <template #error>
+                        <el-icon>
+                          <Picture />
+                        </el-icon>
+                      </template>
+                    </el-image>
+                  </div>
+                </div>
+
+                <el-button
+                  class="delete_button"
+                  icon="Delete"
+                  size="large"
+                  circle
+                  type="danger"
+                  @click="deleteImage(item.pictureId, item.pictureUrl)"
+                  v-hasPermi="['system:image:remove']"
+                ></el-button>
+              </el-card>
+            </div>
+          </div>
+          
+        </el-main>
+        <el-footer class="footer">
+          <!--分页组件-->
+          <div class="demo-pagination-block">
+              <el-pagination
+                background
+                :current-page="currentpageNum"
+                :page-sizes="[4, 8, 12, 20, 30, 42]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="totalPage"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              />
+          </div>
+        </el-footer>
+      </el-container>
+
+      
+      
+
     </el-container>
     <!-- 新增节点对话框 -->
     <el-dialog
@@ -169,7 +185,7 @@
         ref="dataForm"
         :model="form"
         :rules="rules"
-        label-position="left"
+        :label-position="left"
         label-width="110px"
       >
         <el-form-item label="节点新名称：" prop="treeName">
@@ -209,7 +225,7 @@
         class="upload-demo"
         ref="upload"
         accept=".jpeg,.jpg,.png,.bmp,.webp,.zip,.rar"
-        list-type="picture-card"
+        drag
         :action="uploadUrl"
         :auto-upload="false"
         :headers="{ Authorization: 'Bearer ' + getToken() }"
@@ -220,17 +236,20 @@
         :on-change="handleUploadFile"
         :http-request="httpRequest"
         :multiple="true"
+        width="100%"
       >
-        <el-button type="primary">Click to upload</el-button>
-
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <template #tip>
           <div class="el-upload__tip">请上传图片或压缩包</div>
         </template>
       </el-upload>
-      <div class="dialog-footer">
-        <el-button type="primary" @click="submitImage"> 添加 </el-button>
-        <el-button @click="suspendSubmitImage">取消</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitImage"> 添加 </el-button>
+          <el-button @click="suspendSubmitImage">取消</el-button>
+        </div>
+      </template>
     </el-dialog>
     <!-- 图片自动上传对话框 -->
     <el-dialog
@@ -244,7 +263,7 @@
         ref="dataForm"
         :model="form"
         :rules="autoRules"
-        label-position="left"
+        label-position="right"
         label-width="110px"
       >
         <el-form-item label="IP地址：" prop="ip">
@@ -768,7 +787,7 @@ async function rowClick(nodeObj) {
 }
 
 :deep(.el-tree-node__label) {
-  font-size: 16px;
+  font-size: 5px;
 }
 
 :deep(.el-form-item__label) {
@@ -955,7 +974,8 @@ async function rowClick(nodeObj) {
 
 .mokuai {
   margin-bottom: 0;
-  background-color: rgb(183, 202, 189);
+  background: #f2fbf7;
+  border-radius: 8px;
   // box-shadow:2px 2px 5px #000;
   // border:1px solid #ccc;
   // margin-bottom: 50px;
@@ -966,6 +986,20 @@ async function rowClick(nodeObj) {
   // border:1px solid #ccc;
   // margin-bottom: 50px;
   margin-left: 20px;
+  //background: pink;
+  
+}
+.footer{
+  margin-left: 20px;
+  position: relative;
+  //background-color: purple;
+
+  .demo-pagination-block {
+    position: absolute;
+    bottom: 0;
+    //margin-top: 3%;
+    //background: blue;
+  }
 }
 
 .u-title {
@@ -991,7 +1025,43 @@ async function rowClick(nodeObj) {
   .permission-tree {
     margin-bottom: 30px;
   }
+  
 }
+
+:deep(.permission-tree){
+    margin: 10px;
+    margin-bottom: 30px;
+    background: #f2fbf7;
+    padding-right: 15px;
+  }
+:deep(.el-tree-node__content){
+    border-radius: 5px;
+    margin: 1px;
+    line-height: 30px;
+    font-size: 14px;
+    color: black;
+    padding: 0%;
+    //margin-right: 10px;
+  }
+:deep(.el-tree-node__content:hover) {
+  color: #FFD04B;
+  color: #F56C6C;
+  //color: #9ABEAF;
+  background-color: rgba($color: #C6C6C6, $alpha: 0.3);
+  // &:hover{
+  //   background-color: rgba($color: #161616, $alpha: 0.7);
+  // }
+  .el-tree-node__expand-icon{
+    color: #FFD04B;
+    color: #F56C6C;
+    //color: #9ABEAF;
+  }
+}
+
+:deep(.el-tree-node__expand-icon) {
+    color: black;
+  }
+
 </style>
 <style lang="less" scoped>
 .shadow {
@@ -1001,10 +1071,223 @@ async function rowClick(nodeObj) {
 }
 
 /* 按钮样式 */
-.addNode-button {
-  background: rgb(85, 123, 116);
-}
+// .addNode-button {
+//   background: rgb(85, 123, 116);
+// }
 </style>
 
+<style  scoped>
+.shadow {
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14);
+  /* 0 3px 3px -2px rgba(0, 0, 0, 0.12),
+         0 1px 8px 0 rgba(0, 0, 0, 0.2); */
+}
 
+/* /deep/ .el-dialog {
+     display: flex;
+     flex-direction: column;
+     margin:0 !important;
+     position:absolute;
+     top:50%;
+     left:50%;
+     transform:translate(-50%,-50%);
+     max-height:calc(100% - 200px);
+     max-width:calc(100% - 30px);
+}
+/deep/ .el-dialog .el-dialog__body {
+     flex:1;
+     overflow: auto;
+} */
+</style>
+
+<style lang="less" scoped>
+  .element-plus-tree {
+    //padding: 100px;
+ 
+    :deep(.el-tree) {
+ 
+      /* ---- ---- ---- ---- ^（节点对齐）---- ---- ---- ---- */
+      .el-tree-node {
+        
+        /* ^ 所有节点 */
+        i.el-tree-node__expand-icon {
+          padding: 6px;
+ 
+          &::before {
+            font-family: element-ui-icons;
+            font-style: normal;
+            //content: "\e6d9";
+            //color: #000000;
+            border: 1px solid #606266;
+            border-radius: 2px;
+          }
+ 
+          // svg {
+          //   display: true; // 隐藏所有节点的 svg 图标
+          // }
+        }
+        /* / 所有节点 */
+ 
+        /* ^ 已展开的父节点 */
+        i.el-tree-node__expand-icon.expanded {
+          //transform: rotate(0deg); // 取消旋转
+          //-webkit-transform: rotate(0deg); // 取消旋转
+ 
+          &::before {
+            font-family: element-ui-icons;
+            font-style: normal;
+            //content: "\e6d8";
+            //color: #000000;
+            border: 1px solid #606266;
+            border-radius: 2px;
+          }
+        }
+        /* / 已展开的父节点 */
+ 
+        /* ^ 叶子节点 */
+        i.el-tree-node__expand-icon.is-leaf {
+ 
+          &::before {
+            display: none;
+          }
+        }
+        /* / 叶子节点 */
+ 
+        /* ^ 复选框 */
+        .el-checkbox {
+          margin: 0 7px 0 2px;
+ 
+          .el-checkbox__inner {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+            border: 1px solid #bbb;
+          }
+ 
+          .el-checkbox__input.is-checked .el-checkbox__inner,
+          .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+            border: 1px solid #5e7ce0;
+          }
+        }
+        /* / 复选框 */
+ 
+        .el-tree-node__content {
+          small {
+            font-size: 13px;
+          }
+        }
+      }
+      /* ---- ---- ---- ---- /（节点对齐）---- ---- ---- ---- */
+ 
+      /* ---- ---- ---- ---- ^（文字高亮）---- ---- ---- ---- */
+      .el-tree-node.is-current {
+        .el-tree-node__content {
+          small {
+            color: #5e7ce0;
+          }
+        }
+ 
+        .el-tree-node__children {
+          small {
+            color: unset;
+          }
+        }
+      }
+      /* ---- ---- ---- ---- /（文字高亮）---- ---- ---- ---- */
+ 
+      /* ---- ---- ---- ---- ^（新增辅助线）---- ---- ---- ---- */
+      /* ^ 树节点 */
+      .el-tree-node {
+        position: relative;
+        width: auto;
+        // width: max-content; // 显示文字宽度
+        padding-left: 13px;
+ 
+        &::before {
+          width: 1px;
+          height: 100%;
+          content: '';
+          position: absolute;
+          top: -38px;
+          bottom: 0;
+          left: 0;
+          right: auto;
+          border-width: 1px;
+          border-left: 1px solid #b8b9bb;
+        }
+ 
+        &::after {
+          width: 13px;
+          height: 13px;
+          content: '';
+          position: absolute;
+          z-index: 0;
+          left: 0;
+          right: auto;
+          top: 12px;
+          bottom: auto;
+          border-width: 1px;
+          border-top: 1px solid #b8b9bb;
+        }
+ 
+        .el-tree-node__content {
+          position: relative;
+          z-index: 1;
+          //color: #000;
+          padding-left: 0 !important;
+ 
+          /* ^ 复选框 */
+          .el-checkbox {
+            margin: 0 10px 0 5.5px;
+          }
+          /* / 复选框 */
+        }
+        
+        .el-tree-node__children {
+          padding-left: 12px;
+        }
+ 
+        &:last-child::before {
+          height: 50px;
+        }
+      }
+      /* / 树节点 */
+ 
+      /* ^ 第一层节点 */
+      > .el-tree-node {
+        padding-left: 0;
+ 
+        &::before {
+          border-left: none;
+        }
+ 
+        &::after {
+          border-top: none;
+        }
+      }
+      /* / 第一层节点 */
+ 
+      /* ^ 叶子节点 */
+      i.el-tree-node__expand-icon.is-leaf {
+        display: none;
+      }
+      /* / 叶子节点 */
+ 
+      /* ^ 设置子节点左外边距 */
+      .el-tree-node__content:has(.is-leaf) {
+        // color: #00ffff;
+        margin-left: 12px !important;
+      }
+      /* / 设置子节点左外边距 */
+      /* ---- ---- ---- ---- /（新增辅助线）---- ---- ---- ---- */
+    }
+  }
+</style>
+
+<style lang="less" scoped>
+// 设置高亮颜色
+/deep/ .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: rgba(rgb(243, 121, 121), 0.3) !important;
+}
+</style>
 

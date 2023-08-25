@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router';
 import Layout from '@/layout';
 
+
 /**
  * Note: 路由配置项
  *
@@ -172,7 +173,8 @@ export const constantRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
-  }
+  },
+   
 ];
 
 const router = createRouter({

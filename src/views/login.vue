@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">作物表型管理平台</h3>
+      <h3 class="title">温室管理平台</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -192,8 +192,17 @@ getCookie();
 }
 
 .button_style{
-  background-color: #707070;
+  // background-color: #707070;
   border: #707070;
+  background-image: linear-gradient(to right, #1b9c94, #0f9c8b, #0d9b80, #179a75, #249968, #3c9f64, #50a561, #63ab5d, #82b963, #a0c76b, #bed574, #dce37f);
+  text-align: center;
+    display: block;
+    height: 50px;
+    padding: 12px;
+    font: 900 18px '';
+    border-radius: 10px;
+    color: #fff;
+    letter-spacing: 3px;
 }
 .login {
   display: flex;
@@ -201,14 +210,27 @@ getCookie();
   align-items: center;
   height: 100%;
   // background-image: url("../assets/images/login-background.jpg");
-  background-image: url("@/assets/img/banner/banner1.jpg");
+  background-image: url("@/assets/img/banner/back.jpg");
   background-size: cover;
 }
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
   color: #707070;
+
+  font:800 25px '';
+  text-align: center;
+  letter-spacing: 5px;
+  color: #3d3d3d;
 }
+
+:deep(.el-input__inner) {
+      caret-color: #63ab5d;
+   }
+  :deep(.el-input__inner:focus) {
+    // el-input输入时设置边框颜色
+    border: #63ab5d 1px solid;
+  }
 
 .login-form {
   border-radius: 6px;
@@ -226,6 +248,18 @@ getCookie();
     width: 14px;
     margin-left: 0px;
   }
+
+  padding: 20px;
+  background: linear-gradient(
+      to right bottom,
+      rgba(255,255,255,.7),
+      rgba(255,255,255,.5),
+      rgba(255,255,255,.4)
+  );
+  /* 使背景模糊化 */
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px #3c9f64;
+  border-radius: 15px;
 }
 .login-tip {
   font-size: 13px;

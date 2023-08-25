@@ -7,7 +7,7 @@ import { createApp } from 'vue'
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
-import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
+//import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
 
 import '@/assets/styles/index.scss' // global css
 
@@ -46,6 +46,10 @@ import ImagePreview from "@/components/ImagePreview"
 import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
+
+// 丝带div样式
+import '@/assets/styles/raised.css'
+
 const app = createApp(App)
 
 // 全局方法挂载
@@ -77,7 +81,7 @@ directive(app)
 
 // 使用element-plus 并且设置全局的大小
 app.use(ElementPlus, {
-  locale: locale,
+  //locale: locale,
   // 支持 large、default、small
   size: Cookies.get('size') || 'default'
 })
