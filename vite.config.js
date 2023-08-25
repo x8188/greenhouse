@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import createVitePlugins from './vite/plugins'
-import babel from "vite-babel-plugin";
+// import babel from "vite-babel-plugin";
 
 
 export default defineConfig(({ mode, command }) => {
@@ -10,11 +10,11 @@ export default defineConfig(({ mode, command }) => {
   return {
     base: VITE_APP_ENV === 'production' ? '/' : '/',
     plugins: [createVitePlugins(env, command === 'build'),
-        babel({
-           babelConfig:{
-            configFile:true
-          }
-        })
+        // babel({
+        //    babelConfig:{
+        //     configFile:true
+        //   }
+        // })
 ],
     define: {
     },
@@ -60,7 +60,7 @@ export default defineConfig(({ mode, command }) => {
         ]
       }
     },
-     transpileDependencies:['*'] //最开始这里的值为 true,查到的改成 * , 
-      //应该是 转成es5,大佬知道的话,可留言解答!
+    //  transpileDependencies:['*'] //最开始这里的值为 true,查到的改成 * , 
+    //   //应该是 转成es5,大佬知道的话,可留言解答!
   }
 })
