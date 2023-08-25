@@ -1,3 +1,7 @@
+// import '@babel/polyfill' //(一定要在最上面，第一行)
+// import 'core-js/stable';
+// // import 'regenerator-runtime/runtime';
+
 import { createApp } from 'vue'
 
 import Cookies from 'js-cookie'
