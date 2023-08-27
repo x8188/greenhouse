@@ -20,15 +20,7 @@
             </video>
           </div>
         </div>
-        <div class="tv-sub" ></div>
-       
-        <!-- <template>
-          <div class="home">
-            <Scene :eventList="eventList"></Scene>
-            <BigScreen :dataInfo="dataInfo" :eventList="eventList"></BigScreen>
-          </div>
-        </template> -->
-      <!-- </div> -->
+        <div class="tv-sub" ></div> 
     </div>
   </div>
 </template>
@@ -37,52 +29,16 @@
 
  
 
-// <script setup>
-import videoUrl from "../../../assets/sensor_imge/show_school.mp4"
-// import Scene from "../../../components/SensorScreen/Scene.vue";
-// import BigScreen from "../../../components/SensorScreen/BigScreen.vue";
-// import LightWall from "../../../three/mesh/LightWall";
-// import { onMounted, reactive, ref } from "vue";
-// // import { getSmartCityInfo, getSmartCityList } from "@/api/api";
-// import gsap from "gsap";
-// console.log(testVertex);
+ <script>
 
-// const displayWidth = ref("40%");
-
-// const dataInfo = reactive({
-//   iot: { number: 0 },
-//   event: { number: 0 },
-//   power: { number: 0 },
-//   test: { number: 0 },
-// });
-
-// onMounted(async () => {
-//   changeInfo();
-//   getEventList();
-//   setInterval(() => {
-//     changeInfo();
-//     getEventList();
-//   }, 10000);
-// });
-
-// const changeInfo = async () => {
-//   let res = await getSmartCityInfo();
-
-//   for (let key in dataInfo) {
-//     dataInfo[key].name = res.data.data[key].name;
-//     dataInfo[key].unit = res.data.data[key].unit;
-//     gsap.to(dataInfo[key], {
-//       number: res.data.data[key].number,
-//       duration: 1,
-//     });
-//   }
-// };
-
-// const eventList = ref([]);
-// const getEventList = async () => {
-//   let result = await getSmartCityList();
-//   eventList.value = result.data.list;
-// };
+// import videoUrl from "../../../assets/sensor_imge/show_school.mp4"
+export default {
+  data() {
+    return {
+      videoUrl: 'http://60.205.164.47:8000/rtp/00A4C799.live.mp4',
+    };
+  },
+};
 </script>
 <style>
 .title {
