@@ -84,7 +84,7 @@
               >图片自动上传</el-button
             >
 
-            当前节点状态：
+            <span>当前节点状态：</span>
             <el-switch
               v-hasPermi="['system:node:update']"
               v-model="nodeIsShow"
@@ -95,7 +95,7 @@
           <div v-if="imageSrcList.length === 0" style="height: 500px">
             无图片或未选择节点
           </div>
-          <div class="image_box img-list" v-else>
+          <div class="image_box img-list" v-else style="height: calc(100vh - 300px);width: 100%;">
             <div class="imgCard_container">
               <el-card
                 class="image_item item"
@@ -1300,8 +1300,8 @@ async function rowClick(nodeObj) {
   }
 
   
-:deep(.el-tree-node__label) {
-  font-size: 16px;
+  :deep(.el-tree-node__label) {
+  font-size: 13px;
 }
 //一级节点选择器
 :deep(.el-tree>.el-tree-node> .el-tree-node__content) {
@@ -1314,7 +1314,7 @@ async function rowClick(nodeObj) {
   height: 28px;
 
   .el-tree-node__label{
-    font-size: 22px;
+    font-size: 18px;
     font-family: "PingFang SC";
   }
 }
@@ -1328,7 +1328,7 @@ async function rowClick(nodeObj) {
   //color:#4c8045;
   height: 28px;
   .el-tree-node__label{
-    font-size: 20px;
+    font-size: 16px;
   }
 }
 //三级节点选择器
@@ -1340,7 +1340,7 @@ async function rowClick(nodeObj) {
   //color: #84a729;
   height: 23px;
   .el-tree-node__label{
-    font-size: 18px;
+    font-size: 14px;
   }
 
 }
@@ -1355,6 +1355,22 @@ async function rowClick(nodeObj) {
   }
   .el-tree-node__expand-icon{
     color:#4f6f46;
+  }
+}
+
+@media (max-width: 1330px) {
+  .filter-item {
+    margin-right: 0px; /* 缩小元素之间的间距 */
+    size:"mini";
+  }
+
+  .my_input {
+    width: 120px; /* 缩小输入框的宽度 */
+  }
+
+  .el-button {
+    font-size: 12px; /* 设置按钮的字体大小为小号 */
+    padding: 3px 6px; /* 根据需要调整按钮的内边距 */
   }
 }
 

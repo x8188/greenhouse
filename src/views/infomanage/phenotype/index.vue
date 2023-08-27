@@ -129,7 +129,6 @@
               type="primary"
               plain
               icon="Plus"
-              size="small"
               class="addExcel"
               @click="handleAdd"
               v-hasPermi="['system:logininfor:add']"
@@ -140,7 +139,6 @@
               type="danger"
               plain
               icon="Delete"
-              size="small"
               @click="handleDelete"
               :disabled="deleteDisabled"
               v-hasPermi="['system:logininfor:remove']"
@@ -148,7 +146,7 @@
             </el-button>
           </div>
 
-          <el-container style="height: calc(100vh - 360px);width: 100%;;" class="mytable">
+          <el-container style="height: calc(100vh - 360px);width: 100%;" class="mytable">
             <!-- 表格部分 -->
             <el-table
               v-loading="tableLoading"
@@ -156,7 +154,7 @@
               stripe
               border="true"
               @selection-change="handleSelectionChange"
-              max-height="100%"
+              height="100%"
               style="background-color: #EEEEEE;width: 100%; felx:1;"
             >
               <el-table-column fixed="left" type="selection" width="auto" align="center" />
@@ -1328,7 +1326,7 @@ onMounted(() => {
 
   
 :deep(.el-tree-node__label) {
-  font-size: 16px;
+  font-size: 13px;
 }
 //一级节点选择器
 :deep(.el-tree>.el-tree-node> .el-tree-node__content) {
@@ -1341,7 +1339,7 @@ onMounted(() => {
   height: 28px;
 
   .el-tree-node__label{
-    font-size: 22px;
+    font-size: 18px;
     font-family: "PingFang SC";
   }
 }
@@ -1355,7 +1353,7 @@ onMounted(() => {
   //color:#4c8045;
   height: 28px;
   .el-tree-node__label{
-    font-size: 20px;
+    font-size: 16px;
   }
 }
 //三级节点选择器
@@ -1367,7 +1365,7 @@ onMounted(() => {
   //color: #84a729;
   height: 23px;
   .el-tree-node__label{
-    font-size: 18px;
+    font-size: 14px;
   }
 
 }
