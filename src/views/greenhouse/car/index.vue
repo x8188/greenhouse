@@ -144,55 +144,55 @@
         </div> -->
       <!-- </el-card> -->
       <div class="right">
-        <el-card >
-        <h3>&nbsp;&nbsp&nbsp;&nbsp小车操作</h3>
+        <el-card>
+        <h3>&nbsp;&nbsp;&nbsp;&nbsp;小车操作</h3>
         <el-row type="flex" justify="left">
-          <el-button
-            class="renewmap"
+          <a
+            class="opBu"
             type="primary"
             @click="RenewMap"
-        >地图重建</el-button>
-        <el-button
-            class="uploadmap"
+        >地图重建</a>
+        <a
+            class="opBu"
             type="primary"
             @click="UploadMap"
-        >上载地图</el-button>
+        >上载地图</a>
         </el-row>
         <el-row type="flex" justify="left">
-          <el-button
-              class="shrinkmap"
+          <a
+              class="opBu"
               type="primary"
               @click="Shrink"
-          >缩小地图</el-button>
-          <el-button
-              class="largemap"
+          >缩小地图</a>
+          <a
+              class="opBu"
               type="primary"
               @click="Enlarge"
-          >放大地图</el-button>
+          >放大地图</a>
         </el-row>
         <el-row type="flex" justify="left">
-        <el-button
-            class="startwork"
+        <a
+            class="opBu"
             type="primary"
             @click="StartWork"
-        >开始工作</el-button>
-        <el-button
-            class="finishwork"
+        >开始工作</a>
+        <a
+            class="opBu"
             type="primary"
             @click="FinishWork"
-        >结束工作</el-button>
+        >结束工作</a>
         </el-row>
         <el-row type="flex" justify="left">
-          <el-button
-            class="backbattery"
+          <a
+            class="opBu"
             type="primary"
             @click="BackBattery"
-        >返回充电</el-button>
-        <el-button
-            class="finishbattery"
+        >返回充电</a>
+        <a
+            class="opBu"
             type="primary"
             @click="FinishBattery"
-        >结束充电</el-button>
+        >结束充电</a>
         </el-row>
         <!-- <el-row type="flex" justify="left">
           <el-button
@@ -201,9 +201,27 @@
               @click="RobotState"
           >机器人状态</el-button>
         </el-row> -->
-        <h3>&nbsp;&nbsp&nbsp;&nbsp推杆控制</h3>
-        <el-row type="flex" justify="left">
-        <el-button
+        <h3>&nbsp;&nbsp;&nbsp;&nbsp;推杆控制</h3>
+        <div>
+
+          <div class="container">
+            <div class="button-wrapper">
+              <div class="button" @click="Uppushrod">
+                <span class="text">上升推杆</span>
+              </div>
+            </div>
+            <div class="button-wrapper">
+              <div class="button" @click="Lowpushrod">
+                <span class="text">下降推杆</span>
+              </div>
+            </div>
+            <div class="button-wrapper">
+              <div class="button" @click="Stoppushrod">
+                <span class="text">停止推杆</span>
+              </div>
+            </div>
+          </div>
+        <!-- <el-button
             class="uppushrod"
             type="primary"
             @click="Uppushrod"
@@ -217,19 +235,27 @@
             class="stoppushrod"
             type="primary"
             @click="Stoppushrod"
-        >停止推杆</el-button>
-        </el-row>
+        >停止推杆</el-button> -->
+        </div>
         <div class="demo-progress">
-          <h3>&nbsp;&nbsp&nbsp;&nbsp电量显示</h3>
+          <h3>&nbsp;&nbsp;&nbsp;&nbsp;电量显示</h3>
     <el-progress type="circle" :percentage="electricity" />
         </div>
-        <h3>&nbsp;&nbsp&nbsp;&nbsp状态信息</h3>
+        <h3>&nbsp;&nbsp;&nbsp;&nbsp;状态信息</h3>
+
         <el-descriptions>
-    <el-descriptions-item label="小车状态">{{robot_state}}</el-descriptions-item>
-    <el-descriptions-item label="推杆状态">{{pushrod_state}}</el-descriptions-item>
+    <el-descriptions-item label="小车状态">{{robot_state}}<el-icon :size="20" color="green"><SuccessFilled /></el-icon></el-descriptions-item>
+    <el-descriptions-item label="推杆状态">{{pushrod_state}}<el-icon :size="20" color="red"><CircleCloseFilled /></el-icon></el-descriptions-item>
   </el-descriptions>
 </el-card>
+
       </div>
+      <!-- <div class="container">
+			<a href="#" class="opBu">Example 1</a>
+			<a href="#">Example 2</a>
+			<a href="#">Example 3</a>
+		</div> -->
+
     </div>
 </template>
 
@@ -253,7 +279,7 @@ export default {
         theta:''
       },
       //小车电量
-      electricity:'',
+      electricity:'50',
       //小车状态
       robot_state:'',
       //电动推杆信息
@@ -640,7 +666,8 @@ export default {
   right: 0;
   top: 120px;
   position: fixed;
-  opacity: 0.65;
+  opacity: 0.85;
+  /* background-color: #02f816; */
 }
 #mapImg {
   margin-left: 200px;
@@ -649,7 +676,201 @@ export default {
   transform: translateX(-50%); */
   /* margin: 0 auto; */
 }
-#mapShow {
+/* #mapShow {
   position: relative;
+} */
+</style>
+
+
+<style lang="less" scoped>
+// @import url('https://fonts.googleapis.com/css?family=Signika+Negative:400,600,700');
+
+body {
+  margin: 0;
+  background: #2b2f3c;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Signika Negative', sans-serif;
+  
+  h1 {
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+    font-size: 3em;
+    letter-spacing: 0.05em;
+    margin-bottom: 1em;
+  }
+  
+    
+  .opBu {
+    display: inline-block;
+    margin: 10px 20px;
+    color: #fff;
+    line-height: 1em;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0.9em 2.5em;
+    border: 0.15em solid transparent;
+    background: #2b2f3c;
+    border-radius: 3em;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    
+    &:before {
+      content: "";
+      display: block;
+      border-radius: 3.5em;
+      position: absolute;
+      background: inherit;
+      top: 0.2em;
+      left: 0.2em;
+      right: 0.2em;
+      bottom: 0.2em;
+      z-index: -1;
+    }
+    
+    &:after {
+      content: "";
+      display: block;
+      //border-radius: 3.5em;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: -2;
+      transform: rotate(0deg);
+      animation: gradient 2s ease alternate infinite;
+      -webkit-animation-play-state: paused;
+      animation-play-state: paused;
+    }
+    
+    &:hover:after {
+        -webkit-animation-play-state: running;
+        animation-play-state: running;
+      }
+    
+    &{
+      
+      &:after {
+        background: rgb(51,203,235);
+        background: -moz-linear-gradient(left, rgba(51,203,235,1) 0%, rgba(40,214,98,1) 30%, rgba(240,119,57,1) 70%, rgba(227,54,107,1) 100%);
+        background: -webkit-linear-gradient(left, rgba(51,203,235,1) 0%,rgba(40,214,98,1) 30%,rgba(240,119,57,1) 70%,rgba(227,54,107,1) 100%);
+        background: linear-gradient(to right, rgba(51,203,235,1) 0%,rgba(40,214,98,1) 30%,rgba(240,119,57,1) 70%,rgba(227,54,107,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#33cbeb', endColorstr='#e3366b',GradientType=1 );
+        background-size: 300% 300%;
+      }
+
+    }
+      
+      // &:nth-child(2) {
+        
+      //   &:after {
+      //     background: rgb(230,54,196);
+      //     background: -moz-linear-gradient(left, rgba(230,54,196,1) 0%, rgba(63,206,165,1) 48%, rgba(80,64,139,1) 96%);
+      //     background: -webkit-linear-gradient(left, rgba(230,54,196,1) 0%,rgba(63,206,165,1) 48%,rgba(80,64,139,1) 96%);
+      //     background: linear-gradient(to right, rgba(230,54,196,1) 0%,rgba(63,206,165,1) 48%,rgba(80,64,139,1) 96%);
+      //     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e636c4', endColorstr='#50408b',GradientType=1 );
+      //     background-size: 300% 300%;
+      //   }
+      // }
+  }
+
+  @-webkit-keyframes gradient {.keyframes;}
+  @keyframes gradient {.keyframes;}
+  .keyframes () {
+          0% {background-position: 0% 50%;}
+          50% {background-position: 95% 50%;}
+          100% {background-position: 0% 50%;}
+  }
+  
 }
+
+</style>
+
+<style lang="scss" scoped>
+
+$colors: #FF8B94, #02A7E1, #98CB4A, #AE5A41, #F7D842;
+
+@for $i from 1 through length($colors) {
+	.container .button-wrapper:nth-child(#{length($colors)}n+#{$i}) div:before {
+		border-color: nth($colors, $i);
+	} 
+  .container .button-wrapper:nth-child(#{length($colors)}n+#{$i}) div {
+		border-color: nth($colors, $i);
+	} 
+}
+
+.container {  
+  z-index: 99;
+  // height: 100vh;
+  display: flex;
+  // justify-content: center;
+  align-items: center;
+  flex: 0;
+  flex-wrap: wrap;
+  .button-wrapper {
+    overflow:hidden;  
+    .button {
+    position:relative;
+    text-transform: uppercase;
+    color: #555555;
+    border: solid 2px #02A7E1;
+    padding: 10px 30px;
+    z-index:1;
+    cursor: pointer;
+    &::before {
+      position:absolute;
+      border-bottom: solid 3px;
+      content:'';
+      min-height: 10px;
+      min-width: 100px;
+      z-index:200;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 60%;
+      opacity:1;
+      transition-duration:0.5s;
+      
+    }
+    &::after {
+      pointer-events: none;
+      position:absolute;
+      content:'';
+      width: 600px;
+      height: 160px;
+      border-radius:50%;
+      background-color: #fff;
+      //background-color: red;
+      
+      //border: solid 2px red;
+      top:-120%;
+      left:-30%; 
+      z-index: -10;
+      //transform: rotate(30deg);
+      transition-duration: 2s;
+    }
+    &:hover:after {
+      width:0;
+      height:50px;
+    }
+    &:hover:before {
+      opacity:0;
+    }
+  }
+  }
+}
+
+
 </style>

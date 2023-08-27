@@ -32,24 +32,25 @@
 
       </div>
       <div class="Info"> 
-        <div class="InfoTitle">
-          <el-icon :size="25"><PictureFilled /></el-icon> &nbsp;温室环境
+        <div class="InfoTitle" onclick="window.open('http://43.143.200.52:10006/','_blank')">
+          <el-icon :size="25"><PictureFilled /></el-icon> &nbsp;温室环境信息详情
         </div>
         
         <img src="../assets/sensor_imge/wenshi.jpg" alt="" class="wenshi">
       </div>
       <div class="Info">
-        <div class="InfoTitle">
-          <el-icon :size="25"><TrendCharts /></el-icon> &nbsp;养分气象监测
+        <div class="InfoTitle" @click="$router.push('/sensor/car')">
+          <el-icon :size="25"><TrendCharts /></el-icon> &nbsp;巡检机器人控制
         </div>
-         <div id="lineChart"></div>
+         <!-- <div id="lineChart"></div> -->
+        <img src="../assets/sensor_imge/che.jpeg" alt="" class="wenshi">
       </div>
       <div class="Info">
-        <div class="InfoTitle">
-          <el-icon :size="25"><TrendCharts /></el-icon> &nbsp;模拟数据
+        <div class="InfoTitle" @click="$router.push('/sensor/monitor_page')">
+          <el-icon :size="25"><TrendCharts /></el-icon> &nbsp;巡检图像信息
         </div>
-        
-        <div id="histogramChart"></div>
+        <img src="../assets/sensor_imge/ciyun.jpg" alt="" style="height: 80%;width: 60%;">
+        <!-- <div id="histogramChart"></div> -->
       </div>
       <!-- <div class="Info">
         <p>模拟数据</p>
@@ -57,7 +58,7 @@
       </div> -->
     </div>
 
-    <div class="someInfo" style="margin-top: 50px">
+    <!-- <div class="someInfo" style="margin-top: 50px">
       <button class="button">
         Fancy Button
         <div class="button__horizontal"></div>
@@ -78,13 +79,13 @@
         <div class="button__horizontal"></div>
         <div class="button__vertical"></div>
       </button>
-    </div>
+    </div> -->
 
 
 
-    <div class="monitor-platform">
+    <!-- <div class="monitor-platform">
       <monitor-platform></monitor-platform>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -224,26 +225,26 @@ const scatterOption = {
 
     //const mainElement = ref(null);
     /*折线图 */
-function initHistogram() {
-  console.log("1213");
-  let chartDoms = document.querySelector("#lineChart");
-  let myChart = echarts.init(chartDoms);
-  lineOption && myChart.setOption(lineOption);
-// 散点图
-  // let chartDoms2 = document.querySelector("#scatterChart");
-  // let myChart2 = echarts.init(chartDoms2);
-  // lineOption && myChart2.setOption(scatterOption);
-//柱状图
-let chartDoms3 = document.querySelector("#histogramChart");
-  let myChart3 = echarts.init(chartDoms3);
-  lineOption && myChart3.setOption(histogramOption);
-}
+// function initHistogram() {
+//   console.log("1213");
+//   let chartDoms = document.querySelector("#lineChart");
+//   let myChart = echarts.init(chartDoms);
+//   lineOption && myChart.setOption(lineOption);
+// // 散点图
+//   let chartDoms2 = document.querySelector("#scatterChart");
+//   let myChart2 = echarts.init(chartDoms2);
+//   lineOption && myChart2.setOption(scatterOption);
+// // 柱状图
+// let chartDoms3 = document.querySelector("#histogramChart");
+//   let myChart3 = echarts.init(chartDoms3);
+//   lineOption && myChart3.setOption(histogramOption);
+// }
 
 const currentTime = ref(new Date().toLocaleTimeString());
 let timer=ref(null);
 onMounted(()=>{
   console.log('123');
-  initHistogram();
+  // initHistogram();
   timer = setInterval(() => {
         currentTime.value = new Date().toLocaleTimeString();
       }, 1000);
@@ -333,7 +334,10 @@ onBeforeUnmount(() => {
   backdrop-filter: blur(10px);
   box-shadow: 0 0 10px #3c9f64;
   border-radius: 15px;
-
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .wenshi{
     height: 70%;
@@ -570,5 +574,12 @@ body {
 
   font-weight: bolder;
   letter-spacing: 0.15em;
+
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.InfoTitle:hover {
+    color: #3c9f64;
 }
 </style>
