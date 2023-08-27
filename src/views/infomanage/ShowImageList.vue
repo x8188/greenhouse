@@ -787,7 +787,7 @@ async function rowClick(nodeObj) {
 }
 
 :deep(.el-tree-node__label) {
-  font-size: 5px;
+  font-size: 15px;
 }
 
 :deep(.el-form-item__label) {
@@ -1044,17 +1044,10 @@ async function rowClick(nodeObj) {
     //margin-right: 10px;
   }
 :deep(.el-tree-node__content:hover) {
-  color: #FFD04B;
-  color: #F56C6C;
-  //color: #9ABEAF;
+  color:#4f6f46 !important;
   background-color: rgba($color: #C6C6C6, $alpha: 0.3);
-  // &:hover{
-  //   background-color: rgba($color: #161616, $alpha: 0.7);
-  // }
   .el-tree-node__expand-icon{
-    color: #FFD04B;
-    color: #F56C6C;
-    //color: #9ABEAF;
+    color:#4f6f46 !important;
   }
 }
 
@@ -1142,6 +1135,8 @@ async function rowClick(nodeObj) {
             border-radius: 2px;
           }
         }
+
+        
         /* / 已展开的父节点 */
  
         /* ^ 叶子节点 */
@@ -1277,6 +1272,10 @@ async function rowClick(nodeObj) {
       .el-tree-node__content:has(.is-leaf) {
         // color: #00ffff;
         margin-left: 12px !important;
+        .el-tree-node__label {
+          //font-size: 8px;
+        }
+        //background-color: red;
       }
       /* / 设置子节点左外边距 */
       /* ---- ---- ---- ---- /（新增辅助线）---- ---- ---- ---- */
@@ -1289,5 +1288,75 @@ async function rowClick(nodeObj) {
 /deep/ .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
   background-color: rgba(rgb(243, 121, 121), 0.3) !important;
 }
+
+:deep(.el-tree-node__content){
+    border-radius: 5px;
+    margin: 1px;
+    color: black;
+    padding: 0%;
+    height:18px;
+    margin-top3:7px;
+    margin-bottom:7px;
+  }
+
+  
+:deep(.el-tree-node__label) {
+  font-size: 16px;
+}
+//一级节点选择器
+:deep(.el-tree>.el-tree-node> .el-tree-node__content) {
+  font-weight: 600;
+  //color: #333333;
+  color:#3b3a39;
+  color:#595333;
+  color:#80a492;
+  //color:#446a37;
+  height: 28px;
+
+  .el-tree-node__label{
+    font-size: 22px;
+    font-family: "PingFang SC";
+  }
+}
+//二级节点选择器
+:deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
+  font-weight: 500;
+  //color: #666666;
+  color: #0078d4;
+  color:#7f754c;
+  color:#99bcac;
+  //color:#4c8045;
+  height: 28px;
+  .el-tree-node__label{
+    font-size: 20px;
+  }
+}
+//三级节点选择器
+:deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
+  font-weight: 400;
+  //color: #666666;
+  //color: #008272;
+  //color: #938f4c;
+  //color: #84a729;
+  height: 23px;
+  .el-tree-node__label{
+    font-size: 18px;
+  }
+
+}
+// 设置高亮颜色
+:deep(.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content) {
+  background-color: rgba(rgb(#4f6f46), 0.3) !important;
+  
+  .el-tree-node__label{
+    //color:#2e59a7 !important;
+    //color:#409EFF !important;
+    color:#4f6f46;
+  }
+  .el-tree-node__expand-icon{
+    color:#4f6f46;
+  }
+}
+
 </style>
 

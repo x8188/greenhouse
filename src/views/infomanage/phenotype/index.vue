@@ -30,17 +30,18 @@
               el-tree-node-hover-bg-color:null
 
               highlight-current
-          />
+              >
+          </el-tree>
       </el-aside>
       <!-- //右边的盒子 -->
 
-      <el-container>
-        <el-main width="78%" style="padding: 0" class="right-box">
-              <div style="width: 100%;">
+      <el-container style="width: 100%;">
+        <el-main style="padding: 0; width: 100%;" class="right-box">
+          <div style="height: auto; margin-bottom: 10px;">
+            <div style="width: 100%;">
                 <el-button
                   type="primary"
                   class="filter-item addNode-button"
-                  style="margin: 10px"
                   @click.prevent="addChildNode"
                   v-hasPermi="['system:node:add']"
                 >
@@ -49,7 +50,6 @@
                 <el-button
                   type="danger"
                   class="filter-item"
-                  style="margin: 10px"
                   @click.prevent="deleteNode"
                   v-hasPermi="['system:node:remove']"
                   >删除节点</el-button
@@ -57,47 +57,49 @@
                 <el-button
                   type="info"
                   class="filter-item"
-                  style="margin: 10px"
                   @click.prevent="updateChildNode"
                   v-hasPermi="['system:node:update']"
                   >修改节点</el-button
                 >
-              </div>
-              <el-form 
+            </div>
+
+            <el-form 
                 :model="queryParams"
                 ref="queryForm"
                 size="small"
                 :inline="true"
                 v-show="showSearch"
-                
+                style="margin-top: 20px;"
                 
               >
                 <el-form-item label="编号" 
                   class = "my_item" 
                   prop="fileId" 
-                  style="margin-left: 10px;"
                 >
                   <el-input
                     v-model="queryParams.fileId"
                     placeholder="请输入编号"
                     clearable
                     @keyup.enter="handleQuery"
+                    class="my_input"
                   />
                 </el-form-item>
-                <el-form-item label="文件名称" prop="fileName">
+                <el-form-item label="文件名称" prop="fileName" class = "my_item">
                   <el-input
                     v-model="queryParams.fileName"
                     placeholder="请输入文件名称"
                     clearable
                     @keyup.enter="handleQuery"
+                    class="my_input"
                   />
                 </el-form-item>
-                <el-form-item label="文件描述" prop="description">
+                <el-form-item label="文件描述" prop="description" class = "my_item"> 
                   <el-input
                     v-model="queryParams.description"
                     placeholder="请输入文件描述"
                     clearable
                     @keyup.enter="handleQuery"
+                    class="my_input"
                   />
                 </el-form-item>
                 <!-- <el-form-item label="日期" prop="dateTime">
@@ -107,7 +109,7 @@
                     placeholder="选择一个日期"
                   />
                 </el-form-item> -->
-                <el-form-item>
+                <el-form-item class = "my_item">
                   <el-button
                     type="primary"
                     icon="Search"
@@ -120,54 +122,48 @@
                     >重置</el-button
                   >
                 </el-form-item>
-              </el-form>
-              <!-- 操作部分 -->
-              <el-row class="mb8" :gutter="15">
-                <el-col :span="1.5"  class="mb81">
-                  <el-button
-                    type="primary"
-                    plain
-                    icon="Plus"
-                    size="small"
-                    class="addExcel"
-                    @click="handleAdd"
-                    v-hasPermi="['system:logininfor:add']"
-                    >新增</el-button
-                  >
-                </el-col>
-                <el-col :span="1.5" class="mb81">
-                  <!--<el-button type="danger" plain icon="Delete" size="small" :disabled="multiple"
-                    @click="handleDelete" v-hasPermi="['system:logininfor:remove']">删除</el-button>
-                -->
-                  <el-button
-                    type="danger"
-                    plain
-                    icon="Delete"
-                    size="small"
-                    @click="handleDelete"
-                    :disabled="deleteDisabled"
-                    v-hasPermi="['system:logininfor:remove']"
-                    >删除</el-button
-                  >
-                </el-col>
-              </el-row>
-          
+            </el-form>
 
-          <el-container>
+            <!-- 操作部分 -->
+            <el-button
+              type="primary"
+              plain
+              icon="Plus"
+              size="small"
+              class="addExcel"
+              @click="handleAdd"
+              v-hasPermi="['system:logininfor:add']"
+              >新增
+            </el-button>
+
+            <el-button
+              type="danger"
+              plain
+              icon="Delete"
+              size="small"
+              @click="handleDelete"
+              :disabled="deleteDisabled"
+              v-hasPermi="['system:logininfor:remove']"
+              >删除
+            </el-button>
+          </div>
+
+          <el-container style="height: calc(100vh - 360px);width: 100%;;" class="mytable">
             <!-- 表格部分 -->
             <el-table
               v-loading="tableLoading"
               :data="fileList"
               stripe
               border="true"
-              fit
               @selection-change="handleSelectionChange"
+              max-height="100%"
+              style="background-color: #EEEEEE;width: 100%; felx:1;"
             >
-              <el-table-column fixed="left" type="selection" min-width="30" align="center" />
-              <el-table-column label="编号" align="center" min-width="30" prop="fileId" />
-              <el-table-column label="数据名称" align="center" min-width="80" prop="fileName" />
-              <el-table-column label="描述" align="center" min-width="110" prop="description" />
-              <el-table-column label="时间" align="center" prop="dateTime" />
+              <el-table-column fixed="left" type="selection" width="auto" align="center" />
+              <el-table-column label="编号" align="center" min-width="90px" prop="fileId" />
+              <el-table-column label="数据名称" align="center" min-width="180" prop="fileName" />
+              <el-table-column label="描述" align="center" min-width="230" prop="description" />
+              <el-table-column label="时间" align="center" min-width="160" prop="dateTime" />
               <el-table-column
                 label="是否公开"
                 align="center"
@@ -187,11 +183,12 @@
               <el-table-column fixed="right" 
                 label="操作"
                 align="center"
-                min-width="110" 
+                width="130px"
                 class-name="small-padding fixed-width"
               >
                 <template #default="scope">
-                  <el-button
+                  <el-row style="margin: 0%;">
+                    <el-button
                     size="small"
                     type="text"
                     icon="Download"
@@ -205,7 +202,10 @@
                     @click="openDrawer(scope.row)"
                     >预览
                   </el-button>
-                  <el-button
+                  </el-row>
+                  
+                  <el-row style="margin: 0%;">
+                    <el-button
                     size="small"
                     type="text"
                     icon="Edit"
@@ -221,6 +221,8 @@
                     v-hasPermi="['system:file:remove']"
                     >删除</el-button
                   >
+                  </el-row>
+                  
                 </template>
               </el-table-column>
             </el-table>
@@ -374,6 +376,8 @@ import ShowCSVTable from "./ShowCSVTable.vue";
 import { parseTime } from "@/utils/param";
 import { getTreeNodeIdsByNode } from "@/utils/tree";
 import { ElMessage } from "element-plus";
+// ElConfigProvider 组件
+import { ElConfigProvider } from 'element-plus'
 
 // import '@/assets/styles/GRADIENT.less'
 // vue实例
@@ -597,7 +601,7 @@ function getList() {
       fileList.value.forEach((item) => {
         allFileId.value.push(item.fileId);
       });
-      console.log(allFileId.value, "lplp");
+      //console.log(allFileId.value, "lplp");
       total.value = res.total;
     })
     .catch((err) => {
@@ -740,7 +744,7 @@ const tree = ref(null); // 数的dom实例
 const getTreeList = () => {
   getTree(treeType.value, 0, 1).then((res) => {
     routesData.value = res.data.children;
-    console.log(routesData.value,'9090');
+    //console.log(routesData.value,'9090');
     nextTick(() => {
       if (!tree.value.getCurrentNode())
         tree.value.setCurrentNode(routesData.value[0]);
@@ -851,18 +855,18 @@ function rowClick(nodeObj) {
 
   queryParams.treeId = nodeObj.treeId;
   getList();
+  console.log(defaultProps);
 }
 
 onMounted(() => {
   getTreeList();
 });
+
+
+
 </script>
 
 <style lang="less" scoped>
-:deep(.el-tree-node__label) {
-  font-size: 5px;
-}
-
 :deep(
     .el-tree--highlight-current
       .el-tree-node.is-current
@@ -1035,27 +1039,24 @@ onMounted(() => {
     margin-bottom: 30px;
     background: #f2fbf7;
     padding-right: 15px;
+    font-family: "PingFang SC";
   }
-:deep(.el-tree-node__content){
-    border-radius: 5px;
-    margin: 1px;
-    line-height: 30px;
-    font-size: 5px;
-    color: black;
-    padding: 0%;
-    //margin-right: 10px;
-  }
+
 :deep(.el-tree-node__content:hover) {
   color: #FFD04B;
-  color: #F56C6C;
+  color: #F56C6C !important;
+  color:#4f6f46 !important;
+  //color:#2e59a7 !important;
   //color: #9ABEAF;
-  background-color: rgba($color: #C6C6C6, $alpha: 0.3);
+  background-color: rgba($color: #a8bf8f, $alpha: 0.3);
   // &:hover{
   //   background-color: rgba($color: #161616, $alpha: 0.7);
   // }
   .el-tree-node__expand-icon{
     color: #FFD04B;
-    color: #F56C6C;
+    color: #F56C6C !important;
+    color:#4f6f46 !important;
+    //color:#2e59a7 !important;
     //color: #9ABEAF;
   }
 }
@@ -1063,17 +1064,15 @@ onMounted(() => {
 :deep(.el-tree-node__expand-icon) {
     color: black;
   }
-// :deep(.el-tree-node__expand-icon:hover) {
-//     color: #FFD04B;
-//   }
 
 .footer{
-  //ackground-color: red;
+  //background-color: red;
   position: relative;
-
+  padding: 0%;
   .pag{
     position: absolute;
     bottom: 0;
+    left: 20px;
     //background-color: blue;
   }
 }
@@ -1087,6 +1086,10 @@ onMounted(() => {
   background: grey;
   color:#fff;
 
+}
+
+.filter-item{
+  margin-right: 20px;
 }
 
 </style>
@@ -1270,7 +1273,6 @@ onMounted(() => {
       /* ^ 第一层节点 */
       > .el-tree-node {
         padding-left: 0;
- 
         &::before {
           border-left: none;
         }
@@ -1297,11 +1299,91 @@ onMounted(() => {
       /* ---- ---- ---- ---- /（新增辅助线）---- ---- ---- ---- */
     }
   }
+
 </style>
 
 <style lang="less" scoped>
-// 设置高亮颜色
-/deep/ .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
-  background-color: rgba(rgb(243, 121, 121), 0.3) !important;
+
+
+
+@media (max-width: 1300px) {
+  .my_item {
+    margin-right: 5px; /* 缩小元素之间的间距 */
+  }
+
+  .my_input {
+    width: 120px; /* 缩小输入框的宽度 */
+  }
 }
+
+:deep(.el-tree-node__content){
+    border-radius: 5px;
+    margin: 1px;
+    color: black;
+    padding: 0%;
+    height:18px;
+    margin-top3:7px;
+    margin-bottom:7px;
+  }
+
+  
+:deep(.el-tree-node__label) {
+  font-size: 16px;
+}
+//一级节点选择器
+:deep(.el-tree>.el-tree-node> .el-tree-node__content) {
+  font-weight: 600;
+  //color: #333333;
+  color:#3b3a39;
+  color:#595333;
+  color:#80a492;
+  //color:#446a37;
+  height: 28px;
+
+  .el-tree-node__label{
+    font-size: 22px;
+    font-family: "PingFang SC";
+  }
+}
+//二级节点选择器
+:deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
+  font-weight: 500;
+  //color: #666666;
+  color: #0078d4;
+  color:#7f754c;
+  color:#99bcac;
+  //color:#4c8045;
+  height: 28px;
+  .el-tree-node__label{
+    font-size: 20px;
+  }
+}
+//三级节点选择器
+:deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
+  font-weight: 400;
+  //color: #666666;
+  //color: #008272;
+  //color: #938f4c;
+  //color: #84a729;
+  height: 23px;
+  .el-tree-node__label{
+    font-size: 18px;
+  }
+
+}
+// 设置高亮颜色
+:deep(.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content) {
+  background-color: rgba(rgb(#4f6f46), 0.3) !important;
+  
+  .el-tree-node__label{
+    //color:#2e59a7 !important;
+    //color:#409EFF !important;
+    color:#4f6f46;
+  }
+  .el-tree-node__expand-icon{
+    color:#4f6f46;
+  }
+}
+
+
 </style>
