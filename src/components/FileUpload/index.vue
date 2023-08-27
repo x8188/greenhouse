@@ -42,7 +42,7 @@
 import { getToken } from "@/utils/auth";
 
 const props = defineProps({
-  modelValue: [String, Object, Array],
+  modelValue: [String, Object, Array,Boolean],
   // 数量限制
   limit: {
     type: Number,

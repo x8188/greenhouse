@@ -1,166 +1,179 @@
 <template>
-  <div class="BG"></div>
-  <div class="common-layout">
-    <el-container>
-      <el-header class="header">
-        <div
-          class="features"
-          :class="{ 'active': state.selectedOption === 'temp' }"
-          label="空气温度"
-          value="temp"
-          
-          @click="handleOptionChange('temp')"
-        >
-          <div class="features-title">空气温度</div>
-          <p class="features-value">{{ data.ambientTemperature }} &#8451;</p>
-          <img
-            src="../../../assets/sensor_imge/monitor/1.png"
-            alt=""
-            class="features-imge"
-          />
-        </div>
-        <div
-          class="features"
-          :class="{ 'active': state.selectedOption === 'hun' }"
-          label="空气湿度"
-          value="hun"
-          @click="handleOptionChange('hun')"
-        >
-          <div class="features-title">空气湿度</div>
-          <p class="features-value">{{ data.ambientHumidity }} %</p>
-          <img
-            src="../../../assets/sensor_imge/monitor/7.png"
-            alt=""
-            class="features-imge"
-          />
-        </div>
-        <div
-          class="features"
-          :class="{ 'active': state.selectedOption === 'light' }"
-          label="光照强度"
-          value="light"
-          @click="handleOptionChange('light')"
-        >
-          <div class="features-title">光照强度</div>
-          <p class="features-value">{{ data.lightIntensity }} lux</p>
-          <img
-            src="../../../assets/sensor_imge//monitor/4.png"
-            alt=""
-            class="features-imge"
-          />
-        </div>
-        <div
-          class="features"
-          :class="{ 'active': state.selectedOption === 'co' }"
-          label="二氧化碳"
-          value="co"
-          @click="handleOptionChange('co')"
-        >
-          <div class="features-title">二氧化碳</div>
-          <p class="features-value">{{ data.co2 }} ppm</p>
-          <img
-            src="../../../assets/sensor_imge//monitor/2.png"
-            alt=""
-            class="features-imge"
-          />
-        </div>
-        <div
-          class="features"
-          :class="{ 'active': state.selectedOption === 'power' }"
-          label="电源"
-          value="power"
-          @click="handleOptionChange('power')"
-        >
-          <div class="features-title">电源</div>
-          <p class="features-value">{{ data.dewTemp }} V</p>
-          <img
-            src="../../../assets/sensor_imge//monitor/5.png"
-            alt=""
-            class="features-imge"
-          />
-        </div>
-        <div
-          class="features"
-          :class="{ 'active': selectedOption === 'signal' }"
-          label="信号强度"
-          value="signal"
-          @click="handleOptionChange('signal')"
-        >
-          <div class="features-title">信号强度</div>
-          <p class="features-value">{{ data.rssi }} dBm</p>
-          <img
-            src="../../../assets/sensor_imge//monitor/6.png"
-            alt=""
-            class="features-imge"
-          />
-        </div>
-      </el-header>
-
-      <el-main>
-        <el-row
-          style="
-            height: 60px;
-            margin-top: 140px;
-            width: 100%;
-            text-align: center;
-          "
-          class="display-row"
-        >
-          <el-col :span="24">
-            <el-radio-group
-              v-model="state.selectedTime"
-              @change="handleTimeChange"
-              @click="handleClick"
-              style="margin-right: 2%"
-            >
-              <el-radio label="1" border size="big" class="feature-select"
-                >过去12h</el-radio
-              >
-              <el-radio label="2" border size="big" class="feature-select"
-                >过去1天</el-radio
-              >
-              <el-radio label="3" border size="big" class="feature-select"
-                >过去1周</el-radio
-              >
-              <el-radio label="4" border size="big" class="feature-select">
-                过去1月</el-radio
-              >
-            </el-radio-group>
-            <!-- </el-col> -->
-            <!-- <el-col :span="12"> -->
-
-            <el-date-picker
-              class="feature-select"
-              v-model="state.timeTotime"
-              @change="handleTimeChange2"
-              size="big"
-              type="datetimerange"
-              range-separator="To"
-              start-placeholder="Start date"
-              end-placeholder="End date"
+  <div>
+    <div class="BG"></div>
+    <div class="common-layout">
+      <el-container>
+        <el-header class="header">
+          <div
+            class="features"
+            :class="{ active: state.selectedOption === 'temp' }"
+            label="空气温度"
+            value="temp"
+            @click="handleOptionChange('temp')"
+          >
+            <div class="features-title">空气温度</div>
+            <p class="features-value">{{ data.ambientTemperature }} &#8451;</p>
+            <img
+              src="../../../assets/sensor_imge/monitor/1.png"
+              alt=""
+              class="features-imge"
             />
-          </el-col>
-        </el-row>
-      </el-main>
-      <div class="charts">
-        <div
-          id="main"
-          style="
-            width: 1200px;
-            height: 500px;
-            margin: 0 auto;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 10px #3c9f64;
-          "
-        ></div>
-      </div>
-    </el-container>
+          </div>
+          <div
+            class="features"
+            :class="{ active: state.selectedOption === 'hun' }"
+            label="空气湿度"
+            value="hun"
+            @click="handleOptionChange('hun')"
+          >
+            <div class="features-title">空气湿度</div>
+            <p class="features-value">{{ data.ambientHumidity }} %</p>
+            <img
+              src="../../../assets/sensor_imge/monitor/7.png"
+              alt=""
+              class="features-imge"
+            />
+          </div>
+          <div
+            class="features"
+            :class="{ active: state.selectedOption === 'light' }"
+            label="光照强度"
+            value="light"
+            @click="handleOptionChange('light')"
+          >
+            <div class="features-title">光照强度</div>
+            <p class="features-value">{{ data.lightIntensity }} lux</p>
+            <img
+              src="../../../assets/sensor_imge//monitor/4.png"
+              alt=""
+              class="features-imge"
+            />
+          </div>
+          <div
+            class="features"
+            :class="{ active: state.selectedOption === 'co' }"
+            label="二氧化碳"
+            value="co"
+            @click="handleOptionChange('co')"
+          >
+            <div class="features-title">二氧化碳</div>
+            <p class="features-value">{{ data.co2 }} ppm</p>
+            <img
+              src="../../../assets/sensor_imge//monitor/2.png"
+              alt=""
+              class="features-imge"
+            />
+          </div>
+          <div
+            class="features"
+            :class="{ active: state.selectedOption === 'power' }"
+            label="电源"
+            value="power"
+            @click="handleOptionChange('power')"
+          >
+            <div class="features-title">电源</div>
+            <p class="features-value">{{ data.dewTemp }} V</p>
+            <img
+              src="../../../assets/sensor_imge//monitor/5.png"
+              alt=""
+              class="features-imge"
+            />
+          </div>
+          <div
+            class="features"
+            :class="{ active: selectedOption === 'signal' }"
+            label="信号强度"
+            value="signal"
+            @click="handleOptionChange('signal')"
+          >
+            <div class="features-title">信号强度</div>
+            <p class="features-value">{{ data.rssi }} dBm</p>
+            <img
+              src="../../../assets/sensor_imge//monitor/6.png"
+              alt=""
+              class="features-imge"
+            />
+          </div>
+        </el-header>
+
+        <el-main>
+          <el-row
+            style="
+              height: 60px;
+              margin-top: 140px;
+              width: 100%;
+              text-align: center;
+            "
+            class="display-row"
+          >
+            <el-col :span="24">
+              <el-radio-group
+                v-model="state.selectedTime"
+                @change="handleTimeChange"
+                @click="handleClick"
+                style="margin-right: 2%"
+              >
+                <el-radio label="1" border size="big" class="feature-select"
+                  >过去12h</el-radio
+                >
+                <el-radio label="2" border size="big" class="feature-select"
+                  >过去1天</el-radio
+                >
+                <el-radio label="3" border size="big" class="feature-select"
+                  >过去1周</el-radio
+                >
+                <el-radio label="4" border size="big" class="feature-select">
+                  过去1月</el-radio
+                >
+              </el-radio-group>
+              <div class="block">
+                <el-date-picker
+                  class="feature-select"
+                  v-model="state.startTime"
+                  type="datetime"
+                  size="big"
+                  placeholder="Start date"
+                  format="YYYY/MM/DD hh:mm:ss"
+                  value-format="YYYY-MM-DD hh:mm:ss"
+                  :disabled-date="disabledStartDate"
+                  @change="handleTimeChange2"
+                />
+                <el-date-picker
+                  class="feature-select"
+                  v-model="state.endTime"
+                  :default-value="defaultEndTime"
+                  type="datetime"
+                  size="big"
+                  placeholder="End date"
+                  format="YYYY/MM/DD hh:mm:ss"
+                  value-format="YYYY-MM-DD hh:mm:ss"
+                  :disabled-date="disabledEndDate"
+                  @change="handleTimeChange2"
+                />
+              </div>  
+            </el-col>
+          </el-row>
+        </el-main>
+        <div class="charts">
+          <div
+            id="main"
+            style="
+              width: 1200px;
+              height: 500px;
+              margin: 0 auto;
+              backdrop-filter: blur(10px);
+              box-shadow: 0 0 10px #3c9f64;
+            "
+          ></div>
+        </div>
+      </el-container>
+    </div>
   </div>
 </template>
 
 <script setup>
 // import Vue from "vue";
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watchEffect, watch } from "vue";
 import * as echarts from "echarts";
 import {
   getHunidityData,
@@ -174,6 +187,8 @@ import {
 } from "@/api/sensor/meteor";
 import { getNtrData } from "@/api/sensor/nutrientMonitor";
 import { getWeaData } from "@/api/sensor/weatherMonitor";
+import { timestamp } from "@vueuse/core";
+// let isDateSelected;
 const data = {
   co2: ref(0),
   dewTemp: ref(0),
@@ -186,89 +201,93 @@ const data = {
 const state = reactive({
   selectedOption: "",
   selectedTime: "",
-  timeTotime:
-    ref <
-    [Date, Date] >
-    [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-  data: [],
-});
+  startTime:ref(null),
+  endTime:ref(null),
+  // timeTotime:
+  //   ref <
+  //   [Date, Date] >
+  //   [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+  // data: [],
+}); 
 
 const selectedOption = ref("");
 let selectedTime = ref("");
 const updateChart = ref("");
-
 const handleOptionChange = (value) => {
   console.log(value);
   state.selectedOption = value;
 };
-// const handleClick = (value) => {
-//   state.selectedTime = value;
-//   if(state.timeTotime == "" || !state.timeTotime){
-//     this.$message({
-//                     message: "请输入时间段！",
-//                     type: "error",
-//                 })
-//   }else {
-//     const DataToData = {
-//       endTime:state.timeTotime[1],
-//       startTime : state.timeTotime[0],
-
-//     };
-//     getSensorHistoryByDate(DataToData).then((res) => {
-//       state.data = [];
-//       state.date =[];
-//       for (let i=0;i<res.data.length;i++){
-//         this.data.push(res.data[i].value);
-//         this.date.push(res.data[i].dataTime)
-//       }
-//     })
-//   }
-
-// }
-
+watch(selectedTime, (newValue) => {
+  // 根据选择的时间进行相应的逻辑处理
+  if (newValue === "1") {
+    // 过去 12 小时
+    const end = new Date();
+    const start = new Date(end - 12 * 60 * 60 * 1000);
+    state.startTime = start;
+    state.endTime = end;
+  } else if (newValue === "2") {
+    // 过去 1 天
+    const end = new Date();
+    const start = new Date(end - 24 * 60 * 60 * 1000);
+    startTime.value = start;
+    endTime.value = end;
+  } else if (newValue === "3") {
+    // 过去 1 周
+    const end = new Date();
+    const start = new Date(end - 7 * 24 * 60 * 60 * 1000);
+    startTime.value = start;
+    endTime.value = end;
+  } else if (newValue === "4") {
+    // 过去 1 月
+    const end = new Date();
+    const start = new Date(end - 30 * 24 * 60 * 60 * 1000);
+    startTime.value = start;
+    endTime.value = end;
+  } else {
+    // 默认情况
+    startTime.value = null;
+    endTime.value = null;
+  }
+});
+// watch([state.startTime, state.endTime], ([start, end]) => {
+//   console.log("startTime:", start);
+//   console.log("endTime:", end);
+// });
 const handleTimeChange = () => {
-  state.timeTotime=null
-  const clickedTime = new Date(); // 当前点击时刻
-  const pastTime = new Date(clickedTime.getTime() - state.selectedTime * 60 * 60 * 1000); // value小时之前的时间
-  const clickedTimeString = formatDate(clickedTime); // 格式化点击时刻的时间字符串
-  const pastTimeString = formatDate(pastTime); // 格式化value小时之前的时间字符串
-  console.log(clickedTimeString);
-  console.log(pastTimeString);
-  getData(pastTimeString, clickedTimeString);
+  state.startTime = null;
+  state.endTime = null;
 };
+
 const handleTimeChange2 = () => {
-  state.selectedTime=null
-  console.log(state.timeTotime, "uiui");
-
-  const endTime = state.timeTotime[1];
-  const startTime = state.timeTotime[0];
-  // console.log(startTime)
-  // console.log(endTime);
-  const endTimeString = formatDate(endTime);
-  const startTimeString = formatDate(startTime);
-  console.log(endTimeString);
-  console.log(startTimeString);
-  getData(startTimeString, endTimeString);
-
-  // console.log(endTime);
-  // console.log(startTime);
-  // getData(startTime, endTime);
+  state.selectedTime = null;
+};
+const handleClick = () => {
+  handleTimeChange();
 };
 
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-};
+const disabledStartDate = computed(() => {
+  if ( state.endTime) {
+    return (date) => date && (date > new Date() || date >= state.endTime);
+  }
+  return (date) => date && date > new Date();
+});
+const disabledEndDate = computed(() => {
+  if ( state.startTime ) {
+    console.log(state.startTime, "kkk");
+    return (date) => date && (date > new Date() || date < state.startTime);
+  }
+  return (date) => date && date > new Date();
+}); 
+watch(state.startTime,(date) => { 
+  state.startTime.value = date 
+})
+watch(state.endTime,(date) => {
+  state.endTime.value = date
+}) 
 const getData = async () => {
   if (state.selectedOption && state.selectedTime) {
     // let data;
-    
+
     if (state.selectedOption === "co") {
       const res = await getCoDataByTime(state.selectedTime);
       console.log(res);
@@ -280,7 +299,7 @@ const getData = async () => {
     } else if (state.selectedOption === "temp") {
       const res = await getTempDataByTime(state.selectedTime);
       console.log(res);
-      console.log(selectedTime)
+      console.log(selectedTime);
       state.data = res.data;
     } else if (state.selectedOption === "light") {
       const res = await getLightDataByTime(state.selectedTime);
@@ -290,38 +309,33 @@ const getData = async () => {
     if (state.data) {
       updateChart.value();
     }
-  } 
-  if (state.selectedOption && state.timeTotime) { 
-    const endTime = state.timeTotime[1];
-    const startTime = state.timeTotime[0];
-    const endTimeString = formatDate(endTime);
-    const startTimeString = formatDate(startTime);
-
-    if (state.selectedOption === "co") { 
+  }
+  if (state.selectedOption && state.startTime && state.endTime) {
+    if (state.selectedOption === "co") {
       const res = await getCoData({
-        starttime: startTimeString,
-        endtime: endTimeString,
-      });
-      console.log(res);
-      state.data = res.data; 
-    } else if (state.selectedOption === "hun") { 
-      const res = await getHunidityData({
-        starttime: startTimeString,
-        endtime: endTimeString,
+        starttime: state.startTime,
+        endtime: state.endTime,
       });
       console.log(res);
       state.data = res.data;
-    } else if (state.selectedOption === "temp") { 
-      const res = await getTempData({
-        starttime: startTimeString,
-        endtime: endTimeString,
+    } else if (state.selectedOption === "hun") {
+      const res = await getHunidityData({
+        starttime: state.startTime,
+        endtime: state.endTime,
       });
       console.log(res);
-      state.data = res.data; 
-    } else if (state.selectedOption === "light") { 
+      state.data = res.data;
+    } else if (state.selectedOption === "temp") {
+      const res = await getTempData({
+        starttime: state.startTime,
+        endtime: state.endTime,
+      });
+      console.log(res);
+      state.data = res.data;
+    } else if (state.selectedOption === "light") {
       const res = await getLightData({
-        starttime: startTimeString,
-        endtime: endTimeString,
+        starttime: state.startTime,
+        endtime: state.endTime,
       });
       console.log(res.data);
       state.data = res.data;
@@ -333,80 +347,101 @@ const getData = async () => {
     }
   }
 };
+
 onMounted(() => {
   updateChart.value = () => {
-    console.log(state.data);
+    console.log(state.data, "llll");
     const chart = echarts.init(document.getElementById("main"));
+    let base = new Date().getTime();
+    let data = [];
+    let time;
+    if (state.selectedTime == 1) {
+      time = 5 * 60 * 1000;
+    } else if (state.selectedTime == 2) {
+      time = 10 * 60 * 1000;
+    } else if (state.selectedTime == 3) {
+      time = 60 * 60 * 1000;
+    } else {
+      time = 4 * 60 * 60 * 1000;
+    }
+    console.log(state.data, "123");
+
+    for (let i = 0; i < state.data.length; i++) {
+      let now = new Date((base -= time));
+      data.push([
+        // ([now.getFullYear(), now.getMonth() + 1, now.getDate(),].join('/')),
+        `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${(
+          "" + now.getHours()
+        ).padStart(2, "0")}:${("" + now.getMinutes()).padStart(2, "0")}`,
+        state.data[i],
+      ]);
+    }
+
+    console.log(data, "456");
     const option = {
-      // 图表配置项
       tooltip: {
-        trigger: "item",
+        trigger: "axis",
+        position: function (pt) {
+          return [pt[0], "10%"];
+        },
+      },
+      title: {
+        left: "center",
+        text: "History Data Chart",
+      },
+      toolbox: {
+        feature: {
+          dataZoom: {
+            yAxisIndex: "none",
+          },
+          restore: {},
+          saveAsImage: {},
+        },
       },
       xAxis: {
-        type: "category",
-        itemStyle: {
-          normal: {
-            label: {
-              show: true, // 在折线拐点上显示数据
-            },
+        type: "time",
+        boundaryGap: false,
+        axisLabel: {
+          textStyle: {
+            fontSize: 13, // 设置字体大小
+            color: "#333", // 设置字体颜色
           },
         },
-        lineStyle: {
-          color: "#16f1da",
-        },
-        data: [],
       },
       yAxis: {
         type: "value",
-        axisLabel:{
-          fontSize:18
-        },
-        lineStyle: {
-          color: ["#f3f3f3"],
+        boundaryGap: [0, "100%"],
+        axisLabel: {
+          textStyle: {
+            fontSize: 16, // 设置字体大小
+            color: "#333", // 设置字体颜色
+          },
         },
       },
+      dataZoom: [
+        {
+          type: "inside",
+          start: 0,
+          end: 20,
+        },
+        {
+          start: 0,
+          end: 20,
+        },
+      ],
       series: [
         {
-          data: state.data,
+          data: data,
           type: "line",
           smooth: true,
-          sampling: "average",
-          // showSymbol: false,
-          // tooltip: {
-          //   show: true,
-          // },
-          // symbol: "circle",
-          // symbolSize: 14,
-
-          itemStyle: {
-            color: "#188df0",
-          },
+          symbol: "none",
+          // areaStyle: {},
           lineStyle: {
-            normal: {
-              width: 4,
-              color: {
-                type: "linear",
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
-                colorStops: [
-                  {
-                    offset: 0,
-                    color: "#34A3E5",
-                  },
-                  {
-                    offset: 1,
-                    color: "#934CD5",
-                  },
-                ],
-              },
-            },
+            width: 4, // 设置曲线的粗细，单位为像素
           },
         },
       ],
     };
-
     chart.setOption(option);
   };
 });
@@ -437,6 +472,12 @@ defineExpose({
   handleOptionChange,
   handleTimeChange,
 });
+watchEffect(() => {
+  getData();
+});
+// return{
+//   pickerOptions
+// }
 </script>
 <style>
 /* .common-layout{
@@ -466,15 +507,7 @@ defineExpose({
   justify-content: center;
   width: 100%;
   height: 85px;
-}
-/* .sensor{
-  display: flexbox;
-  border:1px solid black ; 
-  padding-top: 5px;
-  padding-left: 10px; 
-  width: 100px;
-  height: 85px;
-} */
+} 
 
 .features {
   width: 200px;
@@ -482,22 +515,12 @@ defineExpose({
   position: relative;
   text-align: center;
   margin-top: 20px;
-  margin-left: 20px;
-  /* background: linear-gradient(
-    to right bottom,
-    rgba(255, 255, 255, 0.7),
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0.4)
-  );
-  background-color: #ececec; */
+  margin-left: 20px; 
 
   /* 使背景模糊化 */
   backdrop-filter: blur(10px);
   box-shadow: 0 0 10px #3c9f64;
-  border-radius: 5px;
-
-  /* border:1px solid #63caef; */
-  /* box-shadow: 0px 0px 1px gray inset; */
+  border-radius: 5px; 
   background-color: #008fef09 0;
 }
 .features:hover {
@@ -512,7 +535,6 @@ defineExpose({
   color: #000000; */
 }
 .feature-select {
-  
   backdrop-filter: blur(10px);
   box-shadow: 0 0 10px #3c9f64;
 }
@@ -550,17 +572,26 @@ defineExpose({
   height: 500px;
 }
 
-.demo-date-picker {
+.el-col {
   display: flex;
   width: 100%;
   padding: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
-.demo-date-picker .block {
-  padding: 30px 0;
-  text-align: center;
+.el-radio-group {
+  margin-left: 5%;
+  line-height: 60px;
+} 
+
+.block { 
   border-right: solid 1px var(--el-border-color);
   flex: 1;
+  display: flex;
+  align-items: center;
+  margin-left: 2%;
+}
+.block .el-input {
+  margin-left: 3%;
 }
 </style>
