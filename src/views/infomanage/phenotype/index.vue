@@ -1037,7 +1037,10 @@ onMounted(() => {
     margin-bottom: 30px;
     background: #f2fbf7;
     padding-right: 15px;
-    font-family: "PingFang SC";
+    display: inline-block;
+    width:auto;
+    overflow: auto;
+    min-width:98%;
   }
 
 :deep(.el-tree-node__content:hover) {
@@ -1319,14 +1322,14 @@ onMounted(() => {
     margin: 1px;
     color: black;
     padding: 0%;
-    height:18px;
-    margin-top3:7px;
-    margin-bottom:7px;
+    height:auto;
   }
 
   
 :deep(.el-tree-node__label) {
   font-size: 13px;
+  padding-left:5px;
+  padding-right:5px;
 }
 //一级节点选择器
 :deep(.el-tree>.el-tree-node> .el-tree-node__content) {
