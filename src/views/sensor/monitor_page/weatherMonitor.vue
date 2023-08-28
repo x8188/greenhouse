@@ -23,8 +23,8 @@
             style="width: 60px; height: 60px"
           />
           <ul>
-            <div class="datafont">{{ data.ambientTemperature }} &#8451;</div>
-            <li>{{ data.detectedTime }}</li>
+            <div class="datafont">{{ data.ambientTemperature.value }} </div>
+            <li>{{ data.detectedTime.value }}</li>
           </ul>
         </div>
       </div>
@@ -49,8 +49,8 @@
             style="width: 60px; height: 60px"
           />
           <ul>
-            <div class="datafont">{{ data.ambientHumidity }} %</div>
-            <li>{{ data.detectedTime }}</li>
+            <div class="datafont">{{ data.ambientHumidity.value }} </div>
+            <li>{{ data.detectedTime.value }}</li>
           </ul>
         </div>
       </div>
@@ -75,9 +75,9 @@
             style="width: 60px; height: 60px"
           />
           <ul>
-            <!-- <div class="datafont">{{ data.lightIntensity }} ppm</div> -->
-            <div class="datafont">0 ppm</div>
-            <li>{{ data.detectedTime }}</li>
+            <div class="datafont">{{ data.lightIntensity.value }}</div>
+            <!-- <div class="datafont">0 ppm</div> -->
+            <li>{{ data.detectedTime.value }}</li>
           </ul>
         </div>
       </div>
@@ -106,19 +106,35 @@ onMounted(() => {
 });
 
 function updateData() {
-  // const data = {
-  //   ambientTemperature,
-  //   ambientHumidity,
-  //   lightIntensity,
-  // };
-
+  function isValidData(value) {
+    return value !== 0 && value !== null;
+  }
+  const noData = '暂无数据';
   getWeaData().then((res) => {
-    console.log(res);
-    const lastDataIndex = res.data.length - 1 ;
-    data.ambientTemperature.value = res.data[lastDataIndex].ambientTemperature;
-    data.ambientHumidity.value = res.data[lastDataIndex].ambientHumidity;
-    data.lightIntensity.value = res.data[lastDataIndex].llightIntensity;
+    const lastDataIndex = res.data.length - 1; 
+    const dataItem = res.data[lastDataIndex];
+    if (dataItem.hasOwnProperty('ambientTemperature')) {
+      data.ambientTemperature.value = isValidData(dataItem.ambientTemperature) ? dataItem.ambientTemperature+' ℃' : noData;
+    } else {
+      data.ambientTemperature = noData;
+    } 
+    if (dataItem.hasOwnProperty('ambientHumidity')) {
+      data.ambientHumidity.value = isValidData(dataItem.ambientHumidity) ? dataItem.ambientHumidity+' %' : noData;
+    } else {
+      data.ambientHumidity = noData;
+    }
+    if (dataItem.hasOwnProperty('lightIntensity')) {
+      data.lightIntensity.value = isValidData(dataItem.lightIntensity) ? dataItem.lightIntensity+' lux' : noData;
+    } else {
+      data.lightIntensity = noData;
+    } 
+    if (dataItem.hasOwnProperty('detectedTime')) {
+      data.detectedTime.value = isValidData(dataItem.detectedTime) ? dataItem.detectedTime+' lux' : noData;
+    } else {
+      data.detectedTime = noData;
+    } 
     data.detectedTime.value = res.data[lastDataIndex].detectedTime;
+ 
   });
 }
 </script>

@@ -150,23 +150,9 @@ const scatterOption = {
         [18, 79395.7]
       ]
     },
-    // {
-    //   transform: {
-    //     type: 'ecStat:regression',
-    //     config: {
-    //       method: 'exponential'
-    //       // 'end' by default
-    //       // formulaOn: 'start'
-    //     }
-    //   }
-    // }
+ 
   ],
-  // title: {
-  //   text: '1981 - 1998 gross domestic product GDP (trillion yuan)',
-  //   subtext: 'By ecStat.regression',
-  //   sublink: 'https://github.com/ecomfe/echarts-stat',
-  //   left: 'center'
-  // },
+  
   tooltip: {
     trigger: 'axis',
     axisPointer: {
