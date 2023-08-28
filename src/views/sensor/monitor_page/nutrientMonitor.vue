@@ -41,7 +41,7 @@
           );
         "
       >
-        <a class="ui teal ribbon label">电源</a>
+        <a class="ui teal ribbon label">露水温度</a>
         <div class="datadiv">
           <img
             src="@/assets/img/dian.png"
@@ -133,9 +133,9 @@ function updateData() {
       data.co2 = noData;
     }
     if (dataItem.hasOwnProperty('dewTemp')) {
-      data.dewTemp.value = isValidData(dataItem.dewTemp) ? dataItem.dewTemp+' V' : noData;
+      data.dewTemp.value = isValidData(dataItem.dewTemp) ? dataItem.dewTemp+'℃' : noData;
     } else {
-      data.co2 = noData;
+      data.dewTemp = noData;
     }
     if (dataItem.hasOwnProperty('rssi')) {
       data.rssi.value = isValidData(dataItem.rssi) ? dataItem.rssi+' dBm' : noData;

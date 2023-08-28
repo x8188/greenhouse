@@ -71,7 +71,7 @@
             value="power"
             @click="handleOptionChange('power')"
           >
-            <div class="features-title">电源</div>
+            <div class="features-title">露水温度</div>
             <p class="features-value">{{ data.dewTemp.value }}</p>
             <img
               src="../../../assets/sensor_imge//monitor/5.png"
@@ -106,7 +106,7 @@
             "
             class="display-row"
           >
-            <el-col :span="24">
+            <el-col :span="24" class="time">
               <el-radio-group
                 v-model="state.selectedTime"
                 @change="handleTimeChange"
@@ -478,7 +478,7 @@ function updateData() {
       data.co2 = noData;
     }
     if (dataItem.hasOwnProperty('dewTemp')) {
-      data.dewTemp.value = isValidData(dataItem.dewTemp) ? dataItem.dewTemp+' V' : noData;
+      data.dewTemp.value = isValidData(dataItem.dewTemp) ? dataItem.dewTemp+' ℃' : noData;
     } else {
       data.co2 = noData;
     }
@@ -611,7 +611,7 @@ watchEffect(() => {
 }
 
 .el-radio-group {
-  margin-left: 5%;
+  margin-left: 15%;
   line-height: 60px;
 }
 
@@ -624,5 +624,9 @@ watchEffect(() => {
 }
 .block .el-input {
   margin-left: 3%;
+}
+.time{
+  display: flex;
+  text-align: center;
 }
 </style>
