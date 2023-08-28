@@ -23,8 +23,8 @@
             style="width: 60px; height: 60px"
           />
           <ul>
-            <div class="datafont">{{ data.co2 }} lux</div>
-            <li>{{ data.detectedTime }}</li>
+            <div class="datafont">{{ data.co2.value }} </div>
+            <li>{{ data.detectedTime.value }}</li>
           </ul>
         </div>
       </div>
@@ -41,16 +41,16 @@
           );
         "
       >
-        <a class="ui teal ribbon label">电源</a>
+        <a class="ui teal ribbon label">露水温度</a>
         <div class="datadiv">
           <img
-            src="@/assets/img/dian.png"
+            src="@/assets/img/dewTemp.png"
             alt=""
             style="width: 60px; height: 60px"
           />
           <ul>
-            <div class="datafont">{{ data.dewTemp }} V</div>
-            <li>{{ data.detectedTime }}</li>
+            <div class="datafont">{{ data.dewTemp.value }} </div>
+            <li>{{ data.detectedTime.value }}</li>
           </ul>
         </div>
       </div>
@@ -75,8 +75,8 @@
             style="width: 60px; height: 60px"
           />
           <ul>
-            <div class="datafont">{{ data.rssi }} dBm</div>
-            <li>{{ data.detectedTime }}</li>
+            <div class="datafont">{{ data.rssi.value }} </div>
+            <li>{{ data.detectedTime.value }}</li>
           </ul>
         </div>
       </div>
@@ -120,14 +120,36 @@ onMounted(() => {
   }, 60000); // 时间间隔为一分钟（单位为毫秒）
 });
 function updateData() {
-  getNtrData().then((res) => { 
-    const lastDataIndex = res.data.length - 1 ;
-     data.co2.value = res.data[lastDataIndex].co2;
-     data.dewTemp.value = res.data[lastDataIndex].dewTemp
-     data.rssi.value = res.data[lastDataIndex].rssi
-     data.detectedTime.value = res.data[lastDataIndex ].detectedTime
-
- 
+  function isValidData(value) {
+    return value !== 0 && value !== null;
+  }
+  const noData = '暂无数据';
+  getNtrData().then((res) => {
+    const lastDataIndex = res.data.length - 1;
+    const dataItem = res.data[lastDataIndex];  
+    if (dataItem.hasOwnProperty('co2')) {
+      data.co2.value = isValidData(dataItem.co2) ? dataItem.co2+' ppm' : noData;
+    } else {
+      data.co2 = noData;
+    }
+    if (dataItem.hasOwnProperty('dewTemp')) {
+      data.dewTemp.value = isValidData(dataItem.dewTemp) ? dataItem.dewTemp+'℃' : noData;
+    } else {
+      data.dewTemp = noData;
+    }
+    if (dataItem.hasOwnProperty('rssi')) {
+      data.rssi.value = isValidData(dataItem.rssi) ? dataItem.rssi+' dBm' : noData;
+    } else {
+      data.rssi = noData;
+    }
+    if (dataItem.hasOwnProperty('detectedTime')) {
+      data.detectedTime.value = isValidData(dataItem.detectedTime) ? dataItem.detectedTime+' lux' : noData;
+    } else {
+      data.detectedTime = noData;
+    } 
+    data.detectedTime.value = res.data[lastDataIndex].detectedTime;
+   
+  
   });
 }
 </script>
