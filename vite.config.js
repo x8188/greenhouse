@@ -37,7 +37,7 @@ export default defineConfig(({ mode, command }) => {
           rewrite: (p) => p.replace(/^\/dev-api/, '')
         },
           '/robot': {
-              target: `http://192.168.31.217:8080`,
+              target: `http://127.0.0.1:5000`,
               ws: true,
               changeOrigin: true,
               rewrite: (p) => p.replace(/^\/robot/, '')

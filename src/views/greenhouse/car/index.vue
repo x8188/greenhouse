@@ -8,8 +8,8 @@
           v-if="showCurrentPoint"
           id="CurrentPoint"
           style="
-            width: 13px;
-            height: 13px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: #f00;
             position: absolute;
@@ -145,18 +145,23 @@
       <!-- </el-card> -->
       <div class="right">
         <el-card >
-        <h3>&nbsp;&nbsp&nbsp;&nbsp小车操作</h3>
+        <h3>&nbsp;&nbsp&nbsp;&nbsp机器人操作</h3>
         <el-row type="flex" justify="left">
+          <el-button
+            class="uploadmap"
+            type="primary"
+            @click="UploadMap"
+        >上载地图</el-button>
           <el-button
             class="renewmap"
             type="primary"
             @click="RenewMap"
         >地图重建</el-button>
         <el-button
-            class="uploadmap"
+            class="savemap"
             type="primary"
-            @click="UploadMap"
-        >上载地图</el-button>
+            @click="SaveMap"
+        >保存地图</el-button>
         </el-row>
         <el-row type="flex" justify="left">
           <el-button
@@ -172,15 +177,27 @@
         </el-row>
         <el-row type="flex" justify="left">
         <el-button
+            class="ChargeWork"
+            type="primary"
+            @click="ChargeWork"
+        >启动机器人</el-button>
+        <el-button
+            class="FinChargeWork"
+            type="primary"
+            @click="FinChargeWork"
+        >结束机器人</el-button>
+        </el-row>
+        <el-row type="flex" justify="left">
+        <el-button
             class="startwork"
             type="primary"
             @click="StartWork"
-        >开始工作</el-button>
+        >继续工作</el-button>
         <el-button
             class="finishwork"
             type="primary"
             @click="FinishWork"
-        >结束工作</el-button>
+        >暂停工作</el-button>
         </el-row>
         <el-row type="flex" justify="left">
           <el-button
@@ -206,18 +223,15 @@
         <el-button
             class="uppushrod"
             type="primary"
-            @click="Uppushrod"
+            @mousedown.native="Uppushrod"
+           @mouseup.native="Stoppushrod"
         >上升推杆</el-button>
         <el-button
             class="lowpushrod"
             type="primary"
-            @click="Lowpushrod"
+            @mousedown.native="Lowpushrod"
+            @mouseup.native="Stoppushrod"
         >下降推杆</el-button>
-        <el-button
-            class="stoppushrod"
-            type="primary"
-            @click="Stoppushrod"
-        >停止推杆</el-button>
         </el-row>
         <div class="demo-progress">
           <h3>&nbsp;&nbsp&nbsp;&nbsp电量显示</h3>
@@ -225,7 +239,7 @@
         </div>
         <h3>&nbsp;&nbsp&nbsp;&nbsp状态信息</h3>
         <el-descriptions>
-    <el-descriptions-item label="小车状态">{{robot_state}}</el-descriptions-item>
+    <el-descriptions-item label="机器人状态">{{robot_state}}</el-descriptions-item>
     <el-descriptions-item label="推杆状态">{{pushrod_state}}</el-descriptions-item>
   </el-descriptions>
 </el-card>
@@ -252,16 +266,22 @@ export default {
         y:'',
         theta:''
       },
+      //小车是否通电
+      robotcharge:'',
       //小车电量
       electricity:'',
       //小车状态
       robot_state:'',
       //电动推杆信息
       pushrod_state:'',
+
       //定时查询小车电量
       electrictyInterval:null,
       //定时获取小车位置
       gpsInterval:null,
+      //定时获取重建地图信息
+      setupInterval:null,
+
       // 加载时缩放比例
       percentage: 1,
       // 按钮缩放比例
@@ -271,8 +291,13 @@ export default {
       //小车是否开始工作
       iswork:false,
       //小车是否在充电
-      isbattery:false
+      isbattery:false,
+      //小车是否已经停止
+      isstop:false,
 
+      //上载图片原始宽高
+      Oriheight:0,
+      Oriwidth:0
     }
   },
   mounted() {
@@ -290,11 +315,61 @@ export default {
     //清除位置轮询
     clearInterval(this.gpsInterval)
     this.gpsInterval=null
+
+    //清除重建地图查询
+    clearInterval(this.setupInterval)
+    this.setupInterval=null
   },
   methods:{
     //重建地图
     RenewMap(){
-
+       const data={
+        command_map:'rebuild_map'
+      }
+      map_robot(data).then((res)=>{
+        const startmessage=res.message
+        console.log(startmessage)
+        if(startmessage=='map_rebuilding')
+        {
+          this.GetMapinfo()
+          this.$message({
+          type: 'info',
+          message: '地图开始重建'
+        })
+        }
+        else {
+          this.$message({
+          type: 'info',
+          message: '地图重建失败'
+        })
+        }
+        console.log('地图开始重建！')
+      }).catch(()=>{})
+    },
+    //保存重建地图
+    SaveMap(){
+      const data={
+        command_map:'save_map'
+      }
+      map_robot(data).then((res)=>{
+        const startmessage=res.message
+        console.log(startmessage)
+        if(startmessage=='map_saved')
+        {
+          clearInterval(this.setupInterval)
+          this.$message({
+          type: 'info',
+          message: '保存地图成功'
+        })
+        }
+        else {
+          this.$message({
+          type: 'info',
+          message: '保存地图失败'
+        })
+        }
+        console.log('地图保存！')
+      }).catch(()=>{})
     },
     //上载地图
     UploadMap(){
@@ -309,11 +384,19 @@ export default {
       img.getAttribute('style') && img.removeAttribute('style')
       console.log(that.maxHeight,that.maxWidth)
       map_robot(data).then((res)=>{
-        console.log(res)
+        if(res.message=='地图文件不存在，请重建')
+        {
+          this.$message({
+          type: 'info',
+          message: '地图文件不存在，请重建'
+        })
+        }else{
         const blob=new Blob([res])
         const objectUrl = window.URL.createObjectURL(blob)
         img.src = objectUrl
         img.style.marginLeft = '100'
+        that.Oriheight=img.height
+        that.Oriwidth=img.width
         img.onload = function() {
           console.log(img.height,img.width)
           if (that.maxWidth < img.width) {
@@ -330,38 +413,124 @@ export default {
           }
           window.URL.revokeObjectURL(objectUrl)
         }
+        this.GetDirect()
         this.isupload=true
         console.log('上载地图成功！')
-      }).catch(()=>{})
+      }
+      }).catch((error)=>{
+          console.log(error)
+      })
     },
-    //开始工作
-    StartWork(){
-      if (this.isupload===false) {
-        this.$message({
+    //启动机器人
+    ChargeWork(){
+      const data={
+        command_query:'query_information'
+      }
+     state_robot(data).then((res)=>{
+       console.log(res.message)
+       const obj=eval('('+res.message+')')
+       this.robotcharge=obj.robot_state
+     }).catch(()=>{})
+     //如果机器人正在运行 则让其显示信息
+     if(this.robotcharge=='robot_working')
+     {
+      this.$message({
           type: 'info',
-          message: '请先上载地图'
+          message: '机器人正在运行中'
         })
-      } else {
-        const data={
+        this.GetRobotinfo()
+        // this.GetDirect()
+        this.iswork=true
+     }
+     //如果机器人没有运行，则让其启动
+     else{
+      const data={
         command_instruction:'start_robot'
       }
       control_robot(data).then((res)=>{
-        // const startmessage=res.message
-        // console.log(startmessage)
-        const obj=eval('('+res.message+')')
-         const startmessage=obj.command_instruction
+        const startmessage=res.message
         console.log(startmessage)
+        // const obj=eval('('+res.message+')')
+        //  const startmessage=obj.command_instruction
+        // console.log(startmessage)
         if(startmessage=='start_robot')
         {
           this.GetRobotinfo()
-          this.GetDirect()
+          // this.GetDirect()
           this.iswork=true
-          alert('启动成功')
+          this.$message({
+          type: 'info',
+          message: '启动成功'
+        })
         }
         else {
-          alert('启动失败')
+          this.$message({
+          type: 'info',
+          message: '启动失败'
+        })
         }
         console.log('启动机器人！')
+      }).catch(()=>{})
+     }
+    },
+    //结束机器人
+    FinChargeWork(){
+      const data={
+        command_instruction:'work_termination'
+      }
+      control_robot(data).then((res)=>{
+        const startmessage=res.message
+        console.log(startmessage)
+        if(startmessage=='work_stopped')
+        {
+          clearInterval(this.electrictyInterval)
+          clearInterval(this.gpsInterval)
+          this.showCurrentPoint=false
+          this.$message({
+          type: 'info',
+          message: '机器人正在结束'
+        })
+        }
+        else {
+          this.$message({
+          type: 'info',
+          message: '机器人结束失败'
+        })
+        }
+        console.log('机器人结束！')
+      }).catch(()=>{})
+    },
+    //继续工作
+    StartWork(){
+      if (this.isstop===false) {
+        this.$message({
+          type: 'info',
+          message: '请先暂停工作'
+        })
+      } else {
+        const data={
+        command_instruction:'work_continue'
+      }
+      control_robot(data).then((res)=>{
+        const startmessage=res.message
+        console.log(startmessage)
+        // const obj=eval('('+res.message+')')
+        //  const startmessage=obj.command_instruction
+        // console.log(startmessage)
+        if(startmessage=='continue_working')
+        {
+          this.$message({
+          type: 'info',
+          message: '继续移动成功'
+        })
+        }
+        else {
+          this.$message({
+          type: 'info',
+          message: '继续移动失败'
+        })
+        }
+        console.log('继续移动！')
       }).catch(()=>{})
       }
     },
@@ -382,16 +551,22 @@ export default {
         if(startmessage=='Automatic_charge')
         {
           this.isbattery=true
-          alert('返回充电成功')
+          this.$message({
+          type: 'info',
+          message: '返回充电成功'
+        })
         }
         else {
-          alert('返回充电失败')
+          this.$message({
+          type: 'info',
+          message: '返回充电失败'
+        })
         }
         console.log('返回充电！')
       }).catch(()=>{})
       }
     },
-    //结束充电  （接口还未写）
+    //结束充电
     FinishBattery(){
       if (this.isbattery===false) {
         this.$message({
@@ -400,23 +575,29 @@ export default {
         })
       } else {
         const data={
-        command_instruction:'Automatic_charge'
+        command_instruction:'stop_charge'
       }
       control_robot(data).then((res)=>{
         const startmessage=res.message
         console.log(startmessage)
-        if(startmessage=='Automatic_charge')
+        if(startmessage=='stop_charging')
         {
-          alert('结束充电成功')
+          this.$message({
+          type: 'info',
+          message: '结束充电成功'
+        })
         }
         else {
-          alert('结束充电失败')
+          this.$message({
+          type: 'info',
+          message: '结束充电失败'
+        })
         }
         console.log('结束充电！')
       }).catch(()=>{})
       }
     },
-    //结束工作
+    //暂停工作
     FinishWork(){
       if (this.iswork===false) {
         this.$message({
@@ -425,22 +606,26 @@ export default {
         })
       } else {
         const data={
-        command_instruction:'work_termination'
+        command_instruction:'work_pause'
       }
       control_robot(data).then((res)=>{
         const startmessage=res.message
         console.log(startmessage)
-        if(startmessage=='work_termination')
+        if(startmessage=='pause_working')
         {
-          clearInterval(this.electrictyInterval)
-          clearInterval(this.gpsInterval)
-          this.showCurrentPoint=false
-          alert('结束成功')
+          this.isstop=true      
+          this.$message({
+          type: 'info',
+          message: '暂停移动成功'
+        })
         }
         else {
-          alert('结束失败')
+          this.$message({
+          type: 'info',
+          message: '暂停移动失败'
+        })
         }
-        console.log('结束机器人！')
+        console.log('暂停机器人！')
       }).catch(()=>{})
       }
     },
@@ -521,40 +706,83 @@ export default {
        let obj=eval('('+res.message+')')
        const mapNavigate = document.getElementById('mapImg')
           const offsetLeft = mapNavigate.offsetLeft
+          console.log("左边缘的偏移量"+offsetLeft)
           const x = (obj.robot_information.robot_pose.x / this.percentage) * this.multiple + offsetLeft
           const y = obj.robot_information.robot_pose.y
           console.log(x,y)
-          console.log(mapNavigate.height)
-          const newy = ((mapNavigate.height - y) / this.percentage) * this.multiple
-          console.log(newy)
-          const a = document.getElementById('CurrentPoint')
-          console.log(a)
-          // a.style.marginTop = `${y}px`
+          console.log("图片元素高"+mapNavigate.height)
+          const newy = ((this.Oriheight - y) / this.percentage) * this.multiple
+          console.log("新高度"+newy)
+          const a = document.getElementById('CurrentPoint')   
           a.style.marginTop = `${newy}px`
           a.style.left = `${x}px`
-          console.log(a)
      }).catch(()=>{})
       }, 1500);
+    },
+    //获取重建地图信息
+    GetMapinfo(){
+      this.setupInterval=setInterval(() => {
+        const data={
+          command_query:'update_map'
+      }
+      const that = this
+      let img = document.getElementById('mapImg')
+      img.getAttribute('width') && img.removeAttribute('width')
+      img.getAttribute('height') && img.removeAttribute('height')
+      img.getAttribute('style') && img.removeAttribute('style')
+      console.log(that.maxHeight,that.maxWidth)
+      state_robot(data).then((res)=>{
+        console.log(res)
+        const blob=new Blob([res])
+        const objectUrl = window.URL.createObjectURL(blob)
+        img.src = objectUrl
+        img.style.marginLeft = '100'
+        img.onload = function() {
+          console.log(img.height,img.width)
+          if (that.maxWidth < img.width) {
+            const percentage = img.width / that.maxWidth
+            // 缩放比例
+            const multiple = percentage.toFixed(1).toString().split('.')[1] >= 5 ? Math.ceil(percentage) : Math.floor(percentage)
+            console.log(img.width / that.maxWidth);
+            console.log(multiple);
+            that.percentage = multiple
+            const width = img.width; const height = img.height
+            img.width = width / multiple
+            img.height = height / multiple
+            img.style.marginLeft = 0
+          }
+          window.URL.revokeObjectURL(objectUrl)
+        }
+      }).catch((error)=>{
+          console.log(error)
+      })
+      }, 1000); 
     },
     //推杆上升控制
     Uppushrod(){
       if (this.iswork===false) {
         this.$message({
           type: 'info',
-          message: '请先开始工作'
+          message: '请先启动机器人'
         })
       } else {
         const data={
-        command_instruction:'rise'
+        command_instruction:'rise_pushrod'
       }
       control_robot(data).then((res)=>{
         const startmessage=res.message
-        if(startmessage=='rise')
+        if(startmessage=='pushrod_rising')
         {
-          alert('正在上升')
+          this.$message({
+          type: 'info',
+          message: '正在上升'
+        })
         }
         else {
-          alert('上升失败')
+          this.$message({
+          type: 'info',
+          message: '上升失败'
+        })
         }
         console.log('推杆上升！')
       }).catch(()=>{})
@@ -569,16 +797,22 @@ export default {
         })
       } else {
         const data={
-        command_instruction:'decline'
+        command_instruction:'decline_pushrod'
       }
       control_robot(data).then((res)=>{
         const startmessage=res.message
-        if(startmessage=='decline')
+        if(startmessage=='pushrod_declining')
         {
-          alert('正在下降')
+          this.$message({
+          type: 'info',
+          message: '正在下降'
+        })
         }
         else {
-          alert('下降失败')
+          this.$message({
+          type: 'info',
+          message: '下降失败'
+        })
         }
         console.log('推杆下降！')
       }).catch(()=>{})
@@ -586,36 +820,36 @@ export default {
     },
     //推杆停止控制
     Stoppushrod(){
-      if (this.iswork===false) {
-        this.$message({
-          type: 'info',
-          message: '请先开始工作'
-        })
-      } else { const data={
-        command_instruction:'stop'
+       const data={
+        command_instruction:'stop_pushrod'
       }
       control_robot(data).then((res)=>{
         const startmessage=res.message
-        if(startmessage=='stop')
+        if(startmessage=='pushrod_stopped')
         {
-          alert('正在停止')
+          this.$message({
+          type: 'info',
+          message: '正在停止'
+        })
         }
         else {
-          alert('停止失败')
+          this.$message({
+          type: 'info',
+          message: '停止失败'
+        })
         }
         console.log('推杆停止！')
       }).catch(()=>{})
-      }
     },
-   Stopbutton() {
-    if (this.iswork===false) {
-        this.$message({
-          type: 'info',
-          message: '请先开始工作'
-        })
-      } else {
-      }
-   }
+  //  Stopbutton() {
+  //   if (this.iswork===false) {
+  //       this.$message({
+  //         type: 'info',
+  //         message: '请先开始工作'
+  //       })
+  //     } else {
+  //     }
+  //  }
   }
 }
 </script>
