@@ -12,7 +12,7 @@
             @click="handleOptionChange('temp')"
           >
             <div class="features-title">空气温度</div>
-            <p class="features-value">{{ data.ambientTemperature }} &#8451;</p>
+            <p class="features-value">{{ data.ambientTemperature.value }} </p>
             <img
               src="../../../assets/sensor_imge/monitor/1.png"
               alt=""
@@ -27,7 +27,7 @@
             @click="handleOptionChange('hun')"
           >
             <div class="features-title">空气湿度</div>
-            <p class="features-value">{{ data.ambientHumidity }} %</p>
+            <p class="features-value">{{ data.ambientHumidity.value }} </p>
             <img
               src="../../../assets/sensor_imge/monitor/7.png"
               alt=""
@@ -42,7 +42,7 @@
             @click="handleOptionChange('light')"
           >
             <div class="features-title">光照强度</div>
-            <p class="features-value">{{ data.lightIntensity }} lux</p>
+            <p class="features-value">{{ data.lightIntensity.value }} </p>
             <img
               src="../../../assets/sensor_imge//monitor/4.png"
               alt=""
@@ -57,7 +57,7 @@
             @click="handleOptionChange('co')"
           >
             <div class="features-title">二氧化碳</div>
-            <p class="features-value">{{ data.co2 }} ppm</p>
+            <p class="features-value">{{ data.co2.value }} </p>
             <img
               src="../../../assets/sensor_imge//monitor/2.png"
               alt=""
@@ -72,7 +72,7 @@
             @click="handleOptionChange('power')"
           >
             <div class="features-title">电源</div>
-            <p class="features-value">{{ data.dewTemp }} V</p>
+            <p class="features-value">{{ data.dewTemp.value }}</p>
             <img
               src="../../../assets/sensor_imge//monitor/5.png"
               alt=""
@@ -87,7 +87,7 @@
             @click="handleOptionChange('signal')"
           >
             <div class="features-title">信号强度</div>
-            <p class="features-value">{{ data.rssi }} dBm</p>
+            <p class="features-value">{{ data.rssi.value }}</p>
             <img
               src="../../../assets/sensor_imge//monitor/6.png"
               alt=""
@@ -132,7 +132,7 @@
                   v-model="state.startTime"
                   type="datetime"
                   size="big"
-                  placeholder="Start date"
+                  placeholder="开始时间"
                   format="YYYY/MM/DD hh:mm:ss"
                   value-format="YYYY-MM-DD hh:mm:ss"
                   :disabled-date="disabledStartDate"
@@ -144,13 +144,13 @@
                   :default-value="defaultEndTime"
                   type="datetime"
                   size="big"
-                  placeholder="End date"
+                  placeholder="结束时间"
                   format="YYYY/MM/DD hh:mm:ss"
                   value-format="YYYY-MM-DD hh:mm:ss"
                   :disabled-date="disabledEndDate"
                   @change="handleTimeChange2"
                 />
-              </div>  
+              </div>
             </el-col>
           </el-row>
         </el-main>
@@ -173,7 +173,7 @@
 
 <script setup>
 // import Vue from "vue";
-import { computed, onMounted, reactive, ref, watchEffect, watch } from "vue";
+import { computed, onMounted, reactive, ref, watchEffect, watch, render } from "vue";
 import * as echarts from "echarts";
 import {
   getHunidityData,
@@ -192,23 +192,23 @@ import { timestamp } from "@vueuse/core";
 const data = {
   co2: ref(0),
   dewTemp: ref(0),
-  rssi: ref(0),
+  rssi: ref(""),
   ambientTemperature: ref(0),
   ambientHumidity: ref(0),
   lightIntensity: ref(0),
   detectedTime: ref(92),
 };
 const state = reactive({
-  selectedOption: "",
-  selectedTime: "",
-  startTime:ref(null),
-  endTime:ref(null),
+  selectedOption: ref("temp"),
+  selectedTime: ref(1),
+  startTime: ref(null),
+  endTime: ref(null),
   // timeTotime:
   //   ref <
   //   [Date, Date] >
   //   [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
   // data: [],
-}); 
+});
 
 const selectedOption = ref("");
 let selectedTime = ref("");
@@ -217,38 +217,38 @@ const handleOptionChange = (value) => {
   console.log(value);
   state.selectedOption = value;
 };
-watch(selectedTime, (newValue) => {
-  // 根据选择的时间进行相应的逻辑处理
-  if (newValue === "1") {
-    // 过去 12 小时
-    const end = new Date();
-    const start = new Date(end - 12 * 60 * 60 * 1000);
-    state.startTime = start;
-    state.endTime = end;
-  } else if (newValue === "2") {
-    // 过去 1 天
-    const end = new Date();
-    const start = new Date(end - 24 * 60 * 60 * 1000);
-    startTime.value = start;
-    endTime.value = end;
-  } else if (newValue === "3") {
-    // 过去 1 周
-    const end = new Date();
-    const start = new Date(end - 7 * 24 * 60 * 60 * 1000);
-    startTime.value = start;
-    endTime.value = end;
-  } else if (newValue === "4") {
-    // 过去 1 月
-    const end = new Date();
-    const start = new Date(end - 30 * 24 * 60 * 60 * 1000);
-    startTime.value = start;
-    endTime.value = end;
-  } else {
-    // 默认情况
-    startTime.value = null;
-    endTime.value = null;
-  }
-});
+// watch(selectedTime, (newValue) => {
+//   // 根据选择的时间进行相应的逻辑处理
+//   if (newValue === "1") {
+//     // 过去 12 小时
+//     const end = new Date();
+//     const start = new Date(end - 12 * 60 * 60 * 1000);
+//     state.startTime = start;
+//     state.endTime = end;
+//   } else if (newValue === "2") {
+//     // 过去 1 天
+//     const end = new Date();
+//     const start = new Date(end - 24 * 60 * 60 * 1000);
+//     startTime.value = start;
+//     endTime.value = end;
+//   } else if (newValue === "3") {
+//     // 过去 1 周
+//     const end = new Date();
+//     const start = new Date(end - 7 * 24 * 60 * 60 * 1000);
+//     startTime.value = start;
+//     endTime.value = end;
+//   } else if (newValue === "4") {
+//     // 过去 1 月
+//     const end = new Date();
+//     const start = new Date(end - 30 * 24 * 60 * 60 * 1000);
+//     startTime.value = start;
+//     endTime.value = end;
+//   } else {
+//     // 默认情况
+//     startTime.value = null;
+//     endTime.value = null;
+//   }
+// });
 // watch([state.startTime, state.endTime], ([start, end]) => {
 //   console.log("startTime:", start);
 //   console.log("endTime:", end);
@@ -265,25 +265,19 @@ const handleClick = () => {
   handleTimeChange();
 };
 
-const disabledStartDate = computed(() => {
-  if ( state.endTime) {
-    return (date) => date && (date > new Date() || date >= state.endTime);
+const disabledStartDate = (date) => {
+  if (state.endTime) {
+    return date > new Date() || date >= state.endTime;
   }
-  return (date) => date && date > new Date();
-});
-const disabledEndDate = computed(() => {
-  if ( state.startTime ) {
+  return date > new Date();
+};
+const disabledEndDate = (date) => {
+  if (state.startTime) {
     console.log(state.startTime, "kkk");
-    return (date) => date && (date > new Date() || date < state.startTime);
+    return date > new Date() || date < state.startTime;
   }
-  return (date) => date && date > new Date();
-}); 
-watch(state.startTime,(date) => { 
-  state.startTime.value = date 
-})
-watch(state.endTime,(date) => {
-  state.endTime.value = date
-}) 
+  return date > new Date();
+};
 const getData = async () => {
   if (state.selectedOption && state.selectedTime) {
     // let data;
@@ -387,7 +381,7 @@ onMounted(() => {
       },
       title: {
         left: "center",
-        text: "History Data Chart",
+        // text: "History Data Chart",
       },
       toolbox: {
         feature: {
@@ -448,22 +442,59 @@ onMounted(() => {
 
 onMounted(() => {
   updateData(); // 获取并显示初始数据
-});
+}); 
 function updateData() {
+  function isValidData(value) {
+    return value !== 0 && value !== null;
+  }
+  const noData = '暂无数据';
   getWeaData().then((res) => {
-    const lastDataIndex = res.data.length - 1;
-    data.ambientTemperature.value = res.data[lastDataIndex].ambientTemperature;
-    data.ambientHumidity.value = res.data[lastDataIndex].ambientHumidity;
-    data.lightIntensity.value = res.data[lastDataIndex].lightIntensity;
+    const lastDataIndex = res.data.length - 1; 
+    const dataItem = res.data[lastDataIndex];
+    if (dataItem.hasOwnProperty('ambientTemperature')) {
+      data.ambientTemperature.value = isValidData(dataItem.ambientTemperature) ? dataItem.ambientTemperature+' ℃' : noData;
+    } else {
+      data.ambientTemperature = noData;
+    } 
+    if (dataItem.hasOwnProperty('ambientHumidity')) {
+      data.ambientHumidity.value = isValidData(dataItem.ambientHumidity) ? dataItem.ambientHumidity+' %' : noData;
+    } else {
+      data.ambientHumidity = noData;
+    }
+    if (dataItem.hasOwnProperty('lightIntensity')) {
+      data.lightIntensity.value = isValidData(dataItem.lightIntensity) ? dataItem.lightIntensity+' lux' : noData;
+    } else {
+      data.lightIntensity = noData;
+    } 
     data.detectedTime.value = res.data[lastDataIndex].detectedTime;
+ 
   });
   getNtrData().then((res) => {
     const lastDataIndex = res.data.length - 1;
-    data.co2.value = res.data[lastDataIndex].co2;
-    data.dewTemp.value = res.data[lastDataIndex].dewTemp;
-    data.rssi.value = res.data[lastDataIndex].rssi;
+    const dataItem = res.data[lastDataIndex];  
+    if (dataItem.hasOwnProperty('co2')) {
+      data.co2.value = isValidData(dataItem.co2) ? dataItem.co2+' ppm' : noData;
+    } else {
+      data.co2 = noData;
+    }
+    if (dataItem.hasOwnProperty('dewTemp')) {
+      data.dewTemp.value = isValidData(dataItem.dewTemp) ? dataItem.dewTemp+' V' : noData;
+    } else {
+      data.co2 = noData;
+    }
+    if (dataItem.hasOwnProperty('rssi')) {
+      data.rssi.value = isValidData(dataItem.rssi) ? dataItem.rssi+' dBm' : noData;
+    } else {
+      data.rssi = noData;
+    }
+   
+  
   });
+   
 }
+
+
+   
 
 // export { selectedOption, selectedTime, handleOptionChange, handleTimeChange };
 defineExpose({
@@ -492,12 +523,12 @@ watchEffect(() => {
   top: 0;
   --color-filter: hue-rotate(25.4219deg);
   background-size: cover;
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
       rgba(255, 255, 255, 0.2),
       rgba(255, 255, 255, 0.2)
     ),
     url("../../../assets/sensor_imge/meteor_imge2.jpg");
-  z-index: -3;
+  z-index: -3; */
 
   opacity: 0.4;
 }
@@ -507,7 +538,7 @@ watchEffect(() => {
   justify-content: center;
   width: 100%;
   height: 85px;
-} 
+}
 
 .features {
   width: 200px;
@@ -515,12 +546,12 @@ watchEffect(() => {
   position: relative;
   text-align: center;
   margin-top: 20px;
-  margin-left: 20px; 
+  margin-left: 20px;
 
   /* 使背景模糊化 */
   backdrop-filter: blur(10px);
   box-shadow: 0 0 10px #3c9f64;
-  border-radius: 5px; 
+  border-radius: 5px;
   background-color: #008fef09 0;
 }
 .features:hover {
@@ -582,9 +613,9 @@ watchEffect(() => {
 .el-radio-group {
   margin-left: 5%;
   line-height: 60px;
-} 
+}
 
-.block { 
+.block {
   border-right: solid 1px var(--el-border-color);
   flex: 1;
   display: flex;
