@@ -1,5 +1,5 @@
 <template>
-  <div class="weather-monitoring" style="width: 60%; margin: 0 auto">
+  <div class="weather-monitoring" style="margin: 0 auto;min-width: 300px;">
     <h2 class="one"></h2>
     <div class="sensor-data">
       <div
@@ -126,7 +126,7 @@ function updateData() {
   <style scoped>
 .weather-monitoring {
   background: color #f1f1f1;
-  width: 100%;
+  /* width: 100%; */
 }
 .sensor-data {
   width: 100%;

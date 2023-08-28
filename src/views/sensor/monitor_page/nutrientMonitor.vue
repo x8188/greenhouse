@@ -1,5 +1,5 @@
 <template>
-  <div class="agriculture-monitoring" style="width: 60%; margin: 0 auto">
+  <div class="agriculture-monitoring" style="margin: 0 auto;min-width: 300px;">
     <h2 class="two"></h2>
     <div class="sensor-values">
       <div
@@ -134,7 +134,7 @@ function updateData() {
 
 <style>
 .agriculture-monitoring {
-  width: 100%;
+  /* width: 100%; */
   /* border: 1px solid #ccc;; */
   /* box-shadow:0 0 1px;
   border-radius: 5px; */
