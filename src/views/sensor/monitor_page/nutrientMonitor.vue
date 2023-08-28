@@ -44,7 +44,7 @@
         <a class="ui teal ribbon label">露水温度</a>
         <div class="datadiv">
           <img
-            src="@/assets/img/dian.png"
+            src="@/assets/img/dewTemp.png"
             alt=""
             style="width: 60px; height: 60px"
           />
