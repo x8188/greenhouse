@@ -480,10 +480,7 @@ watchEffect(() => {
 //   pickerOptions
 // }
 </script>
-<style>
-/* .common-layout{
-  background-imge:;
-} */
+<style scoped> 
 .BG {
   content: "";
   width: 100%;

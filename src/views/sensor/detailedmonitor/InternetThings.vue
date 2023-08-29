@@ -92,7 +92,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .tac {
   height: 860px;
 }
