@@ -143,26 +143,54 @@
           </el-row>
         </div> -->
       <!-- </el-card> -->
+      <div class="fndiv">
+        <div style="display: flex;justify-content: space-evenly;align-items: baseline;">
+
+          <div class="fndivItem ui raised segment">
+            <a class="ui teal ribbon label">状态操作</a>
+            <a
+                class="opBu"
+                type="primary"
+                @click="StartWork"
+            >继续工作</a>
+            <a
+                class="opBu"
+                type="primary"
+                @click="FinishWork"
+            >暂停工作</a>
+          </div>
+          <div class="fndivItem ui raised segment">
+            <a class="ui teal ribbon label">充电操作</a>
+              <a
+                  class="opBu"
+                  type="primary"
+                  @click="BackBattery"
+              >返回充电</a>
+              <a
+                  class="opBu"
+                  type="primary"
+                  @click="FinishBattery"
+              >结束充电</a>
+          </div>
+          <div class="fndivItem ui raised segment">
+            <a class="ui teal ribbon label">地图操作</a>
+              <a
+                  class="opBu"
+                  type="primary"
+                  @click="SaveMap"
+              >保存地图</a>
+              <a
+                  class="opBu"
+                  type="primary"
+                  @click="RenewMap"
+              >地图重建</a>
+          </div>
+
+        </div>
+      </div>
       <div class="right">
         <el-card>
         <h3>&nbsp;&nbsp;&nbsp;&nbsp;机器人操作</h3>
-        <el-row type="flex" justify="left">
-          <a
-            class="opBu"
-            type="primary"
-            @click="RenewMap"
-        >地图重建</a>
-        <a
-            class="opBu"
-            type="primary"
-            @click="UploadMap"
-        >上载地图</a>
-        <a
-            class="opBu"
-            type="primary"
-            @click="SaveMap"
-        >保存地图</a>
-        </el-row>
         <el-row type="flex" justify="left">
           <a
               class="opBu"
@@ -174,42 +202,6 @@
               type="primary"
               @click="Enlarge"
           >放大地图</a>
-        </el-row>
-        <el-row type="flex" justify="left">
-        <a
-            class="opBu"
-            type="primary"
-            @click="ChargeWork"
-        >启动机器人</a>
-        <a
-            class="opBu"
-            type="primary"
-            @click="FinChargeWork"
-        >结束机器人</a>
-        </el-row>
-        <el-row type="flex" justify="left">
-        <a
-            class="opBu"
-            type="primary"
-            @click="StartWork"
-        >继续工作</a>
-        <a
-            class="opBu"
-            type="primary"
-            @click="FinishWork"
-        >暂停工作</a>
-        </el-row>
-        <el-row type="flex" justify="left">
-          <a
-            class="opBu"
-            type="primary"
-            @click="BackBattery"
-        >返回充电</a>
-        <a
-            class="opBu"
-            type="primary"
-            @click="FinishBattery"
-        >结束充电</a>
         </el-row>
         <!-- <el-row type="flex" justify="left">
           <el-button
@@ -260,7 +252,30 @@
         </div>
         <div class="demo-progress">
           <h3>&nbsp;&nbsp;&nbsp;&nbsp;电量显示</h3>
-    <el-progress type="circle" :percentage="electricity" />
+          
+          <el-row type="flex" justify="left">
+            <el-col :span="8"> <el-progress type="circle" :percentage="electricity" /></el-col>
+
+
+            <el-col :span="16">
+              <a
+                  class="opBu"
+                  type="primary"
+                  @click="UploadMap"
+              >上载地图</a>
+              <a
+                  class="opBu"
+                  type="primary"
+                  @click="ChargeWork"
+              >启动机器人</a>
+              <a
+                  class="opBu"
+                  type="primary"
+                  @click="FinChargeWork"
+              >结束机器人</a>
+            </el-col>
+
+        </el-row>
         </div>
         <h3>&nbsp;&nbsp;&nbsp;&nbsp;状态信息</h3>
 
@@ -926,7 +941,26 @@ export default {
   position: fixed;
   opacity: 0.85;
   /* background-color: #02f816; */
+
+  min-width: 350px;
 }
+.fndiv {
+  float: bottom;;
+  width: 70%;
+  /* overflow: hidden; */
+  left: 0;
+
+  position:absolute;
+  opacity: 0.85;
+  bottom: 0;
+  margin-bottom: 1%;
+  /* background-color: #02f816; */
+  min-width: 600px;
+}
+.fndivItem{
+  width: 250px;
+}
+
 #mapImg {
   margin-left: 200px;
   /* position: absolute;
@@ -970,7 +1004,7 @@ body {
     
   .opBu {
     display: inline-block;
-    margin: 10px 20px;
+    margin:10px 20px 0px 20px;
     color: #fff;
     line-height: 1em;
     letter-spacing: 0.15em;
@@ -1032,17 +1066,31 @@ body {
 
     }
       
-      // &:nth-child(2) {
+    &:nth-child(3) {
         
-      //   &:after {
-      //     background: rgb(230,54,196);
-      //     background: -moz-linear-gradient(left, rgba(230,54,196,1) 0%, rgba(63,206,165,1) 48%, rgba(80,64,139,1) 96%);
-      //     background: -webkit-linear-gradient(left, rgba(230,54,196,1) 0%,rgba(63,206,165,1) 48%,rgba(80,64,139,1) 96%);
-      //     background: linear-gradient(to right, rgba(230,54,196,1) 0%,rgba(63,206,165,1) 48%,rgba(80,64,139,1) 96%);
-      //     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e636c4', endColorstr='#50408b',GradientType=1 );
-      //     background-size: 300% 300%;
-      //   }
-      // }
+        &:after {
+          background: rgb(96,134,193);
+          background: -moz-linear-gradient(45deg,  rgba(96,134,193,1) 0%, rgba(239,224,151,1) 70%, rgba(214,100,102,1) 100%);
+          background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(96,134,193,1)), color-stop(70%,rgba(239,224,151,1)), color-stop(100%,rgba(214,100,102,1)));
+          background: -webkit-linear-gradient(45deg,  rgba(96,134,193,1) 0%,rgba(239,224,151,1) 70%,rgba(214,100,102,1) 100%);
+          background: -o-linear-gradient(45deg,  rgba(96,134,193,1) 0%,rgba(239,224,151,1) 70%,rgba(214,100,102,1) 100%);
+          background: -ms-linear-gradient(45deg,  rgba(96,134,193,1) 0%,rgba(239,224,151,1) 70%,rgba(214,100,102,1) 100%);
+          background: linear-gradient(45deg,  rgba(96,134,193,1) 0%,rgba(239,224,151,1) 70%,rgba(214,100,102,1) 100%);
+          background-size: 300% 300%;
+        }
+      }
+      
+      &:nth-child(2) {
+        
+        &:after {
+          background: rgb(230,54,196);
+          background: -moz-linear-gradient(left, rgba(230,54,196,1) 0%, rgba(63,206,165,1) 48%, rgba(80,64,139,1) 96%);
+          background: -webkit-linear-gradient(left, rgba(230,54,196,1) 0%,rgba(63,206,165,1) 48%,rgba(80,64,139,1) 96%);
+          background: linear-gradient(to right, rgba(230,54,196,1) 0%,rgba(63,206,165,1) 48%,rgba(80,64,139,1) 96%);
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e636c4', endColorstr='#50408b',GradientType=1 );
+          background-size: 300% 300%;
+        }
+      }
   }
 
   @-webkit-keyframes gradient {.keyframes;}
@@ -1131,4 +1179,37 @@ $colors: #FF8B94, #02A7E1, #98CB4A, #AE5A41, #F7D842;
 }
 
 
+</style>
+
+<style scoped>
+/* .svg-wrapper {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+	  margin: 0 auto;
+  width: 320px;  
+}
+.shape {
+  stroke-dasharray: 140 540;
+  stroke-dashoffset: -474;
+  stroke-width: 8px;
+  fill: transparent;
+  stroke: #19f6e8;
+  border-bottom: 5px solid black;
+  transition: stroke-width 1s, stroke-dashoffset 1s, stroke-dasharray 1s;
+}
+.text {
+  font-family: 'Roboto Condensed';
+  font-size: 22px;
+  line-height: 32px;
+  letter-spacing: 8px;
+  color: #fff;
+  top: -48px;
+  position: relative;
+}
+.svg-wrapper:hover .shape {
+  stroke-width: 2px;
+  stroke-dashoffset: 0;
+  stroke-dasharray: 760;
+} */
 </style>

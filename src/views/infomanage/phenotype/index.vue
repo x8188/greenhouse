@@ -66,15 +66,15 @@
             <el-form 
                 :model="queryParams"
                 ref="queryForm"
-                size="small"
                 :inline="true"
                 v-show="showSearch"
-                style="margin-top: 20px;"
+                style="margin-top: 10px; display: block; padding: 0%;height: min-content;"
                 
               >
                 <el-form-item label="编号" 
                   class = "my_item" 
                   prop="fileId" 
+                  style="padding-top: 10px;"
                 >
                   <el-input
                     v-model="queryParams.fileId"
@@ -114,11 +114,11 @@
                     type="primary"
                     icon="Search"
                     class="search-button"
-                    size="small"
                     @click="handleQuery"
                     >搜索</el-button
                   >
-                  <el-button icon="Refresh" size="small" @click="resetQuery"
+                  <el-button icon="Refresh" 
+                    @click="resetQuery"
                     >重置</el-button
                   >
                 </el-form-item>
@@ -1305,9 +1305,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 
-
-
-@media (max-width: 1300px) {
+@media (max-width: 1500px) {
   .my_item {
     margin-right: 5px; /* 缩小元素之间的间距 */
   }

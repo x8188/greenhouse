@@ -264,6 +264,8 @@ onBeforeUnmount(() => {
   align-items: flex-start;
   /* background-color: #7fb7a191; */
   padding-bottom: 1em;
+
+  min-width: 1200px;
 }
 
 .nutrient-monitoring,
@@ -279,20 +281,18 @@ onBeforeUnmount(() => {
   align-items: center;
   align-items: flex-start;
   flex-direction: column;
-  width: 30%;
+  flex: 2;
 }
 .video {
   /* flex: 1 1 40%; */
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40%;
+  // width: 40%;
+  flex: 3;
   /* margin-bottom: 20px;
   padding: 0 20px; */
 }
-/* .nutrient-monitoring{
-  
-} */
 .sensor-card {
   background-color: #f2f2f2;
   padding: 10px;
@@ -303,8 +303,8 @@ onBeforeUnmount(() => {
   justify-content: space-around;
 }
 .Info {
-  height: 325px;
-  width: 350px;
+  height: 100%;
+  width: 20%;
 
   padding: 20px;
 
