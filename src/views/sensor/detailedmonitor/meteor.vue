@@ -51,6 +51,21 @@
           </div>
           <div
             class="features"
+            :class="{ active: state.selectedOption === 'dewTemp' }"
+            label="露水温度"
+            value="dewTemp"
+            @click="handleOptionChange('dewTemp')"
+          >
+            <div class="features-title">露水温度</div>
+            <p class="features-value">{{ data.dewTemp.value }}</p>
+            <img
+              src="../../../assets/sensor_imge//monitor/5.png"
+              alt=""
+              class="features-imge"
+            />
+          </div>
+          <div
+            class="features"
             :class="{ active: state.selectedOption === 'co' }"
             label="二氧化碳"
             value="co"
@@ -64,21 +79,7 @@
               class="features-imge"
             />
           </div>
-          <div
-            class="features"
-            :class="{ active: state.selectedOption === 'power' }"
-            label="电源"
-            value="power"
-            @click="handleOptionChange('power')"
-          >
-            <div class="features-title">露水温度</div>
-            <p class="features-value">{{ data.dewTemp.value }}</p>
-            <img
-              src="../../../assets/sensor_imge//monitor/5.png"
-              alt=""
-              class="features-imge"
-            />
-          </div>
+         
           <div
             class="features"
             :class="{ active: selectedOption === 'signal' }"
@@ -180,10 +181,12 @@ import {
   getTempData,
   getCoData,
   getLightData,
+  getDewTempData,
   getLightDataByTime,
   getHunidityDataByTime,
   getTempDataByTime,
   getCoDataByTime,
+  getDewTempByTime
 } from "@/api/sensor/meteor";
 import { getNtrData } from "@/api/sensor/nutrientMonitor";
 import { getWeaData } from "@/api/sensor/weatherMonitor";
@@ -203,11 +206,7 @@ const state = reactive({
   selectedTime: ref(1),
   startTime: ref(null),
   endTime: ref(null),
-  // timeTotime:
-  //   ref <
-  //   [Date, Date] >
-  //   [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-  // data: [],
+ 
 });
 
 const selectedOption = ref("");
@@ -216,43 +215,7 @@ const updateChart = ref("");
 const handleOptionChange = (value) => {
   console.log(value);
   state.selectedOption = value;
-};
-// watch(selectedTime, (newValue) => {
-//   // 根据选择的时间进行相应的逻辑处理
-//   if (newValue === "1") {
-//     // 过去 12 小时
-//     const end = new Date();
-//     const start = new Date(end - 12 * 60 * 60 * 1000);
-//     state.startTime = start;
-//     state.endTime = end;
-//   } else if (newValue === "2") {
-//     // 过去 1 天
-//     const end = new Date();
-//     const start = new Date(end - 24 * 60 * 60 * 1000);
-//     startTime.value = start;
-//     endTime.value = end;
-//   } else if (newValue === "3") {
-//     // 过去 1 周
-//     const end = new Date();
-//     const start = new Date(end - 7 * 24 * 60 * 60 * 1000);
-//     startTime.value = start;
-//     endTime.value = end;
-//   } else if (newValue === "4") {
-//     // 过去 1 月
-//     const end = new Date();
-//     const start = new Date(end - 30 * 24 * 60 * 60 * 1000);
-//     startTime.value = start;
-//     endTime.value = end;
-//   } else {
-//     // 默认情况
-//     startTime.value = null;
-//     endTime.value = null;
-//   }
-// });
-// watch([state.startTime, state.endTime], ([start, end]) => {
-//   console.log("startTime:", start);
-//   console.log("endTime:", end);
-// });
+}; 
 const handleTimeChange = () => {
   state.startTime = null;
   state.endTime = null;
@@ -272,8 +235,7 @@ const disabledStartDate = (date) => {
   return date > new Date();
 };
 const disabledEndDate = (date) => {
-  if (state.startTime) {
-    console.log(state.startTime, "kkk");
+  if (state.startTime) { 
     return date > new Date() || date < state.startTime;
   }
   return date > new Date();
@@ -292,14 +254,18 @@ const getData = async () => {
       state.data = res.data;
     } else if (state.selectedOption === "temp") {
       const res = await getTempDataByTime(state.selectedTime);
-      console.log(res);
-      console.log(selectedTime);
+      console.log(res); 
       state.data = res.data;
     } else if (state.selectedOption === "light") {
       const res = await getLightDataByTime(state.selectedTime);
       console.log(res.data);
       state.data = res.data;
+    }else if (state.selectedOption === "dewTemp") {
+      const res = await getDewTempByTime(state.selectedTime);
+      console.log(res.data);
+      state.data = res.data;
     }
+
     if (state.data) {
       updateChart.value();
     }
@@ -334,6 +300,15 @@ const getData = async () => {
       console.log(res.data);
       state.data = res.data;
     }
+    else if (state.selectedOption === "dewTemp") {
+      const res = await getDewTempData({
+        starttime: state.startTime,
+        endtime: state.endTime,
+      });
+      console.log(res.data);
+      state.data = res.data;
+    }
+
     if (state.data) {
       updateChart.value();
     } else {
@@ -491,12 +466,7 @@ function updateData() {
   
   });
    
-}
-
-
-   
-
-// export { selectedOption, selectedTime, handleOptionChange, handleTimeChange };
+} 
 defineExpose({
   selectedOption,
   selectedTime,
@@ -523,12 +493,7 @@ watchEffect(() => {
   top: 0;
   --color-filter: hue-rotate(25.4219deg);
   background-size: cover;
-  /* background-image: linear-gradient(
-      rgba(255, 255, 255, 0.2),
-      rgba(255, 255, 255, 0.2)
-    ),
-    url("../../../assets/sensor_imge/meteor_imge2.jpg");
-  z-index: -3; */
+ 
 
   opacity: 0.4;
 }
