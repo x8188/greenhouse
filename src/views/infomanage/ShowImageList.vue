@@ -31,6 +31,7 @@
                   :current-node-key="1"
                   @node-click="rowClick"
                   class="permission-tree"
+                  
                 />
         </div> 
 
@@ -84,7 +85,7 @@
               >图片自动上传</el-button
             >
 
-            当前节点状态：
+            <span>当前节点状态：</span>
             <el-switch
               v-hasPermi="['system:node:update']"
               v-model="nodeIsShow"
@@ -95,7 +96,7 @@
           <div v-if="imageSrcList.length === 0" style="height: 500px">
             无图片或未选择节点
           </div>
-          <div class="image_box img-list" v-else>
+          <div class="image_box img-list" v-else style="height: calc(100vh - 300px);width: 100%;">
             <div class="imgCard_container">
               <el-card
                 class="image_item item"
@@ -708,6 +709,7 @@ const getTreeList = () => {
       rowClick(tree.value.getCurrentNode());
     });
   });
+  
 };
 
 // 获取树
@@ -778,6 +780,8 @@ async function rowClick(nodeObj) {
   }
   loading.value = false;
 }
+
+
 </script>
 
 <style lang="less" scoped>
@@ -1033,6 +1037,10 @@ async function rowClick(nodeObj) {
     margin-bottom: 30px;
     background: #f2fbf7;
     padding-right: 15px;
+    min-width: 98%;
+    display: inline-block;
+    width:auto;
+    overflow: auto;
   }
 :deep(.el-tree-node__content){
     border-radius: 5px;
@@ -1041,6 +1049,8 @@ async function rowClick(nodeObj) {
     font-size: 14px;
     color: black;
     padding: 0%;
+    display:block;
+    overflow:hidden;
     //margin-right: 10px;
   }
 :deep(.el-tree-node__content:hover) {
@@ -1294,14 +1304,14 @@ async function rowClick(nodeObj) {
     margin: 1px;
     color: black;
     padding: 0%;
-    height:18px;
-    margin-top3:7px;
-    margin-bottom:7px;
+    height:auto;
   }
 
   
-:deep(.el-tree-node__label) {
-  font-size: 16px;
+  :deep(.el-tree-node__label) {
+  font-size: 13px;
+  padding-left:5px;
+  padding-right:5px;
 }
 //一级节点选择器
 :deep(.el-tree>.el-tree-node> .el-tree-node__content) {
@@ -1311,10 +1321,9 @@ async function rowClick(nodeObj) {
   color:#595333;
   color:#80a492;
   //color:#446a37;
-  height: 28px;
-
+  //height: 28px;
   .el-tree-node__label{
-    font-size: 22px;
+    font-size: 18px;
     font-family: "PingFang SC";
   }
 }
@@ -1326,9 +1335,9 @@ async function rowClick(nodeObj) {
   color:#7f754c;
   color:#99bcac;
   //color:#4c8045;
-  height: 28px;
+  //height: 28px;
   .el-tree-node__label{
-    font-size: 20px;
+    font-size: 16px;
   }
 }
 //三级节点选择器
@@ -1338,9 +1347,9 @@ async function rowClick(nodeObj) {
   //color: #008272;
   //color: #938f4c;
   //color: #84a729;
-  height: 23px;
+  //height: 23px;
   .el-tree-node__label{
-    font-size: 18px;
+    font-size: 14px;
   }
 
 }
@@ -1355,6 +1364,22 @@ async function rowClick(nodeObj) {
   }
   .el-tree-node__expand-icon{
     color:#4f6f46;
+  }
+}
+
+@media (max-width: 1330px) {
+  .filter-item {
+    margin-right: 0px; /* 缩小元素之间的间距 */
+    size:"mini";
+  }
+
+  .my_input {
+    width: 120px; /* 缩小输入框的宽度 */
+  }
+
+  .el-button {
+    font-size: 12px; /* 设置按钮的字体大小为小号 */
+    padding: 3px 6px; /* 根据需要调整按钮的内边距 */
   }
 }
 
