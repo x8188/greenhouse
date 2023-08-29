@@ -25,7 +25,7 @@ defineProps({
   }
 })
 
-const title = ref('温室管理平台');
+const title = ref('设施巡检机器人管理');
 const settingsStore = useSettingsStore();
 const sideTheme = computed(() => settingsStore.sideTheme);
 </script>
