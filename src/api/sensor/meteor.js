@@ -40,6 +40,14 @@ export function getChartData(){
       timeout: 1000*600000
     })
   }
+  export function getDewTempData(params){
+    return request({
+      url: '/greenhouse/data/dewTemp',
+      method: 'post',
+      data:params, 
+      timeout: 1000*600000
+    })
+  }
   export function getLightDataByTime(i){
     return request({
       url: '/greenhouse/data/lightIntensityTime',
@@ -50,6 +58,7 @@ export function getChartData(){
       timeout: 1000*600000
     })
   }
+
   export function getHunidityDataByTime(i){
     return request({
       url: '/greenhouse/data/ambientHumidityTime',
@@ -73,6 +82,16 @@ export function getChartData(){
   export function getCoDataByTime(i){
     return request({
       url: '/greenhouse/data/CO2Time',
+      method: 'get', 
+      params: {
+        i
+      },
+      timeout: 1000*600000
+    })
+  }
+  export function getDewTempByTime(i){
+    return request({
+      url: '/greenhouse/data/dewTempTime',
       method: 'get', 
       params: {
         i
