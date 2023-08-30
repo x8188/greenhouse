@@ -154,13 +154,14 @@ function updateData() {
 }
 </script>
 
-<style>
+<style scoped>
 .agriculture-monitoring {
   /* width: 100%; */
   /* border: 1px solid #ccc;; */
   /* box-shadow:0 0 1px;
   border-radius: 5px; */
-  /* text-align: center; */
+  /* text-align: center;  */
+ 
 }
 .sensor-value {
   display: flex;

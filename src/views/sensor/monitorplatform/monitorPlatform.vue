@@ -21,33 +21,7 @@ const navigateToTargetPage = () => {
 
 </script>
 
-<style>
-/* .detail {
-  display: flex; 
-  border-radius: 5px;
-  width: 100%;
- 
-  margin: 0 100px 100px 100px;
-  justify-content: center;
-  text-align: center;
-    opacity: 0.5;
-  background-color: #7fb7a191;
-} */
-/* .detail {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  opacity: 0.5;
-  background-color: #7fb7a1;
-} */
-/* .history{
-  width: 1000px;
-
-} */
+<style scoped> 
 .detail {
   /* display: flex; */
   cursor: pointer;
