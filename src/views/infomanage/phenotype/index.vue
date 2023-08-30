@@ -143,7 +143,7 @@
             </el-button>
           </div>
 
-          <el-container style="height: calc(100vh - 360px);width: 100%;" class="mytable">
+          <el-container style="height: calc(100vh - 340px);width: 100%;" class="mytable">
             <!-- 表格部分 -->
             <el-table
               v-loading="tableLoading"
@@ -1065,11 +1065,13 @@ onMounted(() => {
 
 .footer{
   //background-color: red;
-  position: relative;
+  //position: relative;
   padding: 0%;
+  height: fit-content;
+  padding-left: 20px;
   .pag{
-    position: absolute;
-    bottom: 0;
+    //position: absolute;
+    //bottom: 0;
     left: 20px;
     //background-color: blue;
   }

@@ -96,7 +96,7 @@
           <div v-if="imageSrcList.length === 0" style="height: 500px">
             无图片或未选择节点
           </div>
-          <div class="image_box img-list" v-else style="height: calc(100vh - 300px);width: 100%;">
+          <div class="image_box img-list" v-else style="height: calc(100vh - 230px);width: 100%;">
             <div class="imgCard_container">
               <el-card
                 class="image_item item"
@@ -995,12 +995,12 @@ async function rowClick(nodeObj) {
 }
 .footer{
   margin-left: 20px;
-  position: relative;
+  //position: relative;
   //background-color: purple;
-
+  height: fit-content;
   .demo-pagination-block {
-    position: absolute;
-    bottom: 0;
+    //position: absolute;
+    //bottom: 0;
     //margin-top: 3%;
     //background: blue;
   }
