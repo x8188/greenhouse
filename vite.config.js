@@ -1,13 +1,21 @@
 import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import createVitePlugins from './vite/plugins'
+// import babel from "vite-babel-plugin";
+
 
 export default defineConfig(({ mode, command }) => {
   const env = loadEnv(mode, process.cwd())
   const { VITE_APP_ENV, VITE_APP_UPLOAD_URL } = env
   return {
     base: VITE_APP_ENV === 'production' ? '/' : '/',
-    plugins: createVitePlugins(env, command === 'build'),
+    plugins: [createVitePlugins(env, command === 'build'),
+        // babel({
+        //    babelConfig:{
+        //     configFile:true
+        //   }
+        // })
+],
     define: {
     },
     resolve: {
@@ -27,7 +35,13 @@ export default defineConfig(({ mode, command }) => {
           target: VITE_APP_UPLOAD_URL,
           changeOrigin: true,
           rewrite: (p) => p.replace(/^\/dev-api/, '')
-        }
+        },
+          '/robot': {
+              target: `http://192.168.31.217:8080`,
+              ws: true,
+              changeOrigin: true,
+              rewrite: (p) => p.replace(/^\/robot/, '')
+          },
       }
     },
     css: {
@@ -45,6 +59,8 @@ export default defineConfig(({ mode, command }) => {
           }
         ]
       }
-    }
+    },
+    //  transpileDependencies:['*'] //最开始这里的值为 true,查到的改成 * , 
+    //   //应该是 转成es5,大佬知道的话,可留言解答!
   }
 })

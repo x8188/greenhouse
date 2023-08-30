@@ -1,9 +1,15 @@
+// import '@babel/polyfill' //(一定要在最上面，第一行)
+// import 'core-js/stable';
+// // import 'regenerator-runtime/runtime';
+
 import { createApp } from 'vue'
 
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
 //import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import en from "element-plus/dist/locale/en.mjs";
 
 import '@/assets/styles/index.scss' // global css
 
@@ -46,6 +52,8 @@ import DictTag from '@/components/DictTag'
 // 丝带div样式
 import '@/assets/styles/raised.css'
 
+
+
 const app = createApp(App)
 
 // 全局方法挂载
@@ -79,7 +87,8 @@ directive(app)
 app.use(ElementPlus, {
   //locale: locale,
   // 支持 large、default、small
-  size: Cookies.get('size') || 'default'
+  size: Cookies.get('size') || 'default',
+  locale: zhCn,
 })
 
 app.mount('#app')
