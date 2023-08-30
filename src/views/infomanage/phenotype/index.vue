@@ -66,7 +66,6 @@
             <el-form 
                 :model="queryParams"
                 ref="queryForm"
-                size="small"
                 :inline="true"
                 v-show="showSearch"
                 style="margin-top: 20px;"
@@ -114,11 +113,10 @@
                     type="primary"
                     icon="Search"
                     class="search-button"
-                    size="small"
                     @click="handleQuery"
                     >搜索</el-button
                   >
-                  <el-button icon="Refresh" size="small" @click="resetQuery"
+                  <el-button icon="Refresh" @click="resetQuery"
                     >重置</el-button
                   >
                 </el-form-item>
@@ -127,9 +125,8 @@
             <!-- 操作部分 -->
             <el-button
               type="primary"
-              plain
+              
               icon="Plus"
-              class="addExcel"
               @click="handleAdd"
               v-hasPermi="['system:logininfor:add']"
               >新增
@@ -137,7 +134,7 @@
 
             <el-button
               type="danger"
-              plain
+              
               icon="Delete"
               @click="handleDelete"
               :disabled="deleteDisabled"
@@ -1083,11 +1080,6 @@ onMounted(() => {
   // background: rgb(85, 123, 116);
 }
 
-.addExcel{
-  background: grey;
-  color:#fff;
-
-}
 
 .filter-item{
   margin-right: 20px;
@@ -1307,7 +1299,7 @@ onMounted(() => {
 
 
 
-@media (max-width: 1300px) {
+@media (max-width: 1400px) {
   .my_item {
     margin-right: 5px; /* 缩小元素之间的间距 */
   }
@@ -1348,7 +1340,7 @@ onMounted(() => {
 }
 //二级节点选择器
 :deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
-  font-weight: 500;
+  font-weight: 550;
   //color: #666666;
   color: #0078d4;
   color:#7f754c;
