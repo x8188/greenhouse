@@ -10,7 +10,7 @@
           <div style="margin:0 auto;width:100%;height:360px;background:black;">
             <video
             controls='controls'
-            :src="videoUrl" 
+            src="http://60.205.164.47:8000/rtp/00A4C799.live.mp4" 
             width="100%" 
             height="100%" 
             autoplay="autoplay"  
