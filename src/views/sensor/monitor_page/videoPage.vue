@@ -40,7 +40,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .title {
   flex: 1 1 40%;
   justify-content: center;

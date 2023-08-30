@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .app {
   display: flex;
   flex-wrap: wrap;
