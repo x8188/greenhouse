@@ -12,7 +12,7 @@
             @click="handleOptionChange('temp')"
           >
             <div class="features-title">空气温度</div>
-            <p class="features-value">{{ data.ambientTemperature.value }} </p>
+            <p class="features-value">{{ data.ambientTemperature.value }}</p>
             <img
               src="../../../assets/sensor_imge/monitor/1.png"
               alt=""
@@ -27,7 +27,7 @@
             @click="handleOptionChange('hun')"
           >
             <div class="features-title">空气湿度</div>
-            <p class="features-value">{{ data.ambientHumidity.value }} </p>
+            <p class="features-value">{{ data.ambientHumidity.value }}</p>
             <img
               src="../../../assets/sensor_imge/monitor/7.png"
               alt=""
@@ -42,7 +42,7 @@
             @click="handleOptionChange('light')"
           >
             <div class="features-title">光照强度</div>
-            <p class="features-value">{{ data.lightIntensity.value }} </p>
+            <p class="features-value">{{ data.lightIntensity.value }}</p>
             <img
               src="../../../assets/sensor_imge//monitor/4.png"
               alt=""
@@ -72,14 +72,14 @@
             @click="handleOptionChange('co')"
           >
             <div class="features-title">二氧化碳</div>
-            <p class="features-value">{{ data.co2.value }} </p>
+            <p class="features-value">{{ data.co2.value }}</p>
             <img
               src="../../../assets/sensor_imge//monitor/2.png"
               alt=""
               class="features-imge"
             />
           </div>
-         
+
           <div
             class="features"
             :class="{ active: selectedOption === 'signal' }"
@@ -174,7 +174,15 @@
 
 <script setup>
 // import Vue from "vue";
-import { computed, onMounted, reactive, ref, watchEffect, watch, render } from "vue";
+import {
+  computed,
+  onMounted,
+  reactive,
+  ref,
+  watchEffect,
+  watch,
+  render,
+} from "vue";
 import * as echarts from "echarts";
 import {
   getHunidityData,
@@ -186,7 +194,7 @@ import {
   getHunidityDataByTime,
   getTempDataByTime,
   getCoDataByTime,
-  getDewTempByTime
+  getDewTempByTime,
 } from "@/api/sensor/meteor";
 import { getNtrData } from "@/api/sensor/nutrientMonitor";
 import { getWeaData } from "@/api/sensor/weatherMonitor";
@@ -206,7 +214,6 @@ const state = reactive({
   selectedTime: ref(1),
   startTime: ref(null),
   endTime: ref(null),
- 
 });
 
 const selectedOption = ref("");
@@ -215,7 +222,7 @@ const updateChart = ref("");
 const handleOptionChange = (value) => {
   console.log(value);
   state.selectedOption = value;
-}; 
+};
 const handleTimeChange = () => {
   state.startTime = null;
   state.endTime = null;
@@ -235,7 +242,7 @@ const disabledStartDate = (date) => {
   return date > new Date();
 };
 const disabledEndDate = (date) => {
-  if (state.startTime) { 
+  if (state.startTime) {
     return date > new Date() || date < state.startTime;
   }
   return date > new Date();
@@ -254,13 +261,13 @@ const getData = async () => {
       state.data = res.data;
     } else if (state.selectedOption === "temp") {
       const res = await getTempDataByTime(state.selectedTime);
-      console.log(res); 
+      console.log(res);
       state.data = res.data;
     } else if (state.selectedOption === "light") {
       const res = await getLightDataByTime(state.selectedTime);
       console.log(res.data);
       state.data = res.data;
-    }else if (state.selectedOption === "dewTemp") {
+    } else if (state.selectedOption === "dewTemp") {
       const res = await getDewTempByTime(state.selectedTime);
       console.log(res.data);
       state.data = res.data;
@@ -299,8 +306,7 @@ const getData = async () => {
       });
       console.log(res.data);
       state.data = res.data;
-    }
-    else if (state.selectedOption === "dewTemp") {
+    } else if (state.selectedOption === "dewTemp") {
       const res = await getDewTempData({
         starttime: state.startTime,
         endtime: state.endTime,
@@ -319,34 +325,35 @@ const getData = async () => {
 
 onMounted(() => {
   updateChart.value = () => {
-    console.log(state.data, "llll");
-    const chart = echarts.init(document.getElementById("main"));
-    let base = new Date().getTime();
-    let data = [];
-    let time;
-    if (state.selectedTime == 1) {
-      time = 5 * 60 * 1000;
-    } else if (state.selectedTime == 2) {
-      time = 10 * 60 * 1000;
-    } else if (state.selectedTime == 3) {
-      time = 60 * 60 * 1000;
-    } else {
-      time = 4 * 60 * 60 * 1000;
-    }
-    console.log(state.data, "123");
-
-    for (let i = 0; i < state.data.length; i++) {
-      let now = new Date((base -= time));
-      data.push([
-        // ([now.getFullYear(), now.getMonth() + 1, now.getDate(),].join('/')),
-        `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${(
-          "" + now.getHours()
-        ).padStart(2, "0")}:${("" + now.getMinutes()).padStart(2, "0")}`,
-        state.data[i],
-      ]);
-    }
-
-    console.log(data, "456");
+    let chart = document.getElementById("main");
+    chart.removeAttribute('_echarts_instance_')
+    const myChart = echarts.init(chart)
+    let data = []; 
+      let base = new Date().getTime();
+      let time;
+      if (state.selectedTime == 1) {
+        time = 5 * 60 * 1000;
+      } else if (state.selectedTime == 2) {
+        time = 10 * 60 * 1000;
+      } else if (state.selectedTime == 3) {
+        time = 60 * 60 * 1000;
+      } else if (state.selectedTime == 4){
+        time = 4 * 60 * 60 * 1000;
+      } else{
+        base = new Date(state.endTime).getTime()
+        time = (new Date(state.endTime).getTime() - new Date(state.startTime).getTime())/(state.data.length-1)
+     
+      }
+      for (let i = 0; i < state.data.length; i++) {
+        let now = new Date((base -= time));
+        data.push([
+          // ([now.getFullYear(), now.getMonth() + 1, now.getDate(),].join('/')),
+          `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${(
+            "" + now.getHours()
+          ).padStart(2, "0")}:${("" + now.getMinutes()).padStart(2, "0")}`,
+          state.data[i],
+        ]);
+      }
     const option = {
       tooltip: {
         trigger: "axis",
@@ -411,62 +418,72 @@ onMounted(() => {
         },
       ],
     };
-    chart.setOption(option);
+ 
+    // chart.setOption(option);
+    myChart.setOption(option)
   };
 });
 
 onMounted(() => {
   updateData(); // 获取并显示初始数据
-}); 
+});
 function updateData() {
   function isValidData(value) {
     return value !== 0 && value !== null;
   }
-  const noData = '暂无数据';
+  const noData = "暂无数据";
   getWeaData().then((res) => {
-    const lastDataIndex = res.data.length - 1; 
+    const lastDataIndex = res.data.length - 1;
     const dataItem = res.data[lastDataIndex];
-    if (dataItem.hasOwnProperty('ambientTemperature')) {
-      data.ambientTemperature.value = isValidData(dataItem.ambientTemperature) ? dataItem.ambientTemperature+' ℃' : noData;
+    if (dataItem.hasOwnProperty("ambientTemperature")) {
+      data.ambientTemperature.value = isValidData(dataItem.ambientTemperature)
+        ? dataItem.ambientTemperature + " ℃"
+        : noData;
     } else {
       data.ambientTemperature = noData;
-    } 
-    if (dataItem.hasOwnProperty('ambientHumidity')) {
-      data.ambientHumidity.value = isValidData(dataItem.ambientHumidity) ? dataItem.ambientHumidity+' %' : noData;
+    }
+    if (dataItem.hasOwnProperty("ambientHumidity")) {
+      data.ambientHumidity.value = isValidData(dataItem.ambientHumidity)
+        ? dataItem.ambientHumidity + " %"
+        : noData;
     } else {
       data.ambientHumidity = noData;
     }
-    if (dataItem.hasOwnProperty('lightIntensity')) {
-      data.lightIntensity.value = isValidData(dataItem.lightIntensity) ? dataItem.lightIntensity+' lux' : noData;
+    if (dataItem.hasOwnProperty("lightIntensity")) {
+      data.lightIntensity.value = isValidData(dataItem.lightIntensity)
+        ? dataItem.lightIntensity + " lux"
+        : noData;
     } else {
       data.lightIntensity = noData;
-    } 
+    }
     data.detectedTime.value = res.data[lastDataIndex].detectedTime;
- 
   });
   getNtrData().then((res) => {
     const lastDataIndex = res.data.length - 1;
-    const dataItem = res.data[lastDataIndex];  
-    if (dataItem.hasOwnProperty('co2')) {
-      data.co2.value = isValidData(dataItem.co2) ? dataItem.co2+' ppm' : noData;
+    const dataItem = res.data[lastDataIndex];
+    if (dataItem.hasOwnProperty("co2")) {
+      data.co2.value = isValidData(dataItem.co2)
+        ? dataItem.co2 + " ppm"
+        : noData;
     } else {
       data.co2 = noData;
     }
-    if (dataItem.hasOwnProperty('dewTemp')) {
-      data.dewTemp.value = isValidData(dataItem.dewTemp) ? dataItem.dewTemp+' ℃' : noData;
+    if (dataItem.hasOwnProperty("dewTemp")) {
+      data.dewTemp.value = isValidData(dataItem.dewTemp)
+        ? dataItem.dewTemp + " ℃"
+        : noData;
     } else {
       data.co2 = noData;
     }
-    if (dataItem.hasOwnProperty('rssi')) {
-      data.rssi.value = isValidData(dataItem.rssi) ? dataItem.rssi+' dBm' : noData;
+    if (dataItem.hasOwnProperty("rssi")) {
+      data.rssi.value = isValidData(dataItem.rssi)
+        ? dataItem.rssi + " dBm"
+        : noData;
     } else {
       data.rssi = noData;
     }
-   
-  
   });
-   
-} 
+}
 defineExpose({
   selectedOption,
   selectedTime,
@@ -480,7 +497,7 @@ watchEffect(() => {
 //   pickerOptions
 // }
 </script>
-<style scoped> 
+<style scoped>
 .BG {
   content: "";
   width: 100%;
@@ -490,7 +507,6 @@ watchEffect(() => {
   top: 0;
   --color-filter: hue-rotate(25.4219deg);
   background-size: cover;
- 
 
   opacity: 0.4;
 }
@@ -587,7 +603,7 @@ watchEffect(() => {
 .block .el-input {
   margin-left: 3%;
 }
-.time{
+.time {
   display: flex;
   text-align: center;
 }
