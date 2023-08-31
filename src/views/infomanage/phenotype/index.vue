@@ -1316,7 +1316,7 @@ onMounted(() => {
     margin: 1px;
     color: black;
     padding: 0%;
-    height:auto;
+    height:20px;
   }
 
   
