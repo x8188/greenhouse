@@ -158,7 +158,7 @@
               <el-table-column label="编号" align="center" min-width="90px" prop="fileId" />
               <el-table-column label="数据名称" align="center" min-width="180" prop="fileName" />
               <el-table-column label="描述" align="center" min-width="230" prop="description" />
-              <el-table-column label="时间" align="center" min-width="160" prop="dateTime" />
+              <el-table-column label="时间" align="center" width="170" prop="dateTime" />
               <el-table-column
                 label="是否公开"
                 align="center"

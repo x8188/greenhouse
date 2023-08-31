@@ -1385,3 +1385,12 @@ async function rowClick(nodeObj) {
 
 </style>
 
+<style lang="scss" scoped>
+:deep(.el-tree-node__content:hover) {
+  color:#4f6f46;
+  background-color: rgba(168, 191, 143,0.3);
+  .el-tree-node__expand-icon{
+    color:#4f6f46;
+  }
+}
+</style>
