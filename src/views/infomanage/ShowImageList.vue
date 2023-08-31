@@ -1045,13 +1045,9 @@ async function rowClick(nodeObj) {
 :deep(.el-tree-node__content){
     border-radius: 5px;
     margin: 1px;
-    line-height: 30px;
-    font-size: 14px;
     color: black;
     padding: 0%;
-    display:block;
-    overflow:hidden;
-    //margin-right: 10px;
+    height:20px;
   }
 :deep(.el-tree-node__content:hover) {
   color:#4f6f46 !important;
@@ -1308,7 +1304,7 @@ async function rowClick(nodeObj) {
   }
 
   
-  :deep(.el-tree-node__label) {
+:deep(.el-tree-node__label) {
   font-size: 13px;
   padding-left:5px;
   padding-right:5px;
@@ -1316,12 +1312,9 @@ async function rowClick(nodeObj) {
 //一级节点选择器
 :deep(.el-tree>.el-tree-node> .el-tree-node__content) {
   font-weight: 600;
-  //color: #333333;
-  color:#3b3a39;
-  color:#595333;
   color:#80a492;
-  //color:#446a37;
-  //height: 28px;
+  height: 28px;
+
   .el-tree-node__label{
     font-size: 18px;
     font-family: "PingFang SC";
@@ -1329,13 +1322,9 @@ async function rowClick(nodeObj) {
 }
 //二级节点选择器
 :deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
-  font-weight: 500;
-  //color: #666666;
-  color: #0078d4;
-  color:#7f754c;
+  font-weight: 550;
   color:#99bcac;
-  //color:#4c8045;
-  //height: 28px;
+  height: 26px;
   .el-tree-node__label{
     font-size: 16px;
   }
@@ -1343,11 +1332,7 @@ async function rowClick(nodeObj) {
 //三级节点选择器
 :deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
   font-weight: 400;
-  //color: #666666;
-  //color: #008272;
-  //color: #938f4c;
-  //color: #84a729;
-  //height: 23px;
+  height: 23px;
   .el-tree-node__label{
     font-size: 14px;
   }

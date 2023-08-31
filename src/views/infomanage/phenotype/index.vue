@@ -1041,21 +1041,10 @@ onMounted(() => {
   }
 
 :deep(.el-tree-node__content:hover) {
-  color: #FFD04B;
-  color: #F56C6C !important;
   color:#4f6f46 !important;
-  //color:#2e59a7 !important;
-  //color: #9ABEAF;
   background-color: rgba($color: #a8bf8f, $alpha: 0.3);
-  // &:hover{
-  //   background-color: rgba($color: #161616, $alpha: 0.7);
-  // }
   .el-tree-node__expand-icon{
-    color: #FFD04B;
-    color: #F56C6C !important;
     color:#4f6f46 !important;
-    //color:#2e59a7 !important;
-    //color: #9ABEAF;
   }
 }
 
@@ -1064,16 +1053,11 @@ onMounted(() => {
   }
 
 .footer{
-  //background-color: red;
-  //position: relative;
   padding: 0%;
   height: fit-content;
   padding-left: 20px;
   .pag{
-    //position: absolute;
-    //bottom: 0;
     left: 20px;
-    //background-color: blue;
   }
 }
 
@@ -1328,11 +1312,7 @@ onMounted(() => {
 //一级节点选择器
 :deep(.el-tree>.el-tree-node> .el-tree-node__content) {
   font-weight: 600;
-  //color: #333333;
-  color:#3b3a39;
-  color:#595333;
   color:#80a492;
-  //color:#446a37;
   height: 28px;
 
   .el-tree-node__label{
@@ -1343,12 +1323,8 @@ onMounted(() => {
 //二级节点选择器
 :deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
   font-weight: 550;
-  //color: #666666;
-  color: #0078d4;
-  color:#7f754c;
   color:#99bcac;
-  //color:#4c8045;
-  height: 28px;
+  height: 26px;
   .el-tree-node__label{
     font-size: 16px;
   }
@@ -1356,10 +1332,6 @@ onMounted(() => {
 //三级节点选择器
 :deep(.el-tree>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__children>.el-tree-node>.el-tree-node__content){
   font-weight: 400;
-  //color: #666666;
-  //color: #008272;
-  //color: #938f4c;
-  //color: #84a729;
   height: 23px;
   .el-tree-node__label{
     font-size: 14px;
@@ -1371,8 +1343,6 @@ onMounted(() => {
   background-color: rgba(rgb(#4f6f46), 0.3) !important;
   
   .el-tree-node__label{
-    //color:#2e59a7 !important;
-    //color:#409EFF !important;
     color:#4f6f46;
   }
   .el-tree-node__expand-icon{
